@@ -1,0 +1,100 @@
+services:
+  seed:
+    build: .
+    container_name: p2p-seed
+    hostname: seed
+    environment:
+      - NODE_ID=seed
+      - LISTEN_PORT=8000
+      - IS_SEED=true
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.30.0.10
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8000' 2>/dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  node1:
+    build: .
+    container_name: p2p-node1
+    hostname: node1
+    environment:
+      - NODE_ID=node1
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.30.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.30.0.11
+    ports:
+      - "8001:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+  node2:
+    build: .
+    container_name: p2p-node2
+    hostname: node2
+    environment:
+      - NODE_ID=node2
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.30.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.30.0.12
+    ports:
+      - "8002:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+  node3:
+    build: .
+    container_name: p2p-node3
+    hostname: node3
+    environment:
+      - NODE_ID=node3
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.30.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.30.0.13
+    ports:
+      - "8003:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+  node4:
+    build: .
+    container_name: p2p-node4
+    hostname: node4
+    environment:
+      - NODE_ID=node4
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.30.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.30.0.14
+    ports:
+      - "8004:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+networks:
+  p2p-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
