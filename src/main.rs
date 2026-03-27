@@ -1,4 +1,5 @@
 mod network;
+pub mod erasure;
 
 use anyhow::Result;
 use log::info;

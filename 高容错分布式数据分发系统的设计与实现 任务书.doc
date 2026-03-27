@@ -1,0 +1,2116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core"  xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" w:macrosPresent="no" w:embeddedObjPresent="yes" w:ocxPresent="no" xml:space="preserve" xmlns:wpsCustomData="http://www.wps.cn/officeDocument/2013/wpsCustomData">
+	<o:DocumentProperties>
+		<o:Author>tiger</o:Author>
+		<o:LastAuthor>Administrator</o:LastAuthor>
+		<o:Revision>2</o:Revision>
+		<o:LastPrinted>2018-05-25T01:05:00Z</o:LastPrinted>
+		<o:Created>2019-03-28T01:37:00Z</o:Created>
+		<o:LastSaved>2022-12-01T06:44:27Z</o:LastSaved>
+		<o:TotalTime>7200</o:TotalTime>
+		<o:Pages>3</o:Pages>
+		<o:Words>138</o:Words>
+		<o:Characters>246</o:Characters>
+		<o:Company>Microsoft</o:Company>
+		<o:Lines>2</o:Lines>
+		<o:Paragraphs>1</o:Paragraphs>
+		<o:CharactersWithSpaces>361</o:CharactersWithSpaces>
+		<o:Version>14</o:Version>
+	</o:DocumentProperties>
+	<o:CustomDocumentProperties>
+		<o:KSOProductBuildVer dt:dt="string">2052-11.1.0.12763</o:KSOProductBuildVer>
+		<o:ICV dt:dt="string">DA6250D51FEA43D28130B86D90ADEB89</o:ICV>
+	</o:CustomDocumentProperties>
+	<w:fonts>
+		<w:defaultFonts w:ascii="Times New Roman" w:fareast="宋体" w:h-ansi="Times New Roman" w:cs="Times New Roman"/>
+		<w:font w:name="Times New Roman">
+			<w:panose-1 w:val="02020603050405020304"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007841" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="400001FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="宋体">
+			<w:panose-1 w:val="02010600030101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000003" w:usb-1="288F0000" w:usb-2="00000006" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Wingdings">
+			<w:panose-1 w:val="05000000000000000000"/>
+			<w:charset w:val="02"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="80000000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Arial">
+			<w:panose-1 w:val="020B0604020202020204"/>
+			<w:charset w:val="01"/>
+			<w:family w:val="SWiss"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007843" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="400001FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="黑体">
+			<w:panose-1 w:val="02010609060101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="800002BF" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Courier New">
+			<w:panose-1 w:val="02070309020205020404"/>
+			<w:charset w:val="01"/>
+			<w:family w:val="Modern"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007843" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="400001FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="Symbol">
+			<w:panose-1 w:val="05050102010706020507"/>
+			<w:charset w:val="02"/>
+			<w:family w:val="Roman"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="80000000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Calibri">
+			<w:panose-1 w:val="020F0502020204030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="SWiss"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E00002FF" w:usb-1="4000ACFF" w:usb-2="00000001" w:usb-3="00000000" w:csb-0="2000019F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Wingdings">
+			<w:panose-1 w:val="05000000000000000000"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="80000000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Arial">
+			<w:panose-1 w:val="020B0604020202020204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007843" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="400001FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="Courier New">
+			<w:panose-1 w:val="02070309020205020404"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007843" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="400001FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="Symbol">
+			<w:panose-1 w:val="05050102010706020507"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="00000000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="80000000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Cambria Math">
+			<w:panose-1 w:val="02040503050406030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E00002FF" w:usb-1="420024FF" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="2000019F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="华文行楷">
+			<w:panose-1 w:val="02010800040101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000001" w:usb-1="080F0000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="00040000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="华文中宋">
+			<w:panose-1 w:val="02010600040101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000287" w:usb-1="080F0000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0004009F" w:csb-1="DFD70000"/>
+		</w:font>
+		<w:font w:name="等线">
+			<w:altName w:val="微软雅黑"/>
+			<w:panose-1 w:val="00000000000000000000"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="0004000F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="仿宋">
+			<w:panose-1 w:val="02010609060101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="800002BF" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="仿宋_GB2312">
+			<w:altName w:val="仿宋"/>
+			<w:panose-1 w:val="00000000000000000000"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000001" w:usb-1="080E0000" w:usb-2="00000010" w:usb-3="00000000" w:csb-0="00040000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="楷体">
+			<w:panose-1 w:val="02010609060101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="800002BF" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@宋体">
+			<w:panose-1 w:val="02010600030101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000003" w:usb-1="288F0000" w:usb-2="00000006" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@仿宋">
+			<w:panose-1 w:val="02010609060101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="800002BF" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@楷体">
+			<w:panose-1 w:val="02010609060101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="800002BF" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@华文行楷">
+			<w:panose-1 w:val="02010800040101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000001" w:usb-1="080F0000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="00040000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@华文中宋">
+			<w:panose-1 w:val="02010600040101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000287" w:usb-1="080F0000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0004009F" w:csb-1="DFD70000"/>
+		</w:font>
+		<w:font w:name="@等线">
+			<w:altName w:val="Arial Unicode MS"/>
+			<w:panose-1 w:val="00000000000000000000"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000000" w:usb-1="38CF7CFA" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="0004000F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@仿宋_GB2312">
+			<w:altName w:val="仿宋"/>
+			<w:panose-1 w:val="00000000000000000000"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000001" w:usb-1="080E0000" w:usb-2="00000010" w:usb-3="00000000" w:csb-0="00040000" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="微软雅黑">
+			<w:panose-1 w:val="020B0503020204020204"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="80000287" w:usb-1="280F3C52" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="0004001F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Arial Unicode MS">
+			<w:panose-1 w:val="020B0604020202020204"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="FFFFFFFF" w:usb-1="E9FFFFFF" w:usb-2="0000003F" w:usb-3="00000000" w:csb-0="603F01FF" w:csb-1="FFFF0000"/>
+		</w:font>
+		<w:font w:name="华文仿宋">
+			<w:panose-1 w:val="02010600040101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="00000287" w:usb-1="080F0000" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0004009F" w:csb-1="DFD70000"/>
+		</w:font>
+		<w:font w:name="Consolas">
+			<w:panose-1 w:val="020B0609020204030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Auto"/>
+			<w:pitch w:val="Default"/>
+			<w:sig w:usb-0="E10002FF" w:usb-1="4000FCFF" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="6000019F" w:csb-1="DFD70000"/>
+		</w:font>
+	</w:fonts>
+	<w:styles>
+		<w:latentStyles w:defLockedState="off" w:latentStyleCount="260">
+			<w:lsdException w:name="Normal"/>
+			<w:lsdException w:name="heading 1"/>
+			<w:lsdException w:name="heading 2"/>
+			<w:lsdException w:name="heading 3"/>
+			<w:lsdException w:name="heading 4"/>
+			<w:lsdException w:name="heading 5"/>
+			<w:lsdException w:name="heading 6"/>
+			<w:lsdException w:name="heading 7"/>
+			<w:lsdException w:name="heading 8"/>
+			<w:lsdException w:name="heading 9"/>
+			<w:lsdException w:name="index 1"/>
+			<w:lsdException w:name="index 2"/>
+			<w:lsdException w:name="index 3"/>
+			<w:lsdException w:name="index 4"/>
+			<w:lsdException w:name="index 5"/>
+			<w:lsdException w:name="index 6"/>
+			<w:lsdException w:name="index 7"/>
+			<w:lsdException w:name="index 8"/>
+			<w:lsdException w:name="index 9"/>
+			<w:lsdException w:name="toc 1"/>
+			<w:lsdException w:name="toc 2"/>
+			<w:lsdException w:name="toc 3"/>
+			<w:lsdException w:name="toc 4"/>
+			<w:lsdException w:name="toc 5"/>
+			<w:lsdException w:name="toc 6"/>
+			<w:lsdException w:name="toc 7"/>
+			<w:lsdException w:name="toc 8"/>
+			<w:lsdException w:name="toc 9"/>
+			<w:lsdException w:name="Normal Indent"/>
+			<w:lsdException w:name="footnote text"/>
+			<w:lsdException w:name="annotation text"/>
+			<w:lsdException w:name="header"/>
+			<w:lsdException w:name="footer"/>
+			<w:lsdException w:name="index heading"/>
+			<w:lsdException w:name="caption"/>
+			<w:lsdException w:name="table of figures"/>
+			<w:lsdException w:name="envelope address"/>
+			<w:lsdException w:name="envelope return"/>
+			<w:lsdException w:name="footnote reference"/>
+			<w:lsdException w:name="annotation reference"/>
+			<w:lsdException w:name="line number"/>
+			<w:lsdException w:name="page number"/>
+			<w:lsdException w:name="endnote reference"/>
+			<w:lsdException w:name="endnote text"/>
+			<w:lsdException w:name="table of authorities"/>
+			<w:lsdException w:name="macro"/>
+			<w:lsdException w:name="toa heading"/>
+			<w:lsdException w:name="List"/>
+			<w:lsdException w:name="List Bullet"/>
+			<w:lsdException w:name="List Number"/>
+			<w:lsdException w:name="List 2"/>
+			<w:lsdException w:name="List 3"/>
+			<w:lsdException w:name="List 4"/>
+			<w:lsdException w:name="List 5"/>
+			<w:lsdException w:name="List Bullet 2"/>
+			<w:lsdException w:name="List Bullet 3"/>
+			<w:lsdException w:name="List Bullet 4"/>
+			<w:lsdException w:name="List Bullet 5"/>
+			<w:lsdException w:name="List Number 2"/>
+			<w:lsdException w:name="List Number 3"/>
+			<w:lsdException w:name="List Number 4"/>
+			<w:lsdException w:name="List Number 5"/>
+			<w:lsdException w:name="Title"/>
+			<w:lsdException w:name="Closing"/>
+			<w:lsdException w:name="Signature"/>
+			<w:lsdException w:name="Default Paragraph Font"/>
+			<w:lsdException w:name="Body Text"/>
+			<w:lsdException w:name="Body Text Indent"/>
+			<w:lsdException w:name="List Continue"/>
+			<w:lsdException w:name="List Continue 2"/>
+			<w:lsdException w:name="List Continue 3"/>
+			<w:lsdException w:name="List Continue 4"/>
+			<w:lsdException w:name="List Continue 5"/>
+			<w:lsdException w:name="Message Header"/>
+			<w:lsdException w:name="Subtitle"/>
+			<w:lsdException w:name="Salutation"/>
+			<w:lsdException w:name="Date"/>
+			<w:lsdException w:name="Body Text First Indent"/>
+			<w:lsdException w:name="Body Text First Indent 2"/>
+			<w:lsdException w:name="Note Heading"/>
+			<w:lsdException w:name="Body Text 2"/>
+			<w:lsdException w:name="Body Text 3"/>
+			<w:lsdException w:name="Body Text Indent 2"/>
+			<w:lsdException w:name="Body Text Indent 3"/>
+			<w:lsdException w:name="Block Text"/>
+			<w:lsdException w:name="Hyperlink"/>
+			<w:lsdException w:name="FollowedHyperlink"/>
+			<w:lsdException w:name="Strong"/>
+			<w:lsdException w:name="Emphasis"/>
+			<w:lsdException w:name="Document Map"/>
+			<w:lsdException w:name="Plain Text"/>
+			<w:lsdException w:name="E-mail Signature"/>
+			<w:lsdException w:name="Normal (Web)"/>
+			<w:lsdException w:name="HTML Acronym"/>
+			<w:lsdException w:name="HTML Address"/>
+			<w:lsdException w:name="HTML Cite"/>
+			<w:lsdException w:name="HTML Code"/>
+			<w:lsdException w:name="HTML Definition"/>
+			<w:lsdException w:name="HTML Keyboard"/>
+			<w:lsdException w:name="HTML Preformatted"/>
+			<w:lsdException w:name="HTML Sample"/>
+			<w:lsdException w:name="HTML Typewriter"/>
+			<w:lsdException w:name="HTML Variable"/>
+			<w:lsdException w:name="Normal Table"/>
+			<w:lsdException w:name="annotation subject"/>
+			<w:lsdException w:name="Table Simple 1"/>
+			<w:lsdException w:name="Table Simple 2"/>
+			<w:lsdException w:name="Table Simple 3"/>
+			<w:lsdException w:name="Table Classic 1"/>
+			<w:lsdException w:name="Table Classic 2"/>
+			<w:lsdException w:name="Table Classic 3"/>
+			<w:lsdException w:name="Table Classic 4"/>
+			<w:lsdException w:name="Table Colorful 1"/>
+			<w:lsdException w:name="Table Colorful 2"/>
+			<w:lsdException w:name="Table Colorful 3"/>
+			<w:lsdException w:name="Table Columns 1"/>
+			<w:lsdException w:name="Table Columns 2"/>
+			<w:lsdException w:name="Table Columns 3"/>
+			<w:lsdException w:name="Table Columns 4"/>
+			<w:lsdException w:name="Table Columns 5"/>
+			<w:lsdException w:name="Table Grid 1"/>
+			<w:lsdException w:name="Table Grid 2"/>
+			<w:lsdException w:name="Table Grid 3"/>
+			<w:lsdException w:name="Table Grid 4"/>
+			<w:lsdException w:name="Table Grid 5"/>
+			<w:lsdException w:name="Table Grid 6"/>
+			<w:lsdException w:name="Table Grid 7"/>
+			<w:lsdException w:name="Table Grid 8"/>
+			<w:lsdException w:name="Table List 1"/>
+			<w:lsdException w:name="Table List 2"/>
+			<w:lsdException w:name="Table List 3"/>
+			<w:lsdException w:name="Table List 4"/>
+			<w:lsdException w:name="Table List 5"/>
+			<w:lsdException w:name="Table List 6"/>
+			<w:lsdException w:name="Table List 7"/>
+			<w:lsdException w:name="Table List 8"/>
+			<w:lsdException w:name="Table 3D effects 1"/>
+			<w:lsdException w:name="Table 3D effects 2"/>
+			<w:lsdException w:name="Table 3D effects 3"/>
+			<w:lsdException w:name="Table Contemporary"/>
+			<w:lsdException w:name="Table Elegant"/>
+			<w:lsdException w:name="Table Professional"/>
+			<w:lsdException w:name="Table Subtle 1"/>
+			<w:lsdException w:name="Table Subtle 2"/>
+			<w:lsdException w:name="Table Web 1"/>
+			<w:lsdException w:name="Table Web 2"/>
+			<w:lsdException w:name="Table Web 3"/>
+			<w:lsdException w:name="Balloon Text"/>
+			<w:lsdException w:name="Table Grid"/>
+			<w:lsdException w:name="Table Theme"/>
+			<w:lsdException w:name="Light Shading"/>
+			<w:lsdException w:name="Light List"/>
+			<w:lsdException w:name="Light Grid"/>
+			<w:lsdException w:name="Medium Shading 1"/>
+			<w:lsdException w:name="Medium Shading 2"/>
+			<w:lsdException w:name="Medium List 1"/>
+			<w:lsdException w:name="Medium List 2"/>
+			<w:lsdException w:name="Medium Grid 1"/>
+			<w:lsdException w:name="Medium Grid 2"/>
+			<w:lsdException w:name="Medium Grid 3"/>
+			<w:lsdException w:name="Dark List"/>
+			<w:lsdException w:name="Colorful Shading"/>
+			<w:lsdException w:name="Colorful List"/>
+			<w:lsdException w:name="Colorful Grid"/>
+			<w:lsdException w:name="Light Shading Accent 1"/>
+			<w:lsdException w:name="Light List Accent 1"/>
+			<w:lsdException w:name="Light Grid Accent 1"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 1"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 1"/>
+			<w:lsdException w:name="Medium List 1 Accent 1"/>
+			<w:lsdException w:name="Medium List 2 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 1"/>
+			<w:lsdException w:name="Dark List Accent 1"/>
+			<w:lsdException w:name="Colorful Shading Accent 1"/>
+			<w:lsdException w:name="Colorful List Accent 1"/>
+			<w:lsdException w:name="Colorful Grid Accent 1"/>
+			<w:lsdException w:name="Light Shading Accent 2"/>
+			<w:lsdException w:name="Light List Accent 2"/>
+			<w:lsdException w:name="Light Grid Accent 2"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 2"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 2"/>
+			<w:lsdException w:name="Medium List 1 Accent 2"/>
+			<w:lsdException w:name="Medium List 2 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 2"/>
+			<w:lsdException w:name="Dark List Accent 2"/>
+			<w:lsdException w:name="Colorful Shading Accent 2"/>
+			<w:lsdException w:name="Colorful List Accent 2"/>
+			<w:lsdException w:name="Colorful Grid Accent 2"/>
+			<w:lsdException w:name="Light Shading Accent 3"/>
+			<w:lsdException w:name="Light List Accent 3"/>
+			<w:lsdException w:name="Light Grid Accent 3"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 3"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 3"/>
+			<w:lsdException w:name="Medium List 1 Accent 3"/>
+			<w:lsdException w:name="Medium List 2 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 3"/>
+			<w:lsdException w:name="Dark List Accent 3"/>
+			<w:lsdException w:name="Colorful Shading Accent 3"/>
+			<w:lsdException w:name="Colorful List Accent 3"/>
+			<w:lsdException w:name="Colorful Grid Accent 3"/>
+			<w:lsdException w:name="Light Shading Accent 4"/>
+			<w:lsdException w:name="Light List Accent 4"/>
+			<w:lsdException w:name="Light Grid Accent 4"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 4"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 4"/>
+			<w:lsdException w:name="Medium List 1 Accent 4"/>
+			<w:lsdException w:name="Medium List 2 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 4"/>
+			<w:lsdException w:name="Dark List Accent 4"/>
+			<w:lsdException w:name="Colorful Shading Accent 4"/>
+			<w:lsdException w:name="Colorful List Accent 4"/>
+			<w:lsdException w:name="Colorful Grid Accent 4"/>
+			<w:lsdException w:name="Light Shading Accent 5"/>
+			<w:lsdException w:name="Light List Accent 5"/>
+			<w:lsdException w:name="Light Grid Accent 5"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 5"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 5"/>
+			<w:lsdException w:name="Medium List 1 Accent 5"/>
+			<w:lsdException w:name="Medium List 2 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 5"/>
+			<w:lsdException w:name="Dark List Accent 5"/>
+			<w:lsdException w:name="Colorful Shading Accent 5"/>
+			<w:lsdException w:name="Colorful List Accent 5"/>
+			<w:lsdException w:name="Colorful Grid Accent 5"/>
+			<w:lsdException w:name="Light Shading Accent 6"/>
+			<w:lsdException w:name="Light List Accent 6"/>
+			<w:lsdException w:name="Light Grid Accent 6"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 6"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 6"/>
+			<w:lsdException w:name="Medium List 1 Accent 6"/>
+			<w:lsdException w:name="Medium List 2 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 6"/>
+			<w:lsdException w:name="Dark List Accent 6"/>
+			<w:lsdException w:name="Colorful Shading Accent 6"/>
+			<w:lsdException w:name="Colorful List Accent 6"/>
+			<w:lsdException w:name="Colorful Grid Accent 6"/>
+		</w:latentStyles>
+		<w:style w:type="paragraph" w:styleId="a1" w:default="on">
+			<w:name w:val="Normal"/>
+			<w:pPr>
+				<w:widowControl w:val="off"/>
+				<w:jc w:val="both"/>
+			</w:pPr>
+			<w:rPr>
+				<w:kern w:val="2"/>
+				<w:sz w:val="21"/>
+				<w:lang w:val="EN-US" w:fareast="ZH-CN" w:bidi="AR-SA"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="a7" w:default="on">
+			<w:name w:val="Default Paragraph Font"/>
+		</w:style>
+		<w:style w:type="table" w:styleId="a5" w:default="on">
+			<w:name w:val="Normal Table"/>
+			<w:rPr>
+				<w:lang w:val="EN-US" w:fareast="ZH-CN" w:bidi="AR-SA"/>
+			</w:rPr>
+			<w:tblPr>
+				<w:tblCellMar>
+					<w:top w:w="0" w:type="dxa"/>
+					<w:left w:w="108" w:type="dxa"/>
+					<w:bottom w:w="0" w:type="dxa"/>
+					<w:right w:w="108" w:type="dxa"/>
+				</w:tblCellMar>
+			</w:tblPr>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a2">
+			<w:name w:val="Balloon Text"/>
+			<w:basedOn w:val="a1"/>
+			<w:link w:val="a11"/>
+			<w:rPr>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a3">
+			<w:name w:val="footer"/>
+			<w:basedOn w:val="a1"/>
+			<w:pPr>
+				<w:snapToGrid w:val="off"/>
+				<w:jc w:val="left"/>
+			</w:pPr>
+			<w:rPr>
+				<w:sz w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a4">
+			<w:name w:val="header"/>
+			<w:basedOn w:val="a1"/>
+			<w:pPr>
+				<w:pBdr>
+					<w:top w:val="nil"/>
+					<w:left w:val="nil"/>
+					<w:bottom w:val="nil"/>
+					<w:right w:val="nil"/>
+				</w:pBdr>
+				<w:snapToGrid w:val="off"/>
+			</w:pPr>
+			<w:rPr>
+				<w:sz w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="table" w:styleId="a6">
+			<w:name w:val="Table Grid"/>
+			<w:basedOn w:val="a5"/>
+			<w:pPr>
+				<w:pStyle w:val="a5"/>
+			</w:pPr>
+			<w:rPr>
+				<w:rFonts w:ascii="等线" w:h-ansi="等线" w:fareast="等线" w:hint="default"/>
+				<w:kern w:val="2"/>
+				<w:sz w:val="21"/>
+				<w:sz-cs w:val="22"/>
+				<w:lang w:val="EN-US" w:fareast="ZH-CN" w:bidi="AR-SA"/>
+			</w:rPr>
+			<w:tblPr>
+				<w:tblBorders>
+					<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+				</w:tblBorders>
+				<w:tblCellMar>
+					<w:top w:w="0" w:type="dxa"/>
+					<w:left w:w="108" w:type="dxa"/>
+					<w:bottom w:w="0" w:type="dxa"/>
+					<w:right w:w="108" w:type="dxa"/>
+				</w:tblCellMar>
+			</w:tblPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="a8">
+			<w:name w:val="Hyperlink"/>
+			<w:rPr>
+				<w:color w:val="0563C1"/>
+				<w:u w:val="single"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a9">
+			<w:name w:val="样式3"/>
+			<w:basedOn w:val="a1"/>
+			<w:link w:val="a10"/>
+			<w:pPr>
+				<w:adjustRightInd w:val="off"/>
+				<w:snapToGrid w:val="off"/>
+				<w:spacing w:before-lines="100" w:line="360" w:line-rule="auto"/>
+				<w:ind w:first-line="480" w:first-line-chars="200"/>
+			</w:pPr>
+			<w:rPr>
+				<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+				<w:kern w:val="0"/>
+				<w:sz w:val="32"/>
+				<w:sz-cs w:val="32"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="a10">
+			<w:name w:val="样式3 字符"/>
+			<w:link w:val="a9"/>
+			<w:rPr>
+				<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+				<w:sz w:val="32"/>
+				<w:sz-cs w:val="32"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="a11">
+			<w:name w:val="批注框文本 字符"/>
+			<w:link w:val="a2"/>
+			<w:rPr>
+				<w:kern w:val="2"/>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+	</w:styles>
+	<w:shapeDefaults>
+		<o:shapedefaults fill="t" stroke="t">
+			<v:fill type="gradient" on="t" angle="90" focussize="0f,0f" focusposition="0f,0f">
+				<o:fill type="gradientUnscaled" v:ext="backwardCompatible"/>
+			</v:fill>
+			<v:stroke weight="1.25pt" color="#739CC3"/>
+		</o:shapedefaults>
+	</w:shapeDefaults>
+	<w:docOleData>
+		<w:binData w:name="oledata.mso"></w:binData>
+	</w:docOleData>
+	<w:bgPict>
+		<w:background w:bgcolor="#FFFFFF"/>
+		<v:background id="_x0000_s1026">
+			<v:fill on="t" color2="#FFFFFF" focussize="0,0"/>
+		</v:background>
+	</w:bgPict>
+	<w:docPr>
+		<w:view w:val="print"/>
+		<w:zoom w:percent="130"/>
+		<w:characterSpacingControl w:val="CompressPunctuation"/>
+		<w:documentProtection w:enforcement="off"/>
+		<w:doNotEmbedSystemFonts/>
+		<w:bordersDontSurroundHeader/>
+		<w:bordersDontSurroundFooter/>
+		<w:defaultTabStop w:val="420"/>
+		<w:drawingGridVerticalSpacing w:val="156"/>
+		<w:displayHorizontalDrawingGridEvery w:val="1"/>
+		<w:displayVerticalDrawingGridEvery w:val="1"/>
+		<w:compat>
+			<w:adjustLineHeightInTable/>
+			<w:ulTrailSpace/>
+			<w:doNotExpandShiftReturn/>
+			<w:balanceSingleByteDoubleByteWidth/>
+			<w:useFELayout/>
+			<w:spaceForUL/>
+			<w:breakWrappedTables/>
+			<w:dontGrowAutofit/>
+			<w:useFELayout/>
+		</w:compat>
+	</w:docPr>
+	<w:body>
+		<wx:sect>
+			<w:p>
+				<w:pPr>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:hint="fareast"/>
+						<w:sz w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:h-ansi="宋体" w:hint="fareast"/>
+						<w:kern w:val="0"/>
+					</w:rPr>
+				</w:pPr>
+				<aml:annotation aml:id="0" w:type="Word.Bookmark.Start" w:name="_1065102613"/>
+				<aml:annotation aml:id="0" w:type="Word.Bookmark.End"/>
+				<aml:annotation aml:id="1" w:type="Word.Bookmark.Start" w:name="_1064953734"/>
+				<aml:annotation aml:id="1" w:type="Word.Bookmark.End"/>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:h-ansi="宋体" w:hint="default"/>
+						<w:kern w:val="0"/>
+					</w:rPr>
+					<w:pict>
+						<w:binData w:name="wordml://1.wmf">iVBORw0KGgoAAAANSUhEUgAAARMAAAA+CAYAAAAI7P/kAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4AQAGgfl+Af////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj4+ADu7u4A+fn5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJTdU6kAACAASURBVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALGxsQBGRkYAp6enAOHh4QD5+fkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADi4uIA6OjoAAAAAAAICAgAKCgoAAYGBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOvr6wDOzs4AdHR0ABgYGACEhIQASUlJAAcHBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wCWlpYAmZmZAAAAAAAXFxcAeHh4ACkpKQA1NTUAAgICAAAAAAAAAAAAAAAAAAAAAADu7u4AyMjIAPz8/AApKSkAJSUlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5+fnANXV1QAAAAAA7e3tAO7u7gBycnIA/Pz8AE5OTgAGBgYAAAAAAAAAAAAAAAAA+fn5AMbGxgDz8/MAAAAAAAAAAAAnJycAJycnAAAAAAAAAAAAAP////////////////////////////////////////////////////////////////////////////////////////////////7+/v+pqan/IyMj/wAAAP8BAQH/BQUF/zAwMP+5ubn//v7+/////////////////+7u7v99fX3/DQ0N/wYGBv9TU1P/2NjY///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////x8fH/oaGh/7Kysv/7+/v/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8/Pz/7a2tv/29vb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////rq6u/wgICP8AAAD/AAAA/wAAAP8BAQH/MzMz/+zs7P////////////39/f+3t7f/iIiI/x4eHv8GBgb/BgYG/wYGBv9OTk7/l5eX/9/f3///////AP/////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/rKys/yIiIv8AAAD/AAAA/wAAAP9hYWH/+/v7/////////////////9PT0/8YGBj/AAAA/wAAAP8CAgL/Tk5O/9bW1v/+/v7//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+//v7+//7+/v//f39//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Ly8v98fHz/Dw8P/yAgIP+hoaH//f39///////////////////////////////////////9/f3/+/v7//v7+//7+/v//v7+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+//v7+//8/Pz////////////////////////////////////////////////////////////29vb/gYGB/yQkJP9paWn/oaGh//r6+v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////zs7O/3R0dP/AwMD/+/v7//7+/v//////////////////////ubm5/3Jycv9ycnL/gICA/9DQ0P9/f3//TU1N/wICAv8AAAD/AAAA/wAAAP8VFRX/kZGR//X19f/7+/v/u7u7/3BwcP8mJib/AQEB/wAAAP8AAAD/AAAA/wAAAP8AAAD/CAgI/7CwsP/+/v7/AP//////////////////////////////////////////////////////////////////////////////////////////////////////////9PT0/0dHR/8CAgL/AAAA/wAAAP8lJSX/rq6u////////////7u7u/2BgYP8ICAj/AAAA/wAAAP8AAAD/AwMD/0lJSf/V1dX//f39///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8/Pz/yMjI/1paWv9VVVX/r6+v//Pz8//8/Pz////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////4+Pj/7Ozs/3d3d/8QEBD/AAAA/wAAAP9cXFz//Pz8//////////////////////////////////r6+v+ioqL/VFRU/1RUVP9lZWX/3t7e//7+/v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////6Ojo/2hoaP+BgYH/7e3t//j4+P/////////////////////////////////////////////////u7u7/MzMz/wAAAP8AAAD/HR0d/5mZmf/5+fn//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////f39//b29v/+/v7/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////q6ur/woKCv8wMDD/XFxc/83Nzf/9/f3/////////////////h4eH/wUFBf8AAAD/CQkJ/zo6Ov8ICAj/AAAA/wAAAP8AAAD/AAAA/xUVFf+VlZX/6enp/8jIyP9aWlr/LS0t/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AgIC/0VFRf/a2tr/AP///////////////////////////////////////////////////////////////////////////////////////////////////////////Pz8/8TExP80NDT/AwMD/wAAAP9LS0v/4ODg///////9/f3/09PT/yIiIv8AAAD/CQkJ/xoaGv8MDAz/AAAA/wQEBP9ISEj/5ubm//////////////////////////////////////////////////////////////////////////////////////////////////////////////////z8/P/Hx8f/ODg4/wICAv8AAAD/IiIi/0NDQ/+/v7//+/v7//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////T09P+IiIj/OTk5/w8PD/8AAAD/AAAA/wAAAP9cXFz//Pz8/////////////////////////////////7CwsP8eHh7/AAAA/wAAAP8GBgb/UFBQ/93d3f/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/y8vL/xsbG/8RERH/OTk5/4yMjP/09PT////////////////////////////////////////////u7u7/MzMz/wAAAP8AAAD/AAAA/xoaGv+ZmZn/9vb2////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////4ODg/3V1df/c3Nz/8PDw////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////6urq/3d3d/8LCwv/AwMD/zs7O//Ly8v//Pz8////////////4eHh/11dXf8ZGRn/BgYG/wAAAP8AAAD/AAAA/wAAAP8AAAD/BwcH/5KSkv/Jycn/UFBQ/ysrK/8CAgL/DAwM/xoaGv8aGhr/GBgY/wQEBP8AAAD/AAAA/wAAAP8AAAD/AAAA/w8PD//IyMj/AP////////////////////////////////////////////////////////////////////////////////////////////////////////////////z8/P/BwcH/GBgY/wAAAP9iYmL//f39///////y8vL/UVFR/wYGBv8KCgr/YmJi/9XV1f9mZmb/AAAA/wAAAP8gICD/39/f/////////////////////////////////////////////////////////////////////////////////////////////////////////////////+Tk5P86Ojr/AwMD/wAAAP8AAAD/AAAA/wICAv8xMTH/2tra///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////09PT/1dXV/4mJif8SEhL/AAAA/wAAAP8AAAD/AAAA/wAAAP9cXFz//Pz8/////////////////////////////////6qqqv8WFhb/AAAA/wAAAP8AAAD/BwcH/1hYWP/29vb////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////u7u7/SEhI/wQEBP8AAAD/AAAA/xMTE/+mpqb////////////////////////////////////////////u7u7/MzMz/wAAAP8AAAD/AAAA/wAAAP8YGBj/mpqa//T09P//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/yEhIf8kJCT/b29v/+np6f///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+3tOA581gAAIABJREFU7f92dnb/Dg4O/wMDA/84ODj/ycnJ//z8/P///////////+jo6P/MzMz/Ly8v/wAAAP8AAAD/AAAA/wAAAP8AAAD/BwcH/46Ojv9DQ0P/DQ0N/ykpKf8sLCz/fHx8/9nZ2f/Z2dn/xcXF/yUlJf8AAAD/AAAA/wAAAP8AAAD/AAAA/w8PD//IyMj/AP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////k5OT/SUlJ/wQEBP9iYmL//f39//39/f/Gxsb/KSkp/wAAAP83Nzf/5eXl/+Pj4/9ZWVn/AAAA/wUFBf9NTU3/5+fn/////////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/8gICD/AAAA/wAAAP8AAAD/AAAA/wAAAP8XFxf/1NTU//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////T09P+ZmZn/HR0d/wwMDP8AAAD/AAAA/wAAAP8AAAD/AAAA/xISEv+EhIT//f39//////////////////////////////////b29v9zc3P/AAAA/wAAAP8AAAD/AAAA/y8vL//Ly8v//v7+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////r6+v/Li4u/wAAAP8AAAD/AAAA/wEBAf9xcXH/6+vr///////////////////////////////////////u7u7/MzMz/wAAAP8AAAD/AAAA/wAAAP8AAAD/FhYW/5mZmf/z8/P/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/CQkJ/25ubv/n5+f////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////w8PD/dnZ2/xAQEP8DAwP/Nzc3/8bGxv/9/f3////////////w8PD/Nzc3/wAAAP8AAAD/AAAA/wAAAP8AAAD/AQEB/w4ODv8MDAz/WFhY/93d3f/p6en/8/Pz///////8/Pz/vLy8/yAgIP8AAAD/AAAA/wAAAP8AAAD/AAAA/w8PD//IyMj/AP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/wsLC/w8PD/9iYmL//f39//j4+P9SUlL/AgIC/wAAAP8mJib/m5ub/2JiYv8FBQX/AwMD/09PT//Z2dn//v7+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/8gICD/AAAA/wAAAP8AAAD/AAAA/wAAAP8XFxf/1NTU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9fX1/5WVlf8VFRX/AAAA/wAAAP8AAAD/AAAA/wcHB/9LS0v/XFxc/4aGhv/09PT///////////////////////////////////////////9+fn7/AAAA/wAAAP8AAAD/AAAA/wICAv9cXFz/+/v7///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////r6+v/Li4u/wAAAP8AAAD/AAAA/wAAAP8KCgr/eHh4/+rq6v////////////////////////////z8/P+ysrL/ISEh/wAAAP8AAAD/AAAA/wAAAP8AAAD/BAQE/1lZWf/k5OT/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wcHB/9tbW3/5ubm////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7e3t/zw8PP8AAAD/AgIC/1FRUf/4+Pj///////z8/P+1tbX/IyMj/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8fHx//2NjY//7+/v/////////////////z8/P/RUVF/wICAv8AAAD/AAAA/wAAAP8AAAD/AwMD/0pKSv/c3Nz/BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AP///wD39/cAtbW1AERERAAQEBAAAAAAAAAAAAAAAAAAAAAAAPX19QC2trYAEhISAAEBAQDQ0NAAg4ODAP7+/gDV1dUA/v7+AAAAAADb29sAaGhoAAEBAQD///8AUlJSAIWFhQAkJCQAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEABWVlYAk5OTAPf39wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////APLy8gCjo6MA7u7uAAAAAAA2NjYARkZGAAEBAQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD39/cAmZmZAIaGhgDt7e0AAgICADU1NQBGRkYAAQEBAAkJCQBeXl4AFxcXAAEBAQDV1dUAsbGxAEZGRgA0NDQAAgICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7+/gD7+/sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD29vYAkZGRAPr6+gB6enoAExMTAAAAAAAAAAAA////APn5+QCXl5cA4ODgAAAAAAAAAAAAAAAAAAEBAQBFRUUAPT09AFpaWgAaGhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPn5+QCZmZkA+vr6AH5+fgAaGhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADf398AqKioAPz8/ABGRkYAMDAwAFZWVgDa2toA6urqANXV1QCGhoYAAwMDAP39/QCzs7MAQEBAAFpaWgDi4uIAp6enAPr6+gABAQEAAAAAAP///wABAQEABgYGAAEBAQAAAAAAAAAAAP7+/gCysrIA2traAP7+/gAAAAAAAQEBAAEBAQA+Pj4AQUFBAFZWVgAiIiIAAP//////////////////////////////////////////////////////////rKys/2JiYv9bW1v/Hx8f/1VVVf9iYmL/YmJi/2JiYv9iYmL/YmJi/1lZWf8fHx//QkJC/wYGBv8AAAD/AAAA/wAAAP8AAAD/AQEB/wcHB/8ICAj/OTk5/5qamv+fn5//3Nzc///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Q0ND/GRkZ/wAAAP8AAAD/AAAA/wAAAP8XFxf/1NTU//////////////////v7+//y8vL/jY2N/1dXV/8ODg7/AAAA/wAAAP8qKir/Y2Nj/8fHx/////////////////////////////////////////////////////////////////////////////b29v+Hh4f/FhYW/wcHB/8tLS3/l5eX/8fHx/////////////////////////////////+jo6P/AwMD/zk5Of9paWn/1dXV//7+/v////////////////9+fn7/AAAA/wAAAP8AAAD/AAAA/ycnJ/+3t7f//f39///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////l5eX/LCws/wAAAP8AAAD/AAAA/wAAAP8AAAD/Dg4O/4WFhf/w8PD////////////7+/v/qqqq/19fX/8cHBz/AAAA/wAAAP8AAAD/AwMD/0tLS//T09P/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8AAAD/BwcH/2FhYf/q6ur///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////++vr7/Dw8P/wAAAP86Ojr/xsbG/+jo6P8yMjL/AQEB/wAAAP8AAAD/AAAA/wkJCf93d3f/6urq/+bm5v9ZWVn/BQUF/wQEBP9WVlb/Pj4+/wICAv8MDAz/cnJy//Pz8/////////////b29v9RUVH/AAAA/wEBAf8ICAj/NDQ0/5mZmf/Ozs7/////////////////AP//////////////////////////////////////////////////////////goKC/wcHB/8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8DAwP/ERER/xMTE/8TExP/CgoK/wEBAf8ODg7/JCQk/6CgoP+5ubn/ycnJ/+vr6//s7Oz/+Pj4///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////x8fH/jIyM/wcHB/8AAAD/AAAA/wEBAf8kJCT/19fX///////5+fn/7Ozs/5mZmf9ERET/FRUV/wAAAP8AAAD/AAAA/wAAAP8AAAD/AwMD/6SkpP//////////////////////////////////////////////////////////////////////9PT0/4SEhP8iIiL/JiYm/6Ghof/Kysr//Pz8//////////////////////////////////////+qqqr/DQ0N/wAAAP8EBAT/RkZG/9TU1P/9/f3///////////9+fn7/AAAA/wAAAP8AAAD/AAAA/z8/P//09PT/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9PT0/+Xl5f9sbGz/DQ0N/wAAAP8AAAD/AAAA/wAAAP8PDw//iYmJ/+/v7///////+/v7/+3t7f+np6f/IyMj/wAAAP8AAAD/AAAA/wAAAP8FBQX/S0tL/9bW1v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8AAAD/AQEB/ysrK//g4OD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////t7e3/goKC/w0NDf8BAQH/Nzc3/7+/v/+np6f/FBQU/wAAAP8AAAD/AQEB/3Jycv/q6ur//f39/8nJyf8WFhb/AAAA/05OTv/d3d3/zMzM/zIyMv8AAAD/Ly8v/+zs7P///////v7+/5WVlf8XFxf/AgIC/ygoKP+np6f/zc3N//39/f//////////////////////AP//////////////////////////////////////////////////////////5OTk/2BgYP8KCgr/AAAA/wAAAP8AAAD/AAAA/wAAAP8UFBT/IyMj/yMjI/87Ozv/vb29/9DQ0P/Q0ND/aWlp/wYGBv+SkpL/1NTU//j4+P//////u7u7/zMzM/8xMTH/n5+f//b29v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////urq6/wkJCf8AAAD/AAAA/woKCv+jo6P/9/f3//f39/+rq6v/NDQ0/xgYGP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/FRUV/7CwsP//////////////////////////////////////////////////////////////////////p6en/zo6Ov+dnZ3/1dXV//j4+P/////////////////s7Oz/3d3d//b29v/////////////////u7u7/bm5u/wAAAP8AAAD/BAQE/0dHR//q6ur///////////9+fn7/AAAA/wAAAP8AAAD/AAAA/z8/P//09PT////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////w8PD/fX19/y0tLf8MDAz/AAAA/wAAAP8AAAD/AAAA/xEREf+Kior/8PDw///////6+vr/uLi4/zk5Of8cHBz/AAAA/wAAAP8AAAD/AAAA/wAAAP80NDT/19fX//7+/v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8AAAD/Dw8P/6ysrP/5+fn/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7u7u/3Jycv8AAAD/AgIC/zMzM/+fn5//GBgY/wAAAP8AAAD/AgIC/5qamv//////6urq/0dHR/8EBAT/AAAA/2xsbP/+/v7/9vb2/0VFRf8AAAD/Ly8v/+zs7P//////7u7u/19fX/8CAgL/Kioq/7m5uf/6+vr/////////////////////////////////BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGxsbAIeHhwACAgIAqampAPX19QAODg4AJycnAAMDAwBgYGAASkpKAAAAAAAEBAQAFhYWAAMDAwDr6+sA/f39ACEhIQAxMTEAKysrAAAAAAAAAAAA8fHxANLS0gD7+/sAenp6APv7+wA1NTUAKSkpAAcHBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wD7+/sA9/f3ALu7uwB1dXUA4+PjAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAABISEgAkJCQAXV1dAEVFRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASUlJADw8PAATExMACQkJAAAAAAAAAAAAAAAAAAAAAACYmJgAoKCgAHd3dwA0NDQAKSkpAAcHBwAREREAMzMzABcXFwDp6ekA/Pz8AN/f3wD7+/sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD29vYA2NjYAPv7+wC1tbUAkJCQAPPz8wAAAAAAAAAAAAAAAAAAAAAAFBQUAHR0dABpaWkACQkJANbW1gDZ2dkAeXl5ANvb2wD+/v4AAAAAAAAAAAAAAAAAAAAAAAoKCgAxMTEAHx8fAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDACEhIQAGBgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERERADIyMgAYGBgA6OjoAM/PzwB1dXUA7+/vAAAAAAAAAAAAAAAAAODg4ADw8PAA+/v7AN/f3wD8/PwAAAAAAOnp6QDJyckA+vr6APHx8QAAAAAAAAAAAAAAAADs7OwAjo6OAK6urgArKysAjo6OAD8/PwAFBQUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////////////////////////////////p6en/b29v/09PT/96enr/6urq//Dw8P/4+Pj///////j4+P+9vb3/sLCw/7CwsP9ycnL/MTEx/7Gxsf/6+vr////////////s7Oz/enp6/wMDA/8AAAD/AQEB/wsLC/8tLS3/4eHh////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////urq6/wkJCf8AAAD/AAAA/wEBAf8aGhr/fX19/x0dHf8BAQH/AAAA/wAAAP8AAAD/AAAA/wAAAP8NDQ3/SEhI/4SEhP/t7e3/+Pj4//////////////////////////////8ZkI5NAAAgAElEQVT//////////////////////////////////////////////////////////////////////////////////93d3f9QUFD/AQEB/wsLC/8uLi7/4uLi////////////9/f3/2VlZf8AAAD/AAAA/yYmJv/l5eX///////////9+fn7/AAAA/wAAAP8AAAD/AAAA/z8/P//09PT////////////////////////////////////////////////////////////////////////////////////////////////////////////j4+P/WFhY/xISEv8ICAj/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/WFhY//T09P/Q0ND/p6en/zQ0NP8NDQ3/AQEB/xkZGf9OTk7/Jycn/wAAAP8AAAD/AAAA/yoqKv/g4OD//v7+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8AAAD/EhIS/83Nzf////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////f39/9nZ2f/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/xAQEP+3t7f/5eXl/yYmJv8AAAD/AAAA/wYGBv8PDw//Dw8P/wQEBP8KCgr/ZmZm//Ly8v+pqan/CwsL/zAwMP+8vLz/+/v7////////////////////////////////////////////AP///////////////////////////////////////////////////////////v7+/7m5uf+YmJj/5OTk//n5+f/7+/v//////////////////////+np6f8xMTH/BgYG/wYGBv8DAwP/e3t7//39/f/////////////////ExMT/EBAQ/wAAAP8AAAD/AAAA/wAAAP8gICD/39/f////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////urq6/wkJCf8AAAD/AAAA/wAAAP8BAQH/BAQE/xkZGf9oaGj/Q0ND/wEBAf8AAAD/AAAA/wwMDP92dnb/7e3t//v7+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////5OTk/8EBAT/AAAA/wAAAP8TExP/lZWV//f39////////v7+/6mpqf8jIyP/AAAA/yYmJv/l5eX///////////9+fn7/AAAA/wAAAP8AAAD/ExMT/4iIiP/5+fn////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/u7u7/wsLC/8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8fHx//oKCg/8jIyP8/Pz//BQUF/wEBAf8AAAD/AAAA/05OTv/z8/P/eXl5/wAAAP8AAAD/DQ0N/3l5ef/z8/P/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8AAAD/EhIS/83Nzf////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/v+rq6v/JCQk/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wQEBP9sbGz/2NjY/3Jycv8LCwv/AAAA/wAAAP8AAAD/AAAA/wkJCf9ra2v/6enp/+Hh4f9hYWH/AwMD/46Ojv/9/f3/////////////////////////////////////////////////AP///////////////////////////////////////////////////////////Pz8/19fX/8KCgr/a2tr/+np6f///////////////////////////+np6f8sLCz/AAAA/wAAAP8AAAD/ODg4/8PDw//6+vr/7Ozs/4WFhf9WVlb/BQUF/wAAAP8AAAD/CAgI/2pqav+dnZ3/8fHx///////////////////////////////////////////////////////////////////////w8PD/nJyc/+/v7///////////////////////////////////////urq6/wkJCf8AAAD/AAAA/wAAAP8AAAD/GBgY/5iYmP/4+Pj/nJyc/wICAv8AAAD/DAwM/319ff/u7u7////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/zc3N/0JCQv8AAAD/AAAA/wAAAP8AAAD/MjIy/+3t7f////////////z8/P+rq6v/IiIi/ykpKf/l5eX///////////9+fn7/AAAA/wAAAP8AAAD/LCws/+np6f//////wMDA/7y8vP/9/f3/////////////////////////////////////////////////////////////////////////////////////////////////4+Pj/5SUlP9SUlL/T09P/zExMf8AAAD/AAAA/wAAAP9ISEj/9/f3/8nJyf8+Pj7/BQUF/wUFBf8aGhr/gYGB/7Kysv/6+vr/enp6/wAAAP8AAAD/HR0d/9zc3P//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8EBAT/cHBw/+np6f/////////////////9/f3/+vr6//r6+v/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/v/V1dX/wEBAf8AAAD/Hh4e/15eXv8HBwf/AAAA/wAAAP8PDw//yMjI/+3t7f+ZmZn/YmJi/wgICP8GBgb/XV1d/5eXl//l5eX/4eHh/11dXf8FBQX/AAAA/0BAQP93d3f/2dnZ//7+/v//////////////////////////////////////AP///////////////////////////////////////////////////////////v7+/8XFxf8vLy//CgoK/2VlZf/l5eX/9vb2///////39/f/+vr6/+rq6v81NTX/AgIC/wAAAP8AAAD/AQEB/zIyMv9cXFz/WFhY/xgYGP8BAQH/AAAA/wAAAP8JCQn/dnZ2/+np6f////////////////////////////////////////////////////////////////////////////7+/v/b29v/MTEx/3R0dP/39/f/////////////////////////////////urq6/wkJCf8AAAD/AAAA/wEBAf8ZGRn/np6e//b29v//////nJyc/wICAv8NDQ3/g4OD/+7u7v////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////39/f/Ly8v/Pj4+/wEBAf8AAAD/AAAA/wAAAP8CAgL/Ozs7/+7u7v/////////////////p6en/R0dH/52dnf/39/f///////////9+fn7/AAAA/wAAAP8AAAD/LCws/+np6f//////j4+P/zAwMP/Dw8P////////////////////////////////////////////////////////////////////////////////////////////////////////////b29v/1tbW/1dXV/8AAAD/AAAA/wAAAP9ISEj/9/f3///////Ozs7/rKys/6ysrP+5ubn/9/f3//////+4uLj/KSkp/wAAAP8BAQH/JiYm/97e3v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8ICAj/ubm5//////////////////r6+v+pqan/U1NT/1lZWf/Kysr/8/Pz//39/f/////////////////////////////////////////////////////////////////////////////////////////////////+/v7/wMDA/yoqKv8AAAD/NjY2/9fX1/9ycnL/CAgI/wAAAP8YGBj/y8vL////////////5OTk/66urv+tra3/2NjY/+Xl5f9xcXH/Q0ND/wYGBv8AAAD/AAAA/wAAAP8EBAT/Tk5O/+Li4v//////////////////////////////////////AP////////////////////////////////////////////////////////////////f39/9GRkb/AAAA/wsLC/81NTX/dXV1/+Hh4f+Ghob/rKys/9/f3/+cnJz/ExMT/wAAAP8AAAD/AAAA/xUVFf+Tk5P/xcXF/6ampv8TExP/AAAA/wsLC/92dnb/6urq//39/f/p6en/5OTk/+Tk5P/u7u7///////////////////////////////////////////////////////Pz8/9eXl7/CAgI/zY2Nv/i4uL//v7+///////////////////////6+vr/qKio/wgICP8AAAD/AAAA/wkJCf+cnJz/9fX1///////39/f/jIyM/wMDA/96enr/7u7u///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/6urq/8fHx/86Ojr/AgIC/wAAAP8AAAD/AAAA/wAAAP8aGhr/ubm5//v7+/////////////v7+/91dXX/JSUl/9bW1v////////////////9+fn7/AAAA/wAAAP8AAAD/LCws/+np6f/29vb/gICA/wQEBP+VlZX/+Pj4////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/1dXV/8AAAD/AAAA/wAAAP9ISEj/9/f3//////////////////////////////////////+Wlpb/AQEB/wAAAP8LCwv/kpKS//Pz8///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8ICAj/ubm5////////////+Pj4/6qqqv8hISH/AAAA/wICAv8rKyv/VVVV/+np6f//////////////////////////////////////////////////////////////////////////////////////////////////////9PT0/1BQUP8FBQX/NjY2/+/v7//p6en/cnJy/yAgIP+Wlpb/8/Pz//////////////////T09P/i4uL/d3d3/zU1Nf8LCwv/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/FxcX/9TU1P//////////////////////////////////////BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAdHR0ACQkJAPX19QDLy8sA2NjYAK+vrwDt7e0ACAgIAAwMDAD7+/sA8fHxAAAAAAAAAAAAAgICAHBwcABhYWEACwsLABEREQAFBQUADw8PAGZmZgB2dnYA9vb2AMjIyACBgYEA39/fAAAAAAA+Pj4AgoKCABoaGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AODg4ADPz88A+Pj4ANPT0wCIiIgAkZGRAAQEBAAAAAAAAAAAAPr6+gC9vb0AgICAAPn5+QAAAAAAAAAAAAMDAwAnJycACgoKAAAAAADHx8cAkZGRAP///wAiIiIAERERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wDX19cAdnZ2ANXV1QDk5OQA/v7+AAAAAAAAAAAAAAAAAAMDAwAmJiYALCwsAAQEBAAAAAAAAAAAAP///wDc3NwA8/PzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+Pj4ANfX1wDY2NgAl5eXAP39/QCMjIwAMjIyADg4OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPLy8gDn5+cAAAAAAAAAAAD39/cAn5+fACgoKAAYGBgADw8PAB0dHQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPv7+wDe3t4Azc3NAHp6egDh4eEAAAAAAP7+/gDZ2dkAGBgYAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQkJAISEhAD7+/sADg4OAAMDAwAWFhYAe3t7AGlpaQAZGRkACwsLAAAAAAD19fUA4ODgALW1tQCcnJwA6OjoAPPz8wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgIAHh4eAAgICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////////////////////////////////////////////////////////////////z8/P+ysrL/ICAg/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AgIC/5qamv///////////9bW1v8YGBj/TExM/9HR0f+4uLj/UVFR/xMTE/8EBAT/AAAA/wAAAP8ICAj/YmJi/+Hh4f//////////////////////////////////////+fn5/1paWv8FBQX/AAAA/wAAAP89PT3/1NTU////////////+vr6/7Ozs/8mJib/AgIC/wAAAP8AAAD/AAAA/wwMDP/Dw8P///////////+zs7P/BwcH/wEBAf90dHT/6+vr////////////////////////////////////////////////////////////////////////////////////////////////////////////3Nzc/7a2tv9ERET/BAQE/wAAAP8RERH/Kysr/wEBAf8AAAD/AAAA/xEREf/CwsL//Pz8//////////////////r6+v9RUVH/EhIS/6enp//4+Pj///////////9+fn7/AAAA/wAAAP8AAAD/BAQE/xMTE/8ODg7/AAAA/wEBAf80NDT/z8/P////////////////////////////////////////////////////////////////////////////////////////////////////////////1tbW/0BAQP8AAAD/AAAA/w4ODv91dXX/+fn5/////////////////////////////////7e3t/8SEhL/AAAA/wAAAP8AAAD/AgIC/xISEv8VFRX/TU1N/9bW1v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGP8AAAD/AAAA/wAAAP8GBgb/h4eH/6enp/8rKyv/EBAQ/wEBAf8AAAD/AQEB/y4uLv9TU1P/0NDQ//39/f////////////////////////////////////////////////////////////////////////////////////////////////////////////39/f/u7u7/7u7u//7+/v//////////////////////+Pj4/8TExP+Tk5P/HR0d/wwMDP8kJCT/RUVF/0BAQP8NDQ3/AAAA/wAAAP8AAAD/AAAA/wEBAf82Njb/xMTE//v7+///////////////////////////////////////AP///////////////////////////////////////////////////////////v7+/729vf8yMjL/AgIC/wAAAP8AAAD/AAAA/wAAAP8AAAD/BQUF/0BAQP8RERH/AAAA/wAAAP8AAAD/AgIC/5qamv//////9fX1/5SUlP8PDw//NDQ0/1xcXP8JCQn/AwMD/wAAAP8AAAD/AAAA/wAAAP8AAAD/BQUF/5WVlf//////////////////////////////////////+Pj4/0xMTP8AAAD/AAAA/wAAAP8DAwP/cXFx//7+/v/8/Pz/rq6u/yUlJf8BAQH/AAAA/wAAAP8AAAD/AAAA/wwMDP/Dw8P//////+rq6v91dXX/BAQE/wAAAP8KCgr/eXl5/+vr6//////////////////////////////////////////////////////////////////////////////////////////////////Z2dn/VFRU/wkJCf8DAwP/AAAA/xEREf99fX3/np6e/wQEBP8AAAD/AAAA/xMTE//Q0ND//////+Xl5f+ioqL/zMzM//r6+v9RUVH/AQEB/ywsLP/m5ub///////////9+fn7/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wMDA/+goKD//f39////////////////////////////////////////////////////////////////////////////////////////////////////////////d3d3/wMDA/8AAAD/AAAA/zExMf/o6Oj//////////////////////////////////////7CwsP8GBgb/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AwMD/3d3d///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////19fX/xgYGArr55oAACAASURBVP8AAAD/AAAA/wAAAP8AAAD/BwcH/wgICP8BAQH/AAAA/wAAAP8sLCz/YmJi/8PDw//39/f//f39/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+/8XFxf+fn5//kJCQ/x8fH/8HBwf/ICAg/15eXv+vr6//9vb2/+Tk5P8vLy//AAAA/wAAAP8AAAD/LCws/2JiYv/FxcX//f39////////////////////////////////////////////AAaB+X4EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/v4AoqKiAM/PzwD///8AAAAAAAAAAAAAAAAAAAAAAAMDAwBXV1cAd3d3AK+vrwCMjIwA8vLyAAAAAAAAAAAA////AP7+/gDu7u4Ak5OTAPLy8gDPz88Az8/PAP7+/gD///8AAAAAAAAAAAAAAAAAAgICAC0tLQBQUFAAMzMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AAAAAAAAAAAAAAAAAP39/QDFxcUAgYGBAPz8/ACpqakA3d3dABkZGQA6OjoAsLCwAPz8/AAAAAAAAAAAAPPz8wCWlpYAz8/PAKWlpQD8/PwAAAAAAPb29gCampoAUVFRABQUFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7+/gDl5eUApaWlAMfHxwC0tLQA/v7+AAAAAAAQEBAAcnJyAG9vbwC5ubkAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAA09PTAGlpaQBvb28ALi4uAAEBAQAAAAAA5+fnAKioqABqamoABwcHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQA4ODgASEhIADIyMgACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AMjIyADCwsIA/f39AAAAAAAAAAAAAgICAAYGBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJycnAElJSQD19fUANzc3AKmpqQDc3NwAAAAAAAAAAAD+/v4A/Pz8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAD5+fkAAAAAAAICAgAiIiIAWFhYAD09PQBFRUUAAQEBAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AM/PzwCysrIAtbW1AM7OzgAAAAAAAAAAAB4eHgCCgoIAWFhYAAQEBAABAQEABwcHAAICAgAAAAAAAQEBAC4uLgCJiYkARUVFAAEBAQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA///////////////////////////////////////////////////////////+/v7/vb29/zIyMv8ICAj/AQEB/wAAAP8AAAD/BQUF/2BgYP/f39//8fHx/25ubv8LCwv/AAAA/wAAAP8BAQH/Ojo6/2BgYP9XV1f/FhYW/ywsLP+YmJj/m5ub/0dHR/8AAAD/AQEB/wcHB/8lJSX/lJSU/8HBwf/+/v7///////////////////////////////////////7+/v+bm5v/HR0d/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8BAQH/Ghoa/5+fn/+zs7P/CQkJ/wAAAP8AAAD/BQUF/0FBQf8QEBD/AAAA/wAAAP8AAAD/BQUF/w0NDf95eXn/6+vr///////////////////////////////////////////////////////////////////////5+fn/6Ojo/3h4eP9LS0v/BgYG/wAAAP8AAAD/AAAA/xAQEP+Kior/8fHx//////+rq6v/BAQE/wAAAP8GBgb/fHx8/+zs7P/a2tr/U1NT/0JCQv/Kysr//f39/7W1tf8lJSX/AAAA/zg4OP/x8fH//////35+fv8AAAD/AAAA/wAAAP8AAAD/AgIC/zs7O//Hx8f////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3/xMTE/zg4OP8AAAD/AAAA/wAAAP8AAAD/MzMz/+7u7v///////////////////////v7+//f39//4+Pj//v7+/9jY2P/R0dH/9/f3/0hISP8AAAD/AAAA/wAAAP82Njb/x8fH/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+/+np6f9oaGj/CQkJ/wAAAP8AAAD/AAAA/wAAAP8BAQH/GRkZ/4uLi/+4uLj/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////0NDQ/z8/P/8BAQH/AAAA/wYGBv8YGBj/iYmJ/7a2tv/6+vr////////////5+fn/hISE/xISEv8AAAD/Jycn/7Kysv/19fX/9vb2//z8/P////////////////////////////////////////////////8A/////////////////////////////////////////////////////////////////f39/83Nzf+mpqb/JiYm/wcHB/8TExP/YGBg/+Hh4f/+/v7/29vb/ykpKf8AAAD/AAAA/wAAAP8AAAD/AQEB/w4ODv8lJSX/oaGh/8bGxv/o6Oj/pKSk/ywsLP8UFBT/ISEh/5qamv/Hx8f/+vr6//////////////////////////////////////////////////39/f9jY2P/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wEBAf8bGxv/o6Oj//b29v+6urr/CQkJ/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wYGBv8UFBT/aGho/7y8vP/r6+v///////////////////////////////////////////////////////////////////////v7+/+BgYH/Pj4+/wsLC/8AAAD/AAAA/wAAAP8AAAD/ERER/46Ojv/w8PD///////////+rq6v/BAQE/wAAAP8JCQn/ra2t/9XV1f9LS0v/ODg4/83Nzf/+/v7///////Ly8v87Ozv/AAAA/zg4OP/x8fH/9/f3/3R0dP8AAAD/AAAA/wAAAP8DAwP/Ozs7/8rKyv/+/v7///////////////////////////////////////////////////////////////////////////////////////////////////////v7+//Dw8P/NTU1/woKCv8JCQn/AAAA/wAAAP8AAAD/MzMz/+7u7v//////////////////////7e3t/2JiYv9ra2v/4uLi//Pz8///////6+vr/0JCQv8AAAD/AAAA/wUFBf9jY2P/+/v7////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////6Ojo/2JiYv8LCwv/AAAA/wAAAP8AAAD/AAAA/w0NDf8gICD/oqKi//b29v//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////urq6/xsbG/8UFBT/GRkZ/4mJif/BwcH/9fX1///////////////////////q6ur/QEBA/wAAAP8AAAD/EhIS/0JCQv9FRUX/R0dH/7S0tP/t7e3//Pz8//////////////////////////////////////8A///////////////////////////////////////////////////////////////////////////5+fn/t7e3/19fX//Kysr/1dXV/9vb2//T09P/VFRU/wgICP8AAAD/AAAA/wAAAP8AAAD/BgYG/5OTk//S0tL/2dnZ/7Kysv9CQkL/Pj4+/4CAgP/R0dH/1NTU//b29v////////////////////////////////////////////////////////////39/f9jY2P/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/x0dHf+mpqb/9vb2//////+6urr/CQkJ/wAAAP8AAAD/AgIC/xwcHP8kJCT/JCQk/1hYWP/MzMz/6Ojo//////////////////////////////////////////////////////////////////////////////////v7+/9ra2v/ISEh/wYGBv8AAAD/AAAA/w4ODv8lJSX/kJCQ//Hx8f////////////////+rq6v/BAQE/wAAAP8CAgL/IiIi/ygoKP8NDQ3/Xl5e//j4+P////////////Ly8v87Ozv/BQUF/1BQUP/o6Oj/lpaW/xcXF/8AAAD/AAAA/wAAAP8kJCT/ysrK//39/f//////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/8HBwf8xMTH/AgIC/1xcXP9wcHD/DAwM/wAAAP8AAAD/MzMz/+7u7v//////////////////////6urq/0FBQf8ODg7/LCws/3V1df/Z2dn/bm5u/w0NDf8AAAD/AAAA/zQ0NP/Y2Nj//v7+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+3t7f/X19f/YGBg/woKCv8AAAD/AAAA/wAAAP8AAAD/FRUV/5GRkf/U1NT/9vb2////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8fHx/9LS0v/R0dH/0tLS//Hx8f///////////////////////////+rq6v9ra2v/DAwM/wAAAP8AAAD/AAAA/wAAAP8AAAD/AQEB/x8fH/8+Pj7/vr6+/+Pj4//9/f3///////////////////////////8A///////////////////////////////////////////////////////////////////////////4+Pj/yMjI/7Ozs//ExMT/eHh4/xwcHP8bGxv/BwcH/wAAAP8AAAD/AAAA/wAAAP8AAAD/BQUF/4uLi/+0tLT/Pz8//0pKSv9ycnL/4ODg//Ly8v////////////////////////////////////////////////////////////////////////////39/f9jY2P/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/ISEh/6ioqP/39/f///////////+6urr/CQkJ/wAAAP8AAAD/CwsL/66urv/j4+P/4+Pj/+vr6//+/v7///////////////////////////////////////////////////////////////////////////////////////7+/v/s7Oz/09PT/1VVVf86Ojr/Ojo6/319ff/i4uL/9PT0//////////////////////+rq6v/BAQE/wAAAP8AAAD/AAAA/wcHB/9UVFT/39/f//7+/v////////////Ly8v87Ozv/GRkZ/56env+QkJD/FRUV/wAAAP8AAAD/AAAA/wAAAP8sLCz/6enp///////////////////////////////////////////////////////////////////////////////////////////////////////7+/v/vr6+/y4uLv8CAgL/ExMT/4+Pj//Nzc3/Ojo6/wAAAP8AAAD/MzMz/+7u7v///////////////////////Pz8/83Nzf89PT3/AwMD/wwMDP8cHBz/CwsL/wAAAP8AAAD/CgoK/2ZmZv/29vb////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+//x8fH/3Nzc/8bGxv/CQkJ/wAAAP8AAAD/AAAA/wAAAP8AAAD/d3d3//X19f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////5+fn/2xsbP8KCgr/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8DAwP/FxcX/0xMTP/x8fH///////////////////////////8A///////////////////////////////////////////////////////////T09P/rKys/6ysrP+ZmZn/IiIi/w4ODv8ODg7/BwcH/wEBAf83Nzf/U1NT/0dHR/8JCQn/AAAA/wAAAP8AAAD/AAAA/woKCv8MDAz/KSkp/9vb2//29vb///////////////////////////////////////////////////////////////////////////////////////7+/v+VlZX/Tk5O/xISEv8AAAD/AAAA/wAAAP8jIyP/qKio//r6+v////////////////+6urr/CQkJ/wAAAP8AAAD/DAwM/8PDw////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+//Pz8//x8fH/8fHx//f39/////////////////////////////////+rq6v/BAQE/wAAAP8AAAD/BgYG/1hYWP/h4eH//v7+//////////////////Ly8v87Ozv/AgIC/wwMDP8KCgr/AAAA/wAAAP8AAAD/AAAA/wAAAP8sLCz/6enp//////////////////////////////////////////////////////////////////////////////////////////////////39/f+6urr/LS0t/wICAv8AAAD/UVFR//T09P95eXn/BQUF/wAAAP8AAAD/MzMz/+7u7v////////////////////////////39/f+8vLz/DQ0N/wAAAP8AAAD/AAAA/wAAAP8AAAD/Kysr/+Hh4f/+/v7/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9PT0/7a2tv9/f3//EhIS/wcHB/8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/hYWF//z8/P/Jycn/7+/v/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+zs7P+wsLD/aWlp/wcHB/8AAAD/AAAA/woKCv9ISEj/U1NT/zU1Nf8BAQH/AAAA/wAAAP8AAAD/AAAA/zY2Nv/v7+////////////////////////////8EAAAAAAAAAAAAAAAA////AAAAAAAAAAAA9fX1AK2trQDv7+8AAAAAAAAAAAC3t7cAv7+/AAAAAAD///8A/f39AAAAAAAAAAAAMjIyAD8/PwBbW1sALS0tANzc3ABFRUUA5eXlAAAAAAAAAAAAAAAAAPf39wD///8A7u7uAMHBwQBdXV0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQBnZ2cAXV1dAJCQkACPj48A8PDwAAAAAABHR0cAVFRUAAMDAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAwMDAAAAAAAAAAAAAAAAAAAAAAAAAAAAPn5+QCvr68A+/v7AFNTUwAAAAAAAAAAAAAAAAAEBAQAV1dXAISEhAAdHR0AAQEBAAAAAAAAAAAA/f39ALm5uQDm5uYA/v7+APT09AAAAAAAAQEBAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////ALi4uAB3d3cA1dXVAP///wAcHBwASkpKAAkJCQD5+fkA+/v7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICAgAiIiIASEhIAK6urgD9/f0AAAAAAAAAAAAAAAAAAgICAAkJCQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////APz8/ACxsbEA0dHRAJmZmQDu7u4A/f39AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvLy8ANTU1APv7+wCKiooALi4uAG9vbwAPDw8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD09PQAra2tAM7OzgCdnZ0A+Pj4AP39/QAAAAAACAgIAGJiYgB9fX0AERERAKenpwBiYmIA/f39AAAAAAABAQEAEBAQAE1NTQAHBwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAP7+/gDHx8cAq6urAP///wAAAAAA9fX1AK6urgDv7+8AAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAHh4eAGdnZwALCwsAMjIyADs7OwABAQEA8PDwAKGhoQDx8fEAAAAAAAAAAAABAQEAVlZWADIyMgCampoA3t7eAH5+fgDNzc0AQEBAAFNTUwADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMADQ0NAHFxkKX0jwAAIABJREFUcQAfHx8A8PDwAAAAAAAuLi4AAwMDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+fn5AJiYmACIiIgAFBQUACAgIAClpaUA/v7+AAAAAAAGBgYAX19fAB4eHgAAAAAAAAAAAAAAAAD///8Ara2tAHp6egDf398AAAAAAAEBAQAvLy8AXl5eALq6ugC4uLgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/v4AtLS0AHl5eQDW1tYAAAAAAAEBAQAnJycAWVlZAAICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhISEAW1tbALGxsQD9/f0AAAAAAAAAAAAAAAAA5ubmAJ6engBtbW0ACgoKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A/Pz8AAAAAADBwcEAs7OzAPv7+wCzs7MA5OTkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8PDwAREREAPn5+QDz8/MAjIyMAPn5+QB6enoACwsLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9/f0A+vr6AKKiogDLy8sArq6uAO/v7wAAAAAAAAAAAAAAAAAAAAAACwsLAGJiYgAWFhYAAAAAAAMDAwAAAAAABQUFAF5eXgAuLi4AEBAQAFJSUgAJCQkAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////83Nzf83Nzf/AQEB/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/CQkJ/xoaGv+Pj4//vb29//n5+f////////////f39//p6en/cXFx/w4ODv8AAAD/AAAA/wAAAP8CAgL/kpKS//X19f+kpKT/GBgY/wAAAP8AAAD/IiIi/6Wlpf/6+vr///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+6urr/CQkJ/wAAAP8AAAD/DAwM/8PDw//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7/kpKS/xgYGP8AAAD/Dg4O/zY2Nv8DAwP/AAAA/wAAAP8KCgr/vLy8///////////////////////+/v7/a2tr/wAAAP8AAAD/AgIC/zAwMP++vr7//f39/35+fv8AAAD/AAAA/wAAAP8sLCz/6enp//////////////////////////////////////////////////////////////////////////////////v7+/+wsLD/KCgo/wAAAP8AAAD/AgIC/ykpKf+1tbX/+/v7//////9ycnL/AAAA/wAAAP8AAAD/MzMz/+7u7v/////////////////////////////////8/Pz/p6en/wYGBv8AAAD/AAAA/wAAAP8AAAD/AAAA/xQUFP+EhIT/7u7u//n5+f/////////////////////////////////////////////////////////////////////////////////////////////////g4OD/X19f/1FRUf8tLS3/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wcHB/8ODg7/Dg4O/wMDA/8AAAD/AAAA/wUFBf9zc3P//v7+//f39/9PT0//AwMD/ysrK//h4eH//v7+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////n5+f+ioqL/T09P/xgYGP8AAAD/AAAA/wMDA/8ODg7/CAgI/wAAAP8AAAD/ExMT/87Ozv///////////6mpqf8SEhL/ampq/+Tk5P////////////////////////////////////////////////8A/////76+vv8iIiL/Dg4O/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wwMDP8eHh7/iYmJ/8vLy//09PT////////////19fX/4+Pj/4KCgv9ISEj/Kioq/xgYGP8DAwP/AAAA/wAAAP8AAAD/Jycn/6ampv9XV1f/CAgI/wAAAP8AAAD/AAAA/yAgIP+3t7f///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+6urr/CQkJ/wAAAP8AAAD/DAwM/8PDw//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v7+//V1dX/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8KCgr/vLy8///////////////////////+/v7/e3t7/xwcHP8cHBz/NTU1/8LCwv/8/Pz//////35+fv8AAAD/AAAA/wAAAP8sLCz/6enp///////////////////////////////////////////////////////////////////////7+/v/5ubm/6+vr/8mJib/AAAA/wAAAP8AAAD/FxcX/7W1tf/6+vr///////////9ycnL/AAAA/wAAAP8AAAD/MzMz/+7u7v/////////////////////////////////S0tL/MjIy/wEBAf8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8TExP/Nzc3/5eXl//19fX////////////////////////////////////////////////////////////////////////////////////////////W1tb/Jycn/wEBAf8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/CwsL/29vb//Gxsb/qqqq/yUlJf8AAAD/AAAA/z8/P//a2tr///////39/f/IyMj/Jycn/woKCv9gYGD/5ubm///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////5+fn/5eXl/6Ghof8eHh7/AAAA/wAAAP8DAwP/GBgY/0RERP+/v7//c3Nz/wEB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AAAAAAAAAAAAAAAA+fn5ALKysgB6enoA9vb2AAAAAABhYWEAbW1tAIqKigCenp4A8vLyAAAAAAAAAAAAAAAAAOnp6QB4eHgABgYGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0NDQCpqakANjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGBgYASUlJAAMDAwCVlZUA1tbWAOHh4QAAAAAACgoKADQ0NAA4ODgAeHh4ABEREQDS0tIA1NTUAPj4+AAAAAAAKysrAHd3dwAEBAQAAAAAAAAAAAAODg4AgoKCAM3NzQDh4eEAqampAAAAAACCgoIAHx8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wDS0tIA2traAIaGhgDf398A8vLyAP///wAAAAAAAgICADg4OACPj48AMjIyAAMDAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA///////////////////////////5+fn/9/f3//f39//4+Pj//////////////////Pz8/66urv8mJib/GRkZ/4KCgv/x8fH/9vb2/8TExP+Wlpb/LS0t/wcHB/8BAQH/AAAA/wAAAP8AAAD/AwMD/0VFRf9xcXH/4ODg//f39//5+fn///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+6urr/CQkJ/wAAAP8AAAD/DAwM/8PDw/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9+fn7/AAAA/wAAAP8LCwv/bm5u/+rq6v+lpaX/BAQE/wAAAP8KCgr/vLy8/////////////////////////////////////////////////////////////////35+fv8AAAD/AAAA/wAAAP8sLCz/6enp/////////////////////////////////////////////////////////////////////////////f39/8nJyf8+Pj7/NDQ0/76+vv/39/f//f39//////////////////////9ycnL/AAAA/wAAAP8AAAD/MzMz/+7u7v/////////////////6+vr/pqam/x8fH/8BAQH/AAAA/ygoKP+ysrL//////+/v7/90dHT/DQ0N/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/Ojo6/2pqav/b29v///////////////////////////////////////////////////////z8/P/39/f/o6Oj/11dXf8hISH/ZWVl/+bm5v/5+fn//////8/Pz/9ERET/AwMD/wAAAP8PDw//fX19//f39///////////////////////7Ozs/2VlZf8ICAj/AAAA/wQEBP9cXFz/oqKi/+fn5///////////////////////////////////////////////////////////////////////////////////////////////////////09PT/5ubm/86Ojr/CAgI/wEBAf8AAAD/AAAA/wAAAP8BAQH/Pz8//8vLy//9/f3/////////////////k5OT/wEBAf8AAAD/ExMT/87Ozv////////////////////////////////////////////////////////////////////////////////8A///////////////////////////////////////////////////////////8/Pz/p6en/yQkJP8QEBD/hYWF/9DQ0P+CgoL/fX19/zc3N/8CAgL/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/CAgI/7Kysv/9/f3///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/v+4uLj/CQkJ/wAAAP8AAAD/DAwM/8PDw/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9/f3//AwMD/woKCv90dHT/7Ozs//////+srKz/BQUF/wAAAP8MDAz/vb29/////////////////////////////////////////////////////////////////35+fv8AAAD/AAAA/wAAAP8sLCz/6enp//////////////////////////////////////////////////////////////////////////////////7+/v/Ly8v/wsLC//7+/v////////////////////////////////9ycnL/AAAA/wAAAP8AAAD/MzMz/+7u7v///////v7+//n5+f+enp7/Hh4e/wAAAP8BAQH/Kioq/7Gxsf/+/v7////////////v7+//fHx8/wwMDP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8CAgL/AwMD/zIyMv+BgYH/y8vL//39/f///////////////////////////////////////////////////////////////////////v7+//j4+P+rq6v/5+fn///////+/v7/zc3N/0JCQv8BAQH/AAAA/wAAAP8pKSn/5ubm/////////////////////////////////9DQ0P8WFhb/AAAA/wAAAP8BAQH/BwcH/2pqav/n5+f//Pz8//39/f/////////////////////////////////////////////////////////////////9/f3//Pz8/9vb2/+CgoL/RUVF/wICAv8BAQH/AAAA/wAAAP8AAAD/AAAA/wEBAf9CQkL/zMzM//7+/v//////////////////////k5OT/wEBAf8AAAD/ExMT/87Ozv////////////////////////////////////////////////////////////////////////////////8EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz8/ACpqakAfn5+AN7e3gALCwsAzc3NAMDAwAC/v78A/Pz8AAUFBQAICAgAAAAAAP7+/gD5+fkA////AAAAAAABAQEAXFxcADExMQACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLi4gCZmZkA+vr6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQUFAAIiIiAAYGBgBEREQAExMTAAAAAAA0NDQAXFxcAKurqwBkZGQAKSkpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQA0NDQAAAAAAAAAAAD///8A+fn5AP7+/gAAAAAAAAAAAAAAAAD8/PwAAAAAAAAAAAAAAAAA/v7+APf39wAHBwcAuLi4AK+vrwDBwcEA5OTkAAgICAAkJCQAioqKAEdHRwABAQEAAAAAAAAAAAAQEBAAcnJyAAQEBACHh4cA+fn5AAUFBQAFBQUFI6OJAAAgAElEQVQAAAAAABQUFABycnIAERERACMjIwA6OjoAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAcHBwBUVFQAAAAAAP7+/gDOzs4AdHR0AMLCwgD///8AAQEBABUVFQBvb28AEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4eHgBpaWkAh4eHAPr6+gD///8A+fn5AJ6engDk5OQAEBAQACsrKwBoaGgABAQEAAAAAAABAQEABwcHAAICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAO7u7gCPj48A4uLiAOfn5wC/v78A/Pz8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAEBAQACLi4sAMTExAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////APn5+QD///8AAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////////////////////////+Pj4/6SkpP8gICD/AAAA/wAAAP8AAAD/AAAA/wAAAP8HBwf/FRUV/3R0dP+8vLz/vLy8/6Ghof8VFRX/AAAA/wAAAP8CAgL/mpqa/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////87Ozv8TExP/AAAA/wAAAP8AAAD/DAwM/8PDw///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////4uLi/729vf/n5+f//////////////////////////////////////////////////////////////////////35+fv8AAAD/AAAA/wAAAP8sLCz/6enp///////////////////////////////////////////////////////////////////////////////////////////////////////z8/P/ampq/0NDQ/9DQ0P/Q0ND/0NDQ/8eHh7/AAAA/wAAAP8AAAD/DQ0N/z8/P/9DQ0P/IyMj/wAAAP8BAQH/ICAg/6Kiov/Ly8v/+/v7/////////////////////////////////8TExP8fHx//FRUV/3Fxcf+8vLz/vLy8/8XFxf/39/f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////Pz8/8rKyv86Ojr/AgIC/wAAAP8AAAD/CgoK/5mZmf/19fX///////////////////////////////////////////+9vb3/CgoK/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/xMTE/9BQUH/Q0ND/0NDQ/9OTk7/1tbW////////////////////////////+vr6/4CAgP8RERH/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8EBAT/RUVF/9HR0f/+/v7/////////////////////////////////k5OT/wEBAf8AAAD/BQUF/05OTv/n5+f///////////////////////////////////////////////////////////////////////////8EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD39/cArq6uAHl5eQDj4+MAAAAAAAAAAAAFBQUAHBwcAAUFBQA8PDwAbm5uABwcHAATExMAAAAAANzc3AAHBwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHR0dAB0dHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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Ojo6AFdXVwADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOjo6AIyMjAC2trYAAAAAAAwMDABlZWUAGBgYAAEBAQADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAAwMDABCQkIAjIyMALa2tgAGBgYAYmJiACQkJAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICAgACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8PDwBhYWEADAwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAAICAgBQUFAACgoKAOTk5ABQUFAAERERAAAAAAACAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADo6OgAhISEAOzs7AAAAAAAAgICAAgICABjY2MAJCQkABYWFgBPT08ABwcHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAENDQwBDQ0MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgIAQ0NDAENDQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgIASEhIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfHx8AnJycAPr6+gAAAAAAAAAAAAMDAwA4ODgAFBQUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPOhX7gAACAASURBVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODg4ASUlJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD29vYA7+/vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkJCQAgICAA7+/vAP7+/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDACEhIQAHBwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+Pj4ANzc3ADDw8MAlZWVAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQkJAB7e3sAWlpaAPj4+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwMAIGBgQAaGhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wD///8AAAAAAAICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A/Pz8AK6urgDb29sA7OzsAKCgoADz8/MA/v7+AAAAAAAAAAAAAAAAACIiIgC9vb0AICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAJCQkACwsLAAAAAABBQUEAMTExAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEALS0tAC0tLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEABQUFAFdXVwAAAAAA8fHxADw8PADGxsYAnZ2dAP39/QAAAAAACwsLAG9vbwAUFBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPf39wDQ0NAA+fn5AAAAAAAfHx8AISEhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADr6+sA1tbWAP///wAAAAAABAQEADAwMAAMDAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGWkbhgAACrtJREFUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmghl9wIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD23fktZ3h1+AAAAAElFTkSuQmCC</w:binData>
+						<v:shape id="_x0000_s1027" o:spt="75" alt="" type="#_x0000_t75" style="height:46.5pt;width:206.2pt;" o:ole="t" fillcolor="#FFFFFF" filled="t" o:preferrelative="t" stroked="f" coordsize="21600,21600">
+							<v:path/>
+							<v:fill on="t" color2="#FFFFFF" focussize="0,0"/>
+							<v:stroke on="f"/>
+							<v:imagedata src="wordml://1.wmf" grayscale="t" bilevel="t" o:title="wordml://1.wmf"/>
+							<o:lock v:ext="edit" aspectratio="t"/>
+							<w10:wrap type="none"/>
+							<w10:anchorlock/>
+						</v:shape>
+						<o:OLEObject Type="Embed" ProgID="" ShapeID="_x0000_s1027" DrawAspect="Content" ObjectID="_1025">
+							<o:WordFieldCodes/>
+						</o:OLEObject>
+					</w:pict>
+				</w:r>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:fareast="华文行楷" w:hint="default"/>
+						<w:sz w:val="44"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:tabs>
+						<w:tab w:val="left" w:pos="0"/>
+					</w:tabs>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:b/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="44"/>
+						<w:sz-cs w:val="44"/>
+					</w:rPr>
+				</w:pPr>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:b/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="44"/>
+						<w:sz-cs w:val="44"/>
+					</w:rPr>
+					<w:t>本科毕业设计（论文）任务书</w:t>
+				</w:r>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:rPr>
+						<w:sz w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:tbl>
+				<w:tblPr>
+					<w:tblW w:w="0" w:type="auto"/>
+					<w:tblInd w:w="-318" w:type="dxa"/>
+					<w:tblBorders>
+						<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					</w:tblBorders>
+					<w:tblCellMar>
+						<w:top w:w="0" w:type="dxa"/>
+						<w:left w:w="108" w:type="dxa"/>
+						<w:bottom w:w="0" w:type="dxa"/>
+						<w:right w:w="108" w:type="dxa"/>
+					</w:tblCellMar>
+				</w:tblPr>
+				<w:tblGrid>
+					<w:gridCol w:w="1419"/>
+					<w:gridCol w:w="6378"/>
+				</w:tblGrid>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr/>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="1419" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="nil"/>
+								<w:left w:val="nil"/>
+								<w:bottom w:val="nil"/>
+								<w:right w:val="nil"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:rPr>
+									<w:rFonts w:ascii="等线" w:h-ansi="等线" w:fareast="等线" w:hint="default"/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+								</w:rPr>
+								<w:t>题</w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+								</w:rPr>
+								<w:t>   </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+								</w:rPr>
+								<w:t>目</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="6378" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="nil"/>
+								<w:left w:val="nil"/>
+								<w:right w:val="nil"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:sz-cs w:val="22"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>高容错分布式数据分发系统的设计与实现</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+			</w:tbl>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+				</w:pPr>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>（任务起</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="Times New Roman" w:h-ansi="Times New Roman" w:fareast="华文中宋" w:cs="Times New Roman" w:hint="default"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>止日期</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>：</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>2024</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>年</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>11</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>月</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>28</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>日～</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>2025</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>年</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>6</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>月</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>1</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+					<w:t>日）</w:t>
+				</w:r>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:sz w:val="24"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:tbl>
+				<w:tblPr>
+					<w:tblpPr w:leftFromText="181" w:rightFromText="181" w:vertAnchor="page" w:horzAnchor="margin" w:tblpXSpec="center" w:tblpY="8097"/>
+					<w:tblOverlap w:val="Never"/>
+					<w:tblW w:w="0" w:type="auto"/>
+					<w:tblInd w:w="0" w:type="dxa"/>
+					<w:tblCellMar>
+						<w:top w:w="0" w:type="dxa"/>
+						<w:left w:w="108" w:type="dxa"/>
+						<w:bottom w:w="0" w:type="dxa"/>
+						<w:right w:w="108" w:type="dxa"/>
+					</w:tblCellMar>
+				</w:tblPr>
+				<w:tblGrid>
+					<w:gridCol w:w="1560"/>
+					<w:gridCol w:w="3793"/>
+				</w:tblGrid>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="851" w:h-rule="exact"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="1560" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:pStyle w:val="a9"/>
+								<w:spacing w:before="312"/>
+								<w:ind w:first-line="32" w:first-line-chars="10"/>
+								<w:rPr>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:hint="fareast"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>院    系</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="3793" w:type="dxa"/>
+							<w:tcBorders>
+								<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="Times New Roman" w:h-ansi="Times New Roman" w:fareast="仿宋" w:cs="Times New Roman" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>网络空间安全学院</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="851" w:h-rule="exact"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="1560" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:pStyle w:val="a9"/>
+								<w:spacing w:before="312"/>
+								<w:ind w:first-line="32" w:first-line-chars="10"/>
+								<w:rPr>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:hint="fareast"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>专业班级</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="3793" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+								<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>信安2202班</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="851" w:h-rule="exact"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="1560" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:pStyle w:val="a9"/>
+								<w:spacing w:before="312"/>
+								<w:ind w:first-line="32" w:first-line-chars="10"/>
+								<w:rPr>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:hint="fareast"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>姓    名</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="3793" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+								<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>王智超</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="851" w:h-rule="exact"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="1560" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:pStyle w:val="a9"/>
+								<w:spacing w:before="312"/>
+								<w:ind w:first-line="32" w:first-line-chars="10"/>
+								<w:rPr>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:hint="fareast"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>学    号</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="3793" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+								<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>U202211910</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="851" w:h-rule="exact"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="0" w:type="auto"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:pStyle w:val="a9"/>
+								<w:spacing w:before="312"/>
+								<w:ind w:first-line="32" w:first-line-chars="10"/>
+								<w:rPr>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:hint="fareast"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>指导教师</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="3793" w:type="dxa"/>
+							<w:tcBorders>
+								<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+								<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+							</w:tcBorders>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap/>
+							<w:vAlign w:val="bottom"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="center"/>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="default"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="仿宋" w:h-ansi="仿宋" w:fareast="仿宋" w:hint="fareast"/>
+									<w:b/>
+									<w:sz w:val="32"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>吴俊军</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+			</w:tbl>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="720" w:line-rule="auto"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:kern w:val="0"/>
+						<w:sz w:val="32"/>
+						<w:sz-cs w:val="32"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="600" w:line-rule="exact"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="default"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+				</w:pPr>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>教研室（系、所）负责人</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t> </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="default"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+					</w:rPr>
+					<w:t>          </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+					</w:rPr>
+					<w:t>      </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="default"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+					</w:rPr>
+					<w:t> </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+					</w:rPr>
+					<w:t> </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>   </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>2024</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>年</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>12</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>月</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>12</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>日审查</w:t>
+				</w:r>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="600" w:line-rule="exact"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+				</w:pPr>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>院（系）负责人</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t> </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="default"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+					</w:rPr>
+					<w:t>                           </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:fareast="仿宋_GB2312" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:u w:val="single"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>   </w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>2024</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>年</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>12</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>月</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+						<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+					</w:rPr>
+					<w:t>17</w:t>
+				</w:r>
+				<w:r>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+					<w:t>日批准</w:t>
+				</w:r>
+			</w:p>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="600" w:line-rule="exact"/>
+					<w:jc w:val="center"/>
+					<w:rPr>
+						<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+						<w:spacing w:val="-20"/>
+						<w:sz w:val="30"/>
+						<w:sz-cs w:val="30"/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:tbl>
+				<w:tblPr>
+					<w:tblW w:w="0" w:type="auto"/>
+					<w:tblInd w:w="392" w:type="dxa"/>
+					<w:tblBorders>
+						<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+					</w:tblBorders>
+					<w:tblCellMar>
+						<w:top w:w="0" w:type="dxa"/>
+						<w:left w:w="108" w:type="dxa"/>
+						<w:bottom w:w="0" w:type="dxa"/>
+						<w:right w:w="108" w:type="dxa"/>
+					</w:tblCellMar>
+				</w:tblPr>
+				<w:tblGrid>
+					<w:gridCol w:w="7938"/>
+				</w:tblGrid>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="3429" w:h-rule="atLeast"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="7938" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap w:val="0"/>
+							<w:vAlign w:val="top"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>课题内容：</w:t>
+							</w:r>
+						</w:p>
+						<w:p>
+							<w:pPr>
+								<w:keepNext w:val="off"/>
+								<w:keepLines w:val="off"/>
+								<w:pageBreakBefore w:val="off"/>
+								<w:widowControl w:val="off"/>
+								<w:kinsoku/>
+								<w:wordWrap/>
+								<w:overflowPunct/>
+								<w:topLinePunct w:val="off"/>
+								<w:autoSpaceDE/>
+								<w:autoSpaceDN/>
+								<w:adjustRightInd/>
+								<w:snapToGrid/>
+								<w:spacing w:line="120" w:line-rule="auto"/>
+								<w:jc w:val="left"/>
+								<w:textAlignment w:val="auto"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="24"/>
+									<w:sz-cs w:val="24"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:cs="华文中宋" w:hint="fareast"/>
+									<w:kern w:val="0"/>
+									<w:sz-cs w:val="21"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>1. 技术研究：调研分布式存储与数据分发的相关技术，重点分析Das (2021) 关于异步数据分发ADD的机制。 2. 核心模块设计： a) 编解码模块：实现基于秘密共享（Secret Sharing）或纠删码的数据切片与重构算法。 b) 网络通信模块：实现节点间的高效异步通信（如P2P消息传递）。 c) 共识/分发逻辑：实现节点间数据的可靠广播（Reliable Broadcast），确保在一定数量节点存活的情况下数据可被恢复。 3. 系统优化：对秘密共享的数学运算（如有限域运算）进行加速优化，对比不同切片策略下的传输开销与计算开销。 4. 测试与评估： 在多节点（可为虚拟机或容器）环境下部署系统，模拟节点掉线和数据篡改场景，测试系统的容错能力及吞吐量。</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="3236" w:h-rule="atLeast"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="7938" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap w:val="0"/>
+							<w:vAlign w:val="top"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="Times New Roman" w:fareast="华文中宋" w:cs="Times New Roman" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="Times New Roman" w:fareast="华文中宋" w:cs="Times New Roman" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>课题任务要求：</w:t>
+							</w:r>
+						</w:p>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:cs="华文中宋" w:hint="default"/>
+									<w:kern w:val="0"/>
+									<w:sz-cs w:val="21"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:cs="华文中宋" w:hint="fareast"/>
+									<w:kern w:val="0"/>
+									<w:sz-cs w:val="21"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>理论掌握：要求深入理解分布式系统中的异步网络模型、拜占庭容错（BFT）理论，以及Shamir秘密共享或纠删码的基本数学原理。 工程能力：熟练使用Rust或Go语言进行系统性网络编程。 系统实现：复现Das (2021)论文中的核心模块，构建去中心化的数据分发原型系统，在部分节点宕机或恶意行为下仍能保证数据的一致性与可用性。 性能优化：对方案进行算法或代码层面的优化，以提升系统的吞吐量并降低延迟。结合其他技术以提高方案总体安全性或效率。</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="2965" w:h-rule="atLeast"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="7938" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap w:val="0"/>
+							<w:vAlign w:val="top"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>主要参考文献（由指导教师选定）：</w:t>
+							</w:r>
+						</w:p>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:spacing w:val="-20"/>
+									<w:sz w:val="30"/>
+									<w:sz-cs w:val="30"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:cs="华文中宋" w:hint="fareast"/>
+									<w:kern w:val="0"/>
+									<w:sz-cs w:val="21"/>
+									<w:lang w:val="EN-US" w:fareast="ZH-CN"/>
+								</w:rPr>
+								<w:t>Asynchronous Data Dissemination and its Applications | Proceedings of the 2021 ACM SIGSAC Conference on Computer and Communications Security</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="2300" w:h-rule="atLeast"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="7938" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap w:val="0"/>
+							<w:vAlign w:val="top"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>同组设计者：</w:t>
+							</w:r>
+						</w:p>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:h-ansi="华文中宋" w:fareast="华文中宋" w:cs="华文中宋" w:hint="fareast"/>
+									<w:kern w:val="0"/>
+									<w:sz-cs w:val="21"/>
+									<w:lang w:fareast="ZH-CN"/>
+								</w:rPr>
+							</w:pPr>
+						</w:p>
+					</w:tc>
+				</w:tr>
+				<w:tr>
+					<w:tblPrEx>
+						<w:tblBorders>
+							<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+							<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="000000"/>
+						</w:tblBorders>
+						<w:tblCellMar>
+							<w:top w:w="0" w:type="dxa"/>
+							<w:left w:w="108" w:type="dxa"/>
+							<w:bottom w:w="0" w:type="dxa"/>
+							<w:right w:w="108" w:type="dxa"/>
+						</w:tblCellMar>
+					</w:tblPrEx>
+					<w:trPr>
+						<w:trHeight w:val="983" w:h-rule="atLeast"/>
+					</w:trPr>
+					<w:tc>
+						<w:tcPr>
+							<w:tcW w:w="7938" w:type="dxa"/>
+							<w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+							<w:noWrap w:val="0"/>
+							<w:vAlign w:val="top"/>
+						</w:tcPr>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>指导教师签名：</w:t>
+							</w:r>
+						</w:p>
+						<w:p>
+							<w:pPr>
+								<w:jc w:val="left"/>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+							</w:pPr>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t> </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>                                      </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>年 </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>   </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>月 </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="default"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>   </w:t>
+							</w:r>
+							<w:r>
+								<w:rPr>
+									<w:rFonts w:ascii="华文中宋" w:fareast="华文中宋" w:hint="fareast"/>
+									<w:sz w:val="28"/>
+								</w:rPr>
+								<w:t>日</w:t>
+							</w:r>
+						</w:p>
+					</w:tc>
+				</w:tr>
+			</w:tbl>
+			<w:p>
+				<w:pPr>
+					<w:spacing w:line="0" w:line-rule="at-least"/>
+					<w:rPr>
+						<w:vanish/>
+					</w:rPr>
+				</w:pPr>
+			</w:p>
+			<w:sectPr>
+				<w:pgSz w:w="11906" w:h="16838"/>
+				<w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="851" w:footer="992" w:gutter="0"/>
+				<w:cols w:space="720"/>
+				<w:docGrid w:type="lines" w:line-pitch="312"/>
+			</w:sectPr>
+		</wx:sect>
+	</w:body>
+</w:wordDocument>
