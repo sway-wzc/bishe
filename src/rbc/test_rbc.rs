@@ -1057,3 +1057,253 @@ fn test_byzantine_max_tolerance_10_nodes() {
         success_count
     );
 }
+
+#[test]
+fn test_byzantine_forged_shard_index() {
+    // ========================================================================
+    // 恶意场景7：伪造分片索引（Forged shard_index）
+    //
+    // 攻击方式：
+    //   恶意节点在READY消息中伪造shard_index字段，声称自己是别的节点索引。
+    //   例如 node_5（真实索引=5）在READY中声称 shard_index=0，
+    //        node_6（真实索引=6）在READY中声称 shard_index=1。
+    //   如果系统信任消息中的shard_index，恶意分片会覆盖索引0和1的正确分片，
+    //   导致解码失败或输出错误数据。
+    //
+    // 预期：
+    //   real_shard_index 逻辑通过 sender 在 node_ids 中的真实位置确定索引，
+    //   无视消息中的 shard_index，恶意分片被放置在正确的位置（索引5和6），
+    //   不会污染其他索引的分片。诚实节点仍能正确解码。
+    // ========================================================================
+    println!("\n=== 恶意场景7: 伪造分片索引（real_shard_index纠偏测试）===");
+
+    let n = 7;
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: forged shard_index attack - testing real_shard_index correction".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_forged_index".to_string(), data.clone())
+        .unwrap();
+
+    // node_5 和 node_6 是恶意节点（t=2）
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: {:?}", malicious);
+    println!("攻击方式: 在READY消息中伪造shard_index，试图污染其他节点的分片槽位");
+
+    // 恶意行为：篡改READY消息中的shard_index
+    // node_5（真实索引5）声称 shard_index=0（试图覆盖node_0的分片）
+    // node_6（真实索引6）声称 shard_index=1（试图覆盖node_1的分片）
+    // 同时篡改分片数据，使得如果系统信任了假索引，解码一定会失败
+    let tamper_fn = |source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        match msg {
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                data_hash,
+                shard_index: _,
+                mut shard_data,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                // 伪造shard_index：node_5声称是索引0，node_6声称是索引1
+                let fake_index = if source == "node_5" {
+                    0 // 试图冒充node_0
+                } else {
+                    1 // 试图冒充node_1
+                };
+
+                // 同时篡改分片数据（翻转所有字节），使假分片内容完全错误
+                for byte in shard_data.iter_mut() {
+                    *byte = !*byte;
+                }
+
+                println!(
+                    "  [恶意] {} 伪造 shard_index: 真实索引={} -> 声称索引={}, 目标={}",
+                    source,
+                    if source == "node_5" { 5 } else { 6 },
+                    fake_index,
+                    dest
+                );
+
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender, // sender保持真实（不伪造身份）
+                        data_hash,
+                        shard_index: fake_index, // 伪造的索引
+                        shard_data,              // 篡改的分片数据
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            // ECHO消息保持正常（恶意节点只在READY阶段攻击）
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    // 验证结果
+    let mut success_count = 0;
+    let mut wrong_output = false;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            if outputs[0].data == data {
+                success_count += 1;
+                println!("诚实节点 {} 正确输出数据 ✓", i);
+            } else {
+                wrong_output = true;
+                println!("错误: 诚实节点 {} 输出了错误数据! (数据长度={})", i, outputs[0].data.len());
+            }
+        } else {
+            println!("诚实节点 {} 未产生输出", i);
+        }
+    }
+
+    assert!(
+        !wrong_output,
+        "伪造shard_index攻击不应导致任何诚实节点输出错误数据"
+    );
+
+    println!(
+        "\n恶意场景7结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= 3,
+        "伪造shard_index攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+    println!("✓ real_shard_index 纠偏逻辑验证通过！恶意伪造的索引被正确忽略。");
+}
+
+#[test]
+fn test_byzantine_forged_shard_index_10_nodes() {
+    // ========================================================================
+    // 恶意场景8：10节点极限伪造索引攻击
+    //
+    // 攻击方式：
+    //   3个恶意节点（t=3）全部伪造shard_index，每个都声称自己是索引0，
+    //   并发送完全不同的垃圾分片数据。
+    //   这是最极端的索引伪造攻击：所有恶意节点都试图污染同一个索引位置。
+    //
+    // 预期：
+    //   real_shard_index 逻辑将恶意分片放置在各自的真实索引位置（7,8,9），
+    //   索引0的分片不受影响。纠错解码能处理3个错误分片并正确输出。
+    // ========================================================================
+    println!("\n=== 恶意场景8: 10节点极限伪造索引攻击 ===");
+
+    let n = 10;
+    let config = RbcConfig::new(n).unwrap();
+    println!("{}", config.info());
+
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data: Vec<u8> = (0..5_000).map(|i| ((i * 17 + 3) % 256) as u8).collect();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_forged_idx_10".to_string(), data.clone())
+        .unwrap();
+
+    // 3个恶意节点（t=3的极限）
+    let malicious: std::collections::HashSet<String> = vec![
+        "node_7".to_string(),
+        "node_8".to_string(),
+        "node_9".to_string(),
+    ]
+    .into_iter()
+    .collect();
+
+    println!("恶意节点（t={}个）: {:?}", config.fault_tolerance, malicious);
+    println!("攻击方式: 所有恶意节点都声称shard_index=0，试图集中污染索引0");
+
+    let tamper_fn = |source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        match msg {
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                data_hash,
+                shard_index: _,
+                shard_data: _,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                // 所有恶意节点都声称自己是索引0，并发送垃圾数据
+                let garbage: Vec<u8> = source.as_bytes().iter()
+                    .cycle()
+                    .take(original_size / data_shard_count + 1)
+                    .copied()
+                    .collect();
+
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash,
+                        shard_index: 0, // 全部声称是索引0
+                        shard_data: garbage,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    let mut wrong_output = false;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            if outputs[0].data == data {
+                success_count += 1;
+            } else {
+                wrong_output = true;
+                println!("错误: 诚实节点 {} 输出了错误数据!", i);
+            }
+        }
+    }
+
+    assert!(
+        !wrong_output,
+        "10节点极限伪造索引攻击不应导致任何诚实节点输出错误数据"
+    );
+
+    println!(
+        "\n恶意场景8结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= n - 2 * config.fault_tolerance,
+        "10节点极限伪造索引攻击下，至少{}个诚实节点应成功输出，实际: {}",
+        n - 2 * config.fault_tolerance,
+        success_count
+    );
+    println!("✓ 10节点极限伪造索引攻击防御验证通过！");
+}
