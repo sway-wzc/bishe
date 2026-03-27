@@ -180,7 +180,8 @@ cleanup() {
 }
 
 # 捕获退出信号，确保清理
-trap 'echo ""; warn "测试中断，正在清理..."; cleanup; exit 1' INT TERM
+# INT=Ctrl+C, TERM=kill, TSTP=Ctrl+Z
+trap 'echo ""; warn "测试中断，正在清理..."; cleanup; exit 1' INT TERM TSTP
 
 # ==========================================
 # 测试准备：生成测试文件
