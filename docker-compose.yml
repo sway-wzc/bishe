@@ -1,3 +1,9 @@
+## 默认7节点配置（向后兼容）
+## 如需自定义节点数量，请使用测试脚本的 -n 参数：
+##   bash test_p2p.sh -n 10
+##   bash test_rbc_docker.sh -n 10
+## 脚本会自动生成 docker-compose.dynamic.yml 覆盖此文件
+
 services:
   seed:
     build: .

@@ -1,7 +1,10 @@
 #!/bin/bash
 # RBC协议 Docker端到端测试脚本
 # 测试大文件的分片广播分发和正确接收恢复
-# 用法: bash test_rbc_docker.sh
+# 用法: bash test_rbc_docker.sh [-n 节点总数]
+# 示例: bash test_rbc_docker.sh          # 默认7节点
+#       bash test_rbc_docker.sh -n 4     # 4节点测试 (t=1)
+#       bash test_rbc_docker.sh -n 10    # 10节点测试 (t=3)
 
 set -e
 
@@ -19,26 +22,157 @@ warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 fail()  { echo -e "${RED}[FAIL]${NC} $1"; }
 step()  { echo -e "${CYAN}[STEP]${NC} $1"; }
 
-ALL_NODES="seed node1 node2 node3 node4 node5 node6"
-NODE_COUNT=7
-# RBC广播等待延迟（秒），需要等待所有节点连接就绪并初始化RBC
-RBC_BROADCAST_DELAY=35
-# RBC协议完成等待时间（秒）
-RBC_COMPLETION_WAIT=90
+# ==========================================
+# 解析命令行参数
+# ==========================================
+NODE_COUNT=7  # 默认节点数
+
+while getopts "n:h" opt; do
+    case $opt in
+        n) NODE_COUNT="$OPTARG" ;;
+        h)
+            echo "用法: bash test_rbc_docker.sh [-n 节点总数]"
+            echo "  -n  总节点数（最小4，默认7）"
+            echo "  -h  显示帮助"
+            exit 0
+            ;;
+        *) echo "未知参数，使用 -h 查看帮助"; exit 1 ;;
+    esac
+done
+
+# 验证节点数量
+if [ "$NODE_COUNT" -lt 4 ]; then
+    fail "节点数量最少为4（BFT要求 n >= 3t+1，最小 t=1 时 n=4）"
+    exit 1
+fi
+
+# 计算容错参数
+T=$(( (NODE_COUNT - 1) / 3 ))  # 最大容错数 t = floor((n-1)/3)
+
+# 生成节点名称列表
+ALL_NODES="seed"
+NORMAL_NODES=""
+for i in $(seq 1 $((NODE_COUNT - 1))); do
+    ALL_NODES="$ALL_NODES node${i}"
+    if [ -z "$NORMAL_NODES" ]; then
+        NORMAL_NODES="node${i}"
+    else
+        NORMAL_NODES="$NORMAL_NODES node${i}"
+    fi
+done
+
+# RBC广播等待延迟（秒），节点越多需要等待越久
+RBC_BROADCAST_DELAY=$((25 + NODE_COUNT * 2))
+# RBC协议完成等待时间（秒），节点越多需要等待越久
+RBC_COMPLETION_WAIT=$((60 + NODE_COUNT * 5))
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.dynamic.yml"
+SEED_IP="172.28.0.10"
+SUBNET="172.28.0.0/16"
 
 echo "=========================================="
 echo "  高容错分布式数据分发系统 RBC协议测试"
-echo "  节点数: $NODE_COUNT (n=7, t=2)"
+echo "  节点数: $NODE_COUNT (n=${NODE_COUNT}, t=${T})"
+echo "  数据分片: $((T + 1))片, 校验分片: $((NODE_COUNT - T - 1))片"
+echo "  广播延迟: ${RBC_BROADCAST_DELAY}秒"
 echo "  测试内容: 大文件分片广播分发与恢复"
 echo "=========================================="
 echo ""
+
+# ==========================================
+# 动态生成 docker-compose 基础文件
+# ==========================================
+generate_compose_file() {
+    info "动态生成 docker-compose 配置（${NODE_COUNT}个节点）..."
+
+    cat > "$COMPOSE_FILE" << YAML
+# 自动生成的docker-compose文件 - ${NODE_COUNT}个节点 (n=${NODE_COUNT}, t=${T})
+services:
+  seed:
+    build: .
+    container_name: p2p-seed
+    hostname: seed
+    environment:
+      - NODE_ID=seed
+      - LISTEN_PORT=8000
+      - IS_SEED=true
+      - RUST_LOG=info
+      - RBC_OUTPUT_DIR=/app/rbc_output
+      - RBC_TEST_FILE=\${RBC_TEST_FILE:-}
+      - RBC_BROADCAST_DELAY=\${RBC_BROADCAST_DELAY:-${RBC_BROADCAST_DELAY}}
+    networks:
+      p2p-net:
+        ipv4_address: ${SEED_IP}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8000' 2>/dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+YAML
+
+    for i in $(seq 1 $((NODE_COUNT - 1))); do
+        local NODE_IP="172.28.1.${i}"
+        local HOST_PORT=$((8000 + i))
+        cat >> "$COMPOSE_FILE" << YAML
+
+  node${i}:
+    build: .
+    container_name: p2p-node${i}
+    hostname: node${i}
+    environment:
+      - NODE_ID=node${i}
+      - LISTEN_PORT=8000
+      - SEED_ADDR=${SEED_IP}:8000
+      - RUST_LOG=info
+      - RBC_OUTPUT_DIR=/app/rbc_output
+    networks:
+      p2p-net:
+        ipv4_address: ${NODE_IP}
+    ports:
+      - "${HOST_PORT}:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+YAML
+    done
+
+    cat >> "$COMPOSE_FILE" << YAML
+
+networks:
+  p2p-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET}
+YAML
+
+    ok "docker-compose 配置已生成: $COMPOSE_FILE"
+}
+
+# docker compose 命令封装
+dc() {
+    docker compose -f "$COMPOSE_FILE" "$@"
+}
+
+# docker compose 命令封装（带覆盖文件）
+dc_with_override() {
+    docker compose -f "$COMPOSE_FILE" -f "${SCRIPT_DIR}/docker-compose.test.yml" "$@"
+}
 
 # ==========================================
 # 清理函数
 # ==========================================
 cleanup() {
     info "清理测试环境..."
-    docker compose down -v --remove-orphans 2>/dev/null || true
+    if [ -f "${SCRIPT_DIR}/docker-compose.test.yml" ]; then
+        dc_with_override down -v --remove-orphans 2>/dev/null || true
+    else
+        dc down -v --remove-orphans 2>/dev/null || true
+    fi
 }
 
 # 捕获退出信号，确保清理
@@ -49,8 +183,6 @@ trap 'echo ""; warn "测试中断，正在清理..."; cleanup; exit 1' INT TERM
 # ==========================================
 info "准备测试数据文件..."
 
-# 使用项目目录下的临时目录（方便Docker bind mount）
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEST_DIR="${SCRIPT_DIR}/test_data_tmp"
 OUTPUT_BASE="${SCRIPT_DIR}/rbc_output_tmp"
 mkdir -p "$TEST_DIR"
@@ -80,12 +212,13 @@ done
 echo ""
 
 # ==========================================
-# 生成动态docker-compose覆盖文件
+# 生成动态docker-compose覆盖文件（用于RBC测试）
 # ==========================================
 generate_compose_override() {
     local TEST_FILE_NAME="$1"
     local OVERRIDE_FILE="${SCRIPT_DIR}/docker-compose.test.yml"
 
+    # 生成seed节点的覆盖配置
     cat > "$OVERRIDE_FILE" << YAML
 services:
   seed:
@@ -97,49 +230,20 @@ services:
       - RBC_BROADCAST_DELAY=${RBC_BROADCAST_DELAY}
       - RBC_OUTPUT_DIR=/app/rbc_output
       - RUST_LOG=info
+YAML
 
-  node1:
-    volumes:
-      - ${OUTPUT_BASE}/node1:/app/rbc_output
-    environment:
-      - RBC_OUTPUT_DIR=/app/rbc_output
-      - RUST_LOG=info
+    # 为每个普通节点生成覆盖配置
+    for i in $(seq 1 $((NODE_COUNT - 1))); do
+        cat >> "$OVERRIDE_FILE" << YAML
 
-  node2:
+  node${i}:
     volumes:
-      - ${OUTPUT_BASE}/node2:/app/rbc_output
-    environment:
-      - RBC_OUTPUT_DIR=/app/rbc_output
-      - RUST_LOG=info
-
-  node3:
-    volumes:
-      - ${OUTPUT_BASE}/node3:/app/rbc_output
-    environment:
-      - RBC_OUTPUT_DIR=/app/rbc_output
-      - RUST_LOG=info
-
-  node4:
-    volumes:
-      - ${OUTPUT_BASE}/node4:/app/rbc_output
-    environment:
-      - RBC_OUTPUT_DIR=/app/rbc_output
-      - RUST_LOG=info
-
-  node5:
-    volumes:
-      - ${OUTPUT_BASE}/node5:/app/rbc_output
-    environment:
-      - RBC_OUTPUT_DIR=/app/rbc_output
-      - RUST_LOG=info
-
-  node6:
-    volumes:
-      - ${OUTPUT_BASE}/node6:/app/rbc_output
+      - ${OUTPUT_BASE}/node${i}:/app/rbc_output
     environment:
       - RBC_OUTPUT_DIR=/app/rbc_output
       - RUST_LOG=info
 YAML
+    done
 }
 
 # ==========================================
@@ -163,12 +267,14 @@ run_rbc_test() {
     info "  文件: $FILE_NAME, 大小: ${FILE_SIZE}字节"
     info "  期望SHA-256: ${EXPECTED_HASH:0:32}..."
     if [ -n "$EXPECT_FAULT" ]; then
-        info "  容错测试: 将停止节点 $EXPECT_FAULT"
+        local FAULT_COUNT
+        FAULT_COUNT=$(echo "$EXPECT_FAULT" | wc -w)
+        info "  容错测试: 将停止 ${FAULT_COUNT} 个节点: $EXPECT_FAULT"
     fi
     echo "========================================"
 
     # 1. 清理之前的环境
-    docker compose -f docker-compose.yml -f docker-compose.test.yml down -v --remove-orphans 2>/dev/null || true
+    dc_with_override down -v --remove-orphans 2>/dev/null || true
     sleep 2
 
     # 清理输出目录
@@ -181,11 +287,11 @@ run_rbc_test() {
     generate_compose_override "$FILE_NAME"
 
     # 3. 启动所有节点（seed带RBC_TEST_FILE环境变量）
-    step "启动所有节点..."
-    docker compose -f docker-compose.yml -f docker-compose.test.yml up -d
+    step "启动所有 ${NODE_COUNT} 个节点..."
+    dc_with_override up -d
     sleep 5
 
-    RUNNING_COUNT=$(docker compose -f docker-compose.yml -f docker-compose.test.yml ps --status running | grep -c "p2p-" || true)
+    RUNNING_COUNT=$(dc_with_override ps --status running | grep -c "p2p-" || true)
     if [ "$RUNNING_COUNT" -ge "$NODE_COUNT" ]; then
         ok "所有${NODE_COUNT}个节点启动成功"
     else
@@ -198,7 +304,7 @@ run_rbc_test() {
         sleep 20
         for fault_node in $EXPECT_FAULT; do
             info "  停止节点: $fault_node"
-            docker compose -f docker-compose.yml -f docker-compose.test.yml stop "$fault_node"
+            dc_with_override stop "$fault_node"
         done
         sleep 3
     fi
@@ -313,7 +419,7 @@ run_rbc_test() {
         info "调试信息 - 各节点RBC相关日志:"
         for node in $ALL_NODES; do
             echo -e "${YELLOW}--- $node ---${NC}"
-            docker compose -f docker-compose.yml -f docker-compose.test.yml logs "$node" 2>&1 | grep -i "rbc\|广播\|分片\|重建" | tail -20
+            dc_with_override logs "$node" 2>&1 | grep -i "rbc\|广播\|分片\|重建" | tail -20
             echo ""
         done
         return 1
@@ -328,46 +434,61 @@ run_rbc_test() {
 cleanup
 rm -rf "${OUTPUT_BASE:?}"/* 2>/dev/null || true
 
+# 生成compose文件
+generate_compose_file
+echo ""
+
 # 构建镜像
 info "测试0: 构建Docker镜像..."
-docker compose build 2>&1 | tail -10
+dc build 2>&1 | tail -10
 ok "Docker镜像构建成功"
 echo ""
 
 # ==========================================
 # 测试1: 小文件广播 (1KB)
 # ==========================================
-run_rbc_test "测试1: 小文件广播(1KB)" "$TEST_DIR/small_1kb.bin" ""
+run_rbc_test "测试1: 小文件广播(1KB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/small_1kb.bin" ""
 TEST1_RESULT=$?
 
 # ==========================================
 # 测试2: 中等文件广播 (100KB)
 # ==========================================
-run_rbc_test "测试2: 中等文件广播(100KB)" "$TEST_DIR/medium_100kb.bin" ""
+run_rbc_test "测试2: 中等文件广播(100KB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/medium_100kb.bin" ""
 TEST2_RESULT=$?
 
 # ==========================================
 # 测试3: 大文件广播 (1MB)
 # ==========================================
-run_rbc_test "测试3: 大文件广播(1MB)" "$TEST_DIR/large_1mb.bin" ""
+run_rbc_test "测试3: 大文件广播(1MB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/large_1mb.bin" ""
 TEST3_RESULT=$?
 
 # ==========================================
 # 测试4: 文本文件广播
 # ==========================================
-run_rbc_test "测试4: 文本文件广播" "$TEST_DIR/text_file.txt" ""
+run_rbc_test "测试4: 文本文件广播 [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/text_file.txt" ""
 TEST4_RESULT=$?
 
 # ==========================================
 # 测试5: 单节点故障容错广播 (1MB)
 # ==========================================
-run_rbc_test "测试5: 单节点故障容错(1MB)" "$TEST_DIR/large_1mb.bin" "node3"
+# 选择倒数第一个普通节点作为故障节点
+FAULT_SINGLE="node$((NODE_COUNT - 1))"
+run_rbc_test "测试5: 单节点故障容错(1MB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/large_1mb.bin" "$FAULT_SINGLE"
 TEST5_RESULT=$?
 
 # ==========================================
-# 测试6: 双节点故障容错广播 (100KB, t=2极限)
+# 测试6: t个节点故障容错广播 (100KB, 极限测试)
 # ==========================================
-run_rbc_test "测试6: 双节点故障容错(100KB)" "$TEST_DIR/medium_100kb.bin" "node3 node5"
+# 选择最后t个普通节点作为故障节点
+FAULT_MAX=""
+for i in $(seq $((NODE_COUNT - 1)) -1 $((NODE_COUNT - T))); do
+    if [ -z "$FAULT_MAX" ]; then
+        FAULT_MAX="node${i}"
+    else
+        FAULT_MAX="$FAULT_MAX node${i}"
+    fi
+done
+run_rbc_test "测试6: ${T}节点故障容错(100KB) [n=${NODE_COUNT},t=${T},极限]" "$TEST_DIR/medium_100kb.bin" "$FAULT_MAX"
 TEST6_RESULT=$?
 
 # ==========================================
@@ -375,7 +496,7 @@ TEST6_RESULT=$?
 # ==========================================
 echo ""
 echo "=========================================="
-echo "  RBC协议测试结果汇总"
+echo "  RBC协议测试结果汇总 (n=${NODE_COUNT}, t=${T})"
 echo "=========================================="
 
 TOTAL_PASS=0
@@ -398,7 +519,7 @@ print_result "测试2: 中等文件广播(100KB)" "$TEST2_RESULT"
 print_result "测试3: 大文件广播(1MB)" "$TEST3_RESULT"
 print_result "测试4: 文本文件广播" "$TEST4_RESULT"
 print_result "测试5: 单节点故障容错(1MB)" "$TEST5_RESULT"
-print_result "测试6: 双节点故障容错(100KB)" "$TEST6_RESULT"
+print_result "测试6: ${T}节点故障容错(100KB)" "$TEST6_RESULT"
 
 echo ""
 echo "通过: $TOTAL_PASS / $((TOTAL_PASS + TOTAL_FAIL))"
@@ -409,17 +530,17 @@ echo ""
 read -p "是否清理所有容器和测试文件？(y/N): " CLEANUP
 if [ "$CLEANUP" = "y" ] || [ "$CLEANUP" = "Y" ]; then
     cleanup
-    rm -rf "$TEST_DIR" "${OUTPUT_BASE}" "${SCRIPT_DIR}/docker-compose.test.yml" 2>/dev/null || true
+    rm -rf "$TEST_DIR" "${OUTPUT_BASE}" "${SCRIPT_DIR}/docker-compose.test.yml" "$COMPOSE_FILE" 2>/dev/null || true
     ok "清理完成"
 else
-    info "容器保留运行中，手动清理请执行: docker compose down -v"
+    info "容器保留运行中，手动清理请执行: docker compose -f $COMPOSE_FILE down -v"
     info "测试文件保留在: $TEST_DIR"
     info "输出文件保留在: $OUTPUT_BASE"
 fi
 
 echo ""
 echo "=========================================="
-echo "  RBC协议测试完成"
+echo "  RBC协议测试完成 (n=${NODE_COUNT}, t=${T})"
 echo "=========================================="
 
 if [ "$TOTAL_FAIL" -gt 0 ]; then
