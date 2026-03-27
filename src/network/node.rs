@@ -14,6 +14,34 @@ use crate::network::message::{Message, PeerInfo};
 use crate::network::peer::{Peer, PeerTable};
 use crate::rbc::{RbcConfig, RbcManager, RbcMessage, ChunkedBroadcastManager};
 
+/// 拜占庭（恶意）节点行为模式
+///
+/// 用于Docker测试中模拟不同类型的恶意节点攻击，
+/// 验证RBC协议的BFT容错能力。
+#[derive(Debug, Clone, PartialEq)]
+pub enum ByzantineMode {
+    /// 正常模式（诚实节点）
+    None,
+    /// 篡改分片数据：在ECHO和READY消息中发送随机垃圾数据替换真实分片
+    CorruptShard,
+    /// 伪造哈希：在ECHO和READY消息中使用错误的data_hash
+    WrongHash,
+    /// 选择性沉默：不转发任何RBC消息（模拟恶意丢弃）
+    Silent,
+}
+
+impl ByzantineMode {
+    /// 从环境变量字符串解析拜占庭模式
+    pub fn from_env(s: &str) -> Self {
+        match s.trim().to_lowercase().as_str() {
+            "corrupt_shard" => ByzantineMode::CorruptShard,
+            "wrong_hash" => ByzantineMode::WrongHash,
+            "silent" => ByzantineMode::Silent,
+            _ => ByzantineMode::None,
+        }
+    }
+}
+
 /// P2P节点内部事件
 #[derive(Debug)]
 enum NodeEvent {
@@ -47,6 +75,8 @@ pub struct P2PNode {
     rbc_manager: Arc<Mutex<Option<RbcManager>>>,
     /// 分块广播管理器（超大文件支持）
     chunked_manager: Arc<Mutex<Option<ChunkedBroadcastManager>>>,
+    /// 拜占庭模式（仅用于测试，正常节点为None）
+    byzantine_mode: ByzantineMode,
 }
 
 impl P2PNode {
@@ -64,6 +94,15 @@ impl P2PNode {
         // 添加种子节点
         discovery.add_seed_nodes(&config.seed_nodes).await;
 
+        // 从环境变量读取拜占庭模式
+        let byzantine_mode = std::env::var("BYZANTINE_MODE")
+            .map(|s| ByzantineMode::from_env(&s))
+            .unwrap_or(ByzantineMode::None);
+
+        if byzantine_mode != ByzantineMode::None {
+            warn!("⚠️  节点以拜占庭模式启动: {:?}", byzantine_mode);
+        }
+
         info!("节点创建成功，ID: {}", node_id);
 
         Ok(Self {
@@ -73,6 +112,7 @@ impl P2PNode {
             discovery,
             rbc_manager: Arc::new(Mutex::new(None)),
             chunked_manager: Arc::new(Mutex::new(None)),
+            byzantine_mode,
         })
     }
 
@@ -557,13 +597,19 @@ impl P2PNode {
                                             if target == self.node_id {
                                                 // 发给自己的消息加入待处理队列
                                                 pending_msgs.push(out_msg);
-                                            } else if let Ok(serialized) = bincode::serialize(&out_msg) {
-                                                if let Some(sender) = self.peer_table.get_sender(&target) {
-                                                    if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
-                                                        warn!("转发RBC消息到节点 {} 失败: {}", target, e);
+                                            } else {
+                                                // 应用拜占庭篡改
+                                                let tampered = self.apply_byzantine_tampering(out_msg);
+                                                if let Some(final_msg) = tampered {
+                                                    if let Ok(serialized) = bincode::serialize(&final_msg) {
+                                                        if let Some(sender) = self.peer_table.get_sender(&target) {
+                                                            if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                                                                warn!("转发RBC消息到节点 {} 失败: {}", target, e);
+                                                            }
+                                                        } else {
+                                                            debug!("RBC目标节点 {} 不在对等表中，跳过", target);
+                                                        }
                                                     }
-                                                } else {
-                                                    debug!("RBC目标节点 {} 不在对等表中，跳过", target);
                                                 }
                                             }
                                         }
@@ -755,24 +801,198 @@ impl P2PNode {
         Ok(())
     }
 
+    /// 对RBC消息应用拜占庭篡改（仅在恶意模式下生效）
+    ///
+    /// 根据 `byzantine_mode` 对即将发送的消息进行篡改：
+    /// - CorruptShard: 将分片数据替换为随机垃圾数据
+    /// - WrongHash: 将data_hash替换为伪造的哈希值
+    /// - Silent: 返回None表示丢弃该消息
+    fn apply_byzantine_tampering(&self, msg: RbcMessage) -> Option<RbcMessage> {
+        match &self.byzantine_mode {
+            ByzantineMode::None => Some(msg),
+            ByzantineMode::Silent => {
+                // 选择性沉默：丢弃所有ECHO和READY消息
+                match &msg {
+                    RbcMessage::Propose { .. } => {
+                        // PROPOSE消息正常转发（广播者的PROPOSE不篡改，否则协议无法启动）
+                        Some(msg)
+                    }
+                    RbcMessage::Echo { instance_id, .. } => {
+                        warn!(
+                            "[拜占庭-沉默] 丢弃ECHO消息: instance={}",
+                            &instance_id[..8.min(instance_id.len())]
+                        );
+                        None
+                    }
+                    RbcMessage::Ready { instance_id, .. } => {
+                        warn!(
+                            "[拜占庭-沉默] 丢弃READY消息: instance={}",
+                            &instance_id[..8.min(instance_id.len())]
+                        );
+                        None
+                    }
+                }
+            }
+            ByzantineMode::CorruptShard => {
+                use rand::Rng;
+                let mut rng = rand::thread_rng();
+                match msg {
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash,
+                        shard_index,
+                        shard_data,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    } => {
+                        // 篡改分片数据：用随机数据替换
+                        let mut corrupted = vec![0u8; shard_data.len()];
+                        rng.fill(&mut corrupted[..]);
+                        warn!(
+                            "[拜占庭-篡改分片] 篡改ECHO分片: instance={}, shard_index={}",
+                            &instance_id[..8.min(instance_id.len())],
+                            shard_index
+                        );
+                        Some(RbcMessage::Echo {
+                            instance_id,
+                            sender,
+                            data_hash,
+                            shard_index,
+                            shard_data: corrupted,
+                            original_size,
+                            data_shard_count,
+                            parity_shard_count,
+                        })
+                    }
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash,
+                        shard_index,
+                        shard_data,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    } => {
+                        // 篡改分片数据：用随机数据替换
+                        let mut corrupted = vec![0u8; shard_data.len()];
+                        rng.fill(&mut corrupted[..]);
+                        warn!(
+                            "[拜占庭-篡改分片] 篡改READY分片: instance={}, shard_index={}",
+                            &instance_id[..8.min(instance_id.len())],
+                            shard_index
+                        );
+                        Some(RbcMessage::Ready {
+                            instance_id,
+                            sender,
+                            data_hash,
+                            shard_index,
+                            shard_data: corrupted,
+                            original_size,
+                            data_shard_count,
+                            parity_shard_count,
+                        })
+                    }
+                    other => Some(other), // PROPOSE正常转发
+                }
+            }
+            ByzantineMode::WrongHash => {
+                match msg {
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash: _,
+                        shard_index,
+                        shard_data,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    } => {
+                        // 伪造哈希值
+                        let fake_hash = format!(
+                            "deadbeef{:056x}",
+                            rand::random::<u64>()
+                        );
+                        warn!(
+                            "[拜占庭-伪造哈希] 篡改ECHO哈希: instance={}, fake_h={}...",
+                            &instance_id[..8.min(instance_id.len())],
+                            &fake_hash[..16]
+                        );
+                        Some(RbcMessage::Echo {
+                            instance_id,
+                            sender,
+                            data_hash: fake_hash,
+                            shard_index,
+                            shard_data,
+                            original_size,
+                            data_shard_count,
+                            parity_shard_count,
+                        })
+                    }
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash: _,
+                        shard_index,
+                        shard_data,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    } => {
+                        let fake_hash = format!(
+                            "deadbeef{:056x}",
+                            rand::random::<u64>()
+                        );
+                        warn!(
+                            "[拜占庭-伪造哈希] 篡改READY哈希: instance={}, fake_h={}...",
+                            &instance_id[..8.min(instance_id.len())],
+                            &fake_hash[..16]
+                        );
+                        Some(RbcMessage::Ready {
+                            instance_id,
+                            sender,
+                            data_hash: fake_hash,
+                            shard_index,
+                            shard_data,
+                            original_size,
+                            data_shard_count,
+                            parity_shard_count,
+                        })
+                    }
+                    other => Some(other), // PROPOSE正常转发
+                }
+            }
+        }
+    }
+
     /// 发送RBC消息（处理发给自己的消息递归）
+    ///
+    /// 如果节点处于拜占庭模式，会在发送前对消息进行篡改
     async fn send_rbc_messages(&self, messages: Vec<(String, RbcMessage)>) {
         let mut pending = messages;
         while !pending.is_empty() {
             let current_batch: Vec<(String, RbcMessage)> = std::mem::take(&mut pending);
             for (target, msg) in current_batch {
                 if target == self.node_id {
-                    // 发给自己的消息直接处理
+                    // 发给自己的消息直接处理（不篡改自己的消息）
                     let mut guard = self.rbc_manager.lock().await;
                     if let Some(ref mut manager) = *guard {
                         if let Ok(new_msgs) = manager.handle_message(msg) {
                             pending.extend(new_msgs);
                         }
                     }
-                } else if let Ok(serialized) = bincode::serialize(&msg) {
-                    if let Some(sender) = self.peer_table.get_sender(&target) {
-                        if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
-                            warn!("发送RBC消息到节点 {} 失败: {}", target, e);
+                } else {
+                    // 发给其他节点的消息：应用拜占庭篡改
+                    let tampered_msg = self.apply_byzantine_tampering(msg);
+                    if let Some(out_msg) = tampered_msg {
+                        if let Ok(serialized) = bincode::serialize(&out_msg) {
+                            if let Some(sender) = self.peer_table.get_sender(&target) {
+                                if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                                    warn!("发送RBC消息到节点 {} 失败: {}", target, e);
+                                }
+                            }
                         }
                     }
                 }

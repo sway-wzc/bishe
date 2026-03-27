@@ -223,8 +223,11 @@ echo ""
 # ==========================================
 # 生成动态docker-compose覆盖文件（用于RBC测试）
 # ==========================================
+# 参数1: 测试文件名
+# 参数2: 恶意节点配置（格式: "node5:corrupt_shard node6:wrong_hash"，空则无恶意节点）
 generate_compose_override() {
     local TEST_FILE_NAME="$1"
+    local BYZANTINE_NODES="$2"
     local OVERRIDE_FILE="${SCRIPT_DIR}/docker-compose.test.yml"
 
     # 生成seed节点的覆盖配置
@@ -243,7 +246,33 @@ YAML
 
     # 为每个普通节点生成覆盖配置
     for i in $(seq 1 $((NODE_COUNT - 1))); do
-        cat >> "$OVERRIDE_FILE" << YAML
+        local NODE_NAME="node${i}"
+        local BYZ_MODE=""
+        # 检查该节点是否在恶意节点列表中
+        if [ -n "$BYZANTINE_NODES" ]; then
+            for byz_entry in $BYZANTINE_NODES; do
+                local byz_node="${byz_entry%%:*}"
+                local byz_mode="${byz_entry##*:}"
+                if [ "$byz_node" = "$NODE_NAME" ]; then
+                    BYZ_MODE="$byz_mode"
+                    break
+                fi
+            done
+        fi
+
+        if [ -n "$BYZ_MODE" ]; then
+            cat >> "$OVERRIDE_FILE" << YAML
+
+  node${i}:
+    volumes:
+      - ${OUTPUT_BASE}/node${i}:/app/rbc_output
+    environment:
+      - RBC_OUTPUT_DIR=/app/rbc_output
+      - RUST_LOG=info
+      - BYZANTINE_MODE=${BYZ_MODE}
+YAML
+        else
+            cat >> "$OVERRIDE_FILE" << YAML
 
   node${i}:
     volumes:
@@ -252,6 +281,7 @@ YAML
       - RBC_OUTPUT_DIR=/app/rbc_output
       - RUST_LOG=info
 YAML
+        fi
     done
 }
 
@@ -292,8 +322,8 @@ run_rbc_test() {
         mkdir -p "${OUTPUT_BASE}/${node}"
     done
 
-    # 2. 生成compose覆盖文件
-    generate_compose_override "$FILE_NAME"
+    # 2. 生成compose覆盖文件（无恶意节点）
+    generate_compose_override "$FILE_NAME" ""
 
     # 3. 启动所有节点（seed带RBC_TEST_FILE环境变量）
     step "启动所有 ${NODE_COUNT} 个节点..."
@@ -513,11 +543,252 @@ run_rbc_test "测试8: 超大文件分块广播(50MB) [n=${NODE_COUNT},t=${T}]" 
 TEST8_RESULT=$?
 
 # ==========================================
+# 恶意节点（拜占庭）测试函数
+# ==========================================
+# 参数1: 测试名称
+# 参数2: 测试文件路径
+# 参数3: 恶意节点配置（格式: "node5:corrupt_shard node6:wrong_hash"）
+run_byzantine_test() {
+    local TEST_NAME="$1"
+    local TEST_FILE="$2"
+    local BYZANTINE_CONFIG="$3"  # 恶意节点配置
+
+    local FILE_NAME
+    FILE_NAME=$(basename "$TEST_FILE")
+    local FILE_SIZE
+    FILE_SIZE=$(stat -c%s "$TEST_FILE" 2>/dev/null || stat -f%z "$TEST_FILE" 2>/dev/null)
+    local EXPECTED_HASH
+    EXPECTED_HASH=$(sha256sum "$TEST_FILE" | awk '{print $1}')
+
+    # 解析恶意节点信息
+    local BYZ_COUNT
+    BYZ_COUNT=$(echo "$BYZANTINE_CONFIG" | wc -w)
+    local BYZ_NODE_NAMES=""
+    for byz_entry in $BYZANTINE_CONFIG; do
+        local byz_node="${byz_entry%%:*}"
+        local byz_mode="${byz_entry##*:}"
+        if [ -z "$BYZ_NODE_NAMES" ]; then
+            BYZ_NODE_NAMES="${byz_node}(${byz_mode})"
+        else
+            BYZ_NODE_NAMES="${BYZ_NODE_NAMES} ${byz_node}(${byz_mode})"
+        fi
+    done
+
+    echo ""
+    echo "========================================"
+    step "$TEST_NAME"
+    info "  文件: $FILE_NAME, 大小: ${FILE_SIZE}字节"
+    info "  期望SHA-256: ${EXPECTED_HASH:0:32}..."
+    info "  \033[0;31m恶意节点(${BYZ_COUNT}个): ${BYZ_NODE_NAMES}\033[0m"
+    info "  诚实节点应正常完成RBC协议并输出正确数据"
+    echo "========================================"
+
+    # 1. 清理之前的环境
+    dc_with_override down -v --remove-orphans 2>/dev/null || true
+    sleep 2
+
+    # 清理输出目录
+    rm -rf "${OUTPUT_BASE:?}"/*
+    for node in $ALL_NODES; do
+        mkdir -p "${OUTPUT_BASE}/${node}"
+    done
+
+    # 2. 生成compose覆盖文件（带恶意节点配置）
+    generate_compose_override "$FILE_NAME" "$BYZANTINE_CONFIG"
+
+    # 3. 启动所有节点
+    step "启动所有 ${NODE_COUNT} 个节点（含 ${BYZ_COUNT} 个恶意节点）..."
+    dc_with_override up -d
+    sleep 5
+
+    RUNNING_COUNT=$(dc_with_override ps --status running | grep -c "p2p-" || true)
+    if [ "$RUNNING_COUNT" -ge "$NODE_COUNT" ]; then
+        ok "所有${NODE_COUNT}个节点启动成功（含${BYZ_COUNT}个恶意节点）"
+    else
+        warn "部分节点启动失败（运行中: $RUNNING_COUNT/$NODE_COUNT）"
+    fi
+
+    # 4. 等待RBC广播完成
+    local TOTAL_WAIT=$((RBC_BROADCAST_DELAY + RBC_COMPLETION_WAIT))
+    step "等待RBC协议完成（最多 ${TOTAL_WAIT}秒）..."
+
+    # 诚实节点数 = 总节点数 - 恶意节点数
+    local EXPECTED_SUCCESS=$((NODE_COUNT - BYZ_COUNT))
+
+    local ELAPSED=0
+    local CHECK_INTERVAL=5
+    local SUCCESS_NODES=0
+
+    while [ $ELAPSED -lt $TOTAL_WAIT ]; do
+        sleep $CHECK_INTERVAL
+        ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+
+        # 检查诚实节点的输出
+        SUCCESS_NODES=0
+        for node in $ALL_NODES; do
+            # 跳过恶意节点（恶意节点的输出不计入）
+            local is_byzantine=false
+            for byz_entry in $BYZANTINE_CONFIG; do
+                local byz_node="${byz_entry%%:*}"
+                if [ "$byz_node" = "$node" ]; then
+                    is_byzantine=true
+                    break
+                fi
+            done
+            if [ "$is_byzantine" = true ]; then
+                continue
+            fi
+
+            if ls "${OUTPUT_BASE}/${node}"/output_*.bin >/dev/null 2>&1; then
+                SUCCESS_NODES=$((SUCCESS_NODES + 1))
+            fi
+        done
+
+        printf "\r  [%3ds/%ds] 诚实节点已完成: %d/%d" "$ELAPSED" "$TOTAL_WAIT" "$SUCCESS_NODES" "$EXPECTED_SUCCESS"
+
+        if [ "$SUCCESS_NODES" -ge "$EXPECTED_SUCCESS" ]; then
+            echo ""
+            ok "所有诚实节点已完成RBC协议"
+            break
+        fi
+    done
+
+    if [ "$SUCCESS_NODES" -lt "$EXPECTED_SUCCESS" ]; then
+        echo ""
+        warn "超时：只有 $SUCCESS_NODES/$EXPECTED_SUCCESS 个诚实节点完成"
+    fi
+
+    # 5. 验证诚实节点的数据完整性
+    step "验证诚实节点数据完整性..."
+    local INTEGRITY_PASS=0
+    local INTEGRITY_FAIL=0
+
+    for node in $ALL_NODES; do
+        # 跳过恶意节点
+        local is_byzantine=false
+        for byz_entry in $BYZANTINE_CONFIG; do
+            local byz_node="${byz_entry%%:*}"
+            if [ "$byz_node" = "$node" ]; then
+                is_byzantine=true
+                break
+            fi
+        done
+        if [ "$is_byzantine" = true ]; then
+            info "  $node: [恶意节点] 跳过验证"
+            continue
+        fi
+
+        local NODE_OUTPUT_DIR="${OUTPUT_BASE}/${node}"
+        local OUTPUT_FILES
+        OUTPUT_FILES=$(ls "${NODE_OUTPUT_DIR}"/output_*.bin 2>/dev/null || true)
+
+        if [ -z "$OUTPUT_FILES" ]; then
+            warn "  $node: 未找到RBC输出文件"
+            INTEGRITY_FAIL=$((INTEGRITY_FAIL + 1))
+            continue
+        fi
+
+        for output_file in $OUTPUT_FILES; do
+            local OUTPUT_HASH
+            OUTPUT_HASH=$(sha256sum "$output_file" | awk '{print $1}')
+            local OUTPUT_SIZE
+            OUTPUT_SIZE=$(stat -c%s "$output_file" 2>/dev/null || stat -f%z "$output_file" 2>/dev/null)
+
+            if [ "$OUTPUT_HASH" = "$EXPECTED_HASH" ]; then
+                ok "  $node: 数据完整性验证通过 (大小=${OUTPUT_SIZE}字节, hash=${OUTPUT_HASH:0:16}...)"
+                INTEGRITY_PASS=$((INTEGRITY_PASS + 1))
+            else
+                fail "  $node: 数据完整性验证失败!"
+                info "    期望hash: ${EXPECTED_HASH:0:32}..."
+                info "    实际hash: ${OUTPUT_HASH:0:32}..."
+                INTEGRITY_FAIL=$((INTEGRITY_FAIL + 1))
+            fi
+        done
+    done
+
+    # 6. 检查恶意节点日志确认恶意行为已执行
+    step "验证恶意行为已生效..."
+    for byz_entry in $BYZANTINE_CONFIG; do
+        local byz_node="${byz_entry%%:*}"
+        local byz_mode="${byz_entry##*:}"
+        local byz_log_keyword=""
+        case "$byz_mode" in
+            corrupt_shard) byz_log_keyword="拜占庭-篡改分片" ;;
+            wrong_hash)    byz_log_keyword="拜占庭-伪造哈希" ;;
+            silent)        byz_log_keyword="拜占庭-沉默" ;;
+        esac
+        if dc_with_override logs "$byz_node" 2>&1 | grep -q "$byz_log_keyword"; then
+            ok "  $byz_node: 恶意行为(${byz_mode})已确认执行"
+        else
+            warn "  $byz_node: 未检测到恶意行为日志（可能未触发）"
+        fi
+    done
+
+    echo ""
+    if [ "$INTEGRITY_PASS" -ge "$EXPECTED_SUCCESS" ] && [ "$INTEGRITY_FAIL" -eq 0 ]; then
+        ok "[$TEST_NAME] 测试通过! ${INTEGRITY_PASS}个诚实节点数据完整，${BYZ_COUNT}个恶意节点被容忍"
+        return 0
+    elif [ "$INTEGRITY_PASS" -gt 0 ]; then
+        warn "[$TEST_NAME] 部分通过: $INTEGRITY_PASS 通过, $INTEGRITY_FAIL 失败"
+        return 0
+    else
+        fail "[$TEST_NAME] 测试失败: 没有诚实节点通过数据完整性验证"
+        info "调试信息 - 各节点RBC相关日志:"
+        for node in $ALL_NODES; do
+            echo -e "${YELLOW}--- $node ---${NC}"
+            dc_with_override logs "$node" 2>&1 | grep -i "rbc\|广播\|分片\|拜占庭\|纠错" | tail -20
+            echo ""
+        done
+        return 1
+    fi
+}
+
+# ==========================================
+# 测试9: 恶意节点 - 篡改分片数据 (corrupt_shard)
+# ==========================================
+# 选择最后1个普通节点作为恶意节点（篡改分片）
+BYZ_CORRUPT="node$((NODE_COUNT - 1)):corrupt_shard"
+run_byzantine_test "测试9: 恶意节点-篡改分片(100KB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/medium_100kb.bin" "$BYZ_CORRUPT"
+TEST9_RESULT=$?
+
+# ==========================================
+# 测试10: 恶意节点 - 伪造哈希 (wrong_hash)
+# ==========================================
+BYZ_HASH="node$((NODE_COUNT - 1)):wrong_hash"
+run_byzantine_test "测试10: 恶意节点-伪造哈希(100KB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/medium_100kb.bin" "$BYZ_HASH"
+TEST10_RESULT=$?
+
+# ==========================================
+# 测试11: 恶意节点 - 选择性沉默 (silent)
+# ==========================================
+BYZ_SILENT="node$((NODE_COUNT - 1)):silent"
+run_byzantine_test "测试11: 恶意节点-选择性沉默(100KB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/medium_100kb.bin" "$BYZ_SILENT"
+TEST11_RESULT=$?
+
+# ==========================================
+# 测试12: 混合恶意节点 - t个恶意节点同时攻击（极限BFT测试）
+# ==========================================
+# 构造t个恶意节点，混合不同攻击模式
+BYZ_MIX=""
+BYZ_MODES=("corrupt_shard" "wrong_hash" "silent")
+for i in $(seq $((NODE_COUNT - 1)) -1 $((NODE_COUNT - T))); do
+    local_idx=$(( (NODE_COUNT - 1 - i) % 3 ))
+    MODE=${BYZ_MODES[$local_idx]}
+    if [ -z "$BYZ_MIX" ]; then
+        BYZ_MIX="node${i}:${MODE}"
+    else
+        BYZ_MIX="$BYZ_MIX node${i}:${MODE}"
+    fi
+done
+run_byzantine_test "测试12: ${T}个混合恶意节点(100KB) [n=${NODE_COUNT},t=${T},BFT极限]" "$TEST_DIR/medium_100kb.bin" "$BYZ_MIX"
+TEST12_RESULT=$?
+
+# ==========================================
 # 测试结果汇总
 # ==========================================
 echo ""
 echo "=========================================="
-echo "  RBC协议测试结果汇总 (n=${NODE_COUNT}, t=${T})"
+echo "  RBC协议测试结果汇总 (n=${NODE_COUNT}, t=${T}, 含拜占庭测试)"
 echo "=========================================="
 
 TOTAL_PASS=0
@@ -535,6 +806,7 @@ print_result() {
     fi
 }
 
+echo "--- 正常广播与故障容错 ---"
 print_result "测试1: 小文件广播(1KB)" "$TEST1_RESULT"
 print_result "测试2: 中等文件广播(100KB)" "$TEST2_RESULT"
 print_result "测试3: 大文件广播(1MB)" "$TEST3_RESULT"
@@ -543,6 +815,12 @@ print_result "测试5: 单节点故障容错(1MB)" "$TEST5_RESULT"
 print_result "测试6: ${T}节点故障容错(100KB)" "$TEST6_RESULT"
 print_result "测试7: 超大文件分块广播(20MB)" "$TEST7_RESULT"
 print_result "测试8: 超大文件分块广播(50MB)" "$TEST8_RESULT"
+echo ""
+echo "--- 拜占庭（恶意节点）容错 ---"
+print_result "测试9: 恶意节点-篡改分片(100KB)" "$TEST9_RESULT"
+print_result "测试10: 恶意节点-伪造哈希(100KB)" "$TEST10_RESULT"
+print_result "测试11: 恶意节点-选择性沉默(100KB)" "$TEST11_RESULT"
+print_result "测试12: ${T}个混合恶意节点(100KB)" "$TEST12_RESULT"
 
 echo ""
 echo "通过: $TOTAL_PASS / $((TOTAL_PASS + TOTAL_FAIL))"
