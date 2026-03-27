@@ -101,6 +101,7 @@ services:
       - RBC_OUTPUT_DIR=/app/rbc_output
       - RBC_TEST_FILE=\${RBC_TEST_FILE:-}
       - RBC_BROADCAST_DELAY=\${RBC_BROADCAST_DELAY:-${RBC_BROADCAST_DELAY}}
+      - EXPECTED_NODES=${NODE_COUNT}
     networks:
       p2p-net:
         ipv4_address: ${SEED_IP}
@@ -129,6 +130,7 @@ YAML
       - SEED_ADDR=${SEED_IP}:8000
       - RUST_LOG=info
       - RBC_OUTPUT_DIR=/app/rbc_output
+      - EXPECTED_NODES=${NODE_COUNT}
     networks:
       p2p-net:
         ipv4_address: ${NODE_IP}

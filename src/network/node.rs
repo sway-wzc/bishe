@@ -134,24 +134,80 @@ impl P2PNode {
             }
         });
 
-        // 启动节点发现定时器
+        // 启动节点发现定时器（发送发现请求 + 主动连接新发现的节点）
         let discovery_interval = self.config.discovery_interval;
-        let peer_table_disc = self.peer_table.clone();
+        let self_disc = self.clone();
+        let event_tx_disc = event_tx.clone();
         tokio::spawn(async move {
             let mut interval = time::interval(discovery_interval);
             loop {
                 interval.tick().await;
-                let senders = peer_table_disc.get_all_senders();
+
+                // 1. 向所有已连接节点发送发现请求
+                let senders = self_disc.peer_table.get_all_senders();
                 for (node_id, sender) in &senders {
                     if sender.send(Message::DiscoverRequest).await.is_err() {
                         warn!("发送发现请求到节点 {} 失败", node_id);
                     }
                 }
+
+                // 2. 尝试连接已发现但未连接的节点
+                let connected_ids: std::collections::HashSet<String> = self_disc
+                    .peer_table
+                    .get_connected_peers()
+                    .iter()
+                    .map(|p| p.node_id.clone())
+                    .collect();
+
+                let unconnected = self_disc.discovery.get_unconnected_peers(&connected_ids).await;
+                for peer_info in unconnected {
+                    if peer_info.address.is_empty() {
+                        continue;
+                    }
+                    debug!("尝试连接发现的节点: {} ({})", peer_info.node_id, peer_info.address);
+                    match TcpStream::connect(&peer_info.address).await {
+                        Ok(stream) => {
+                            let addr = stream.peer_addr().unwrap_or_else(|_| {
+                                peer_info.address.parse().unwrap_or_else(|_| {
+                                    SocketAddr::from(([127, 0, 0, 1], 0))
+                                })
+                            });
+                            self_disc
+                                .setup_outbound_connection(stream, addr, &peer_info.address, &event_tx_disc)
+                                .await;
+                        }
+                        Err(e) => {
+                            debug!("连接发现节点 {} 失败: {}", peer_info.address, e);
+                        }
+                    }
+                }
             }
         });
 
-        // RBC初始化状态标记
+        // RBC初始化状态
         let mut rbc_initialized = false;
+        let mut last_peer_count: usize = 0;
+        let mut peer_stable_since: Option<tokio::time::Instant> = None;
+
+        // 从环境变量读取预期节点数（由测试脚本设置）
+        let expected_nodes: usize = std::env::var("EXPECTED_NODES")
+            .ok()
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(0); // 0表示未设置，使用稳定期策略
+
+        // RBC初始化稳定等待时间（节点数不再变化后等待多久再初始化）
+        let rbc_stable_wait = std::time::Duration::from_secs(
+            std::env::var("RBC_STABLE_WAIT")
+                .ok()
+                .and_then(|s| s.parse().ok())
+                .unwrap_or(8) // 默认8秒稳定期
+        );
+
+        if expected_nodes > 0 {
+            info!("RBC初始化策略: 等待 {} 个节点全部连接", expected_nodes);
+        } else {
+            info!("RBC初始化策略: 节点数稳定 {}秒 后初始化", rbc_stable_wait.as_secs());
+        }
 
         // 主事件循环
         info!("节点 {} 主事件循环启动", self.node_id);
@@ -168,26 +224,49 @@ impl P2PNode {
                 }
             }
 
-            // 检查是否可以自动初始化RBC（需要至少4个节点，包括自己）
+            // RBC自动初始化逻辑
             if !rbc_initialized {
                 let peer_count = self.peer_table.connection_count();
                 let total_nodes = peer_count + 1; // 加上自己
-                if total_nodes >= 4 {
-                    // 收集所有节点ID（包括自己）
-                    let mut node_ids: Vec<String> = self.peer_table
-                        .get_connected_peers()
-                        .iter()
-                        .map(|p| p.node_id.clone())
-                        .collect();
-                    node_ids.push(self.node_id.clone());
 
-                    match self.init_rbc(node_ids).await {
-                        Ok(()) => {
-                            info!("RBC协议自动初始化成功，参与节点数: {}", total_nodes);
-                            rbc_initialized = true;
-                        }
-                        Err(e) => {
-                            warn!("RBC协议自动初始化失败: {}", e);
+                // 检测节点数变化
+                if peer_count != last_peer_count {
+                    if peer_count > last_peer_count {
+                        info!("节点数变化: {} -> {}（总计{}），重置RBC初始化稳定计时",
+                            last_peer_count, peer_count, total_nodes);
+                    }
+                    last_peer_count = peer_count;
+                    peer_stable_since = Some(tokio::time::Instant::now());
+                }
+
+                if total_nodes >= 4 {
+                    let should_init = if expected_nodes > 0 {
+                        // 策略1: 等待预期节点数全部到齐
+                        total_nodes >= expected_nodes
+                    } else {
+                        // 策略2: 节点数稳定一段时间后初始化
+                        peer_stable_since
+                            .map(|since| since.elapsed() >= rbc_stable_wait)
+                            .unwrap_or(false)
+                    };
+
+                    if should_init {
+                        // 收集所有节点ID（包括自己）
+                        let mut node_ids: Vec<String> = self.peer_table
+                            .get_connected_peers()
+                            .iter()
+                            .map(|p| p.node_id.clone())
+                            .collect();
+                        node_ids.push(self.node_id.clone());
+
+                        match self.init_rbc(node_ids).await {
+                            Ok(()) => {
+                                info!("RBC协议自动初始化成功，参与节点数: {}", total_nodes);
+                                rbc_initialized = true;
+                            }
+                            Err(e) => {
+                                warn!("RBC协议自动初始化失败: {}", e);
+                            }
                         }
                     }
                 }

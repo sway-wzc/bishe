@@ -34,7 +34,7 @@ impl Default for NodeConfig {
             heartbeat_interval: Duration::from_secs(5),
             connection_timeout: Duration::from_secs(10),
             heartbeat_timeout: Duration::from_secs(15),
-            discovery_interval: Duration::from_secs(30),
+            discovery_interval: Duration::from_secs(5),
             message_buffer_size: 1024,
         }
     }
