@@ -349,3 +349,801 @@ fn test_rbc_data_integrity() {
         println!("数据完整性测试用例 {} 通过 (大小={}字节)", case_idx, data.len());
     }
 }
+
+// ============================================================================
+// 拜占庭恶意节点测试（Byzantine Fault Tolerance Tests）
+// ============================================================================
+
+/// 辅助函数：带恶意节点的消息路由
+/// malicious_nodes: 恶意节点ID集合
+/// tamper_fn: 恶意节点的篡改函数，对恶意节点产生的消息进行篡改
+fn route_messages_with_byzantine<F>(
+    managers: &mut Vec<RbcManager>,
+    messages: Vec<(String, RbcMessage)>,
+    node_ids: &[String],
+    malicious_nodes: &std::collections::HashSet<String>,
+    tamper_fn: &F,
+) -> Vec<(String, RbcMessage)>
+where
+    F: Fn(&str, String, RbcMessage) -> Option<(String, RbcMessage)>,
+{
+    let mut new_messages = Vec::new();
+
+    for (target_id, msg) in messages {
+        if let Some(idx) = node_ids.iter().position(|id| id == &target_id) {
+            match managers[idx].handle_message(msg) {
+                Ok(msgs) => {
+                    for (dest, out_msg) in msgs {
+                        // 如果消息来源是恶意节点，则通过篡改函数处理
+                        if malicious_nodes.contains(&target_id) {
+                            if let Some(tampered) = tamper_fn(&target_id, dest, out_msg) {
+                                new_messages.push(tampered);
+                            }
+                            // 如果tamper_fn返回None，则丢弃该消息
+                        } else {
+                            new_messages.push((dest, out_msg));
+                        }
+                    }
+                }
+                Err(e) => eprintln!("节点 {} 处理消息失败: {}", target_id, e),
+            }
+        }
+    }
+
+    new_messages
+}
+
+/// 辅助函数：带恶意节点的协议运行
+fn run_with_byzantine<F>(
+    managers: &mut Vec<RbcManager>,
+    initial_messages: Vec<(String, RbcMessage)>,
+    node_ids: &[String],
+    malicious_nodes: &std::collections::HashSet<String>,
+    tamper_fn: F,
+) where
+    F: Fn(&str, String, RbcMessage) -> Option<(String, RbcMessage)>,
+{
+    let mut pending = initial_messages;
+    let mut rounds = 0;
+    let max_rounds = 200; // 恶意场景可能需要更多轮次
+
+    while !pending.is_empty() && rounds < max_rounds {
+        rounds += 1;
+        let msg_count = pending.len();
+        pending = route_messages_with_byzantine(
+            managers,
+            pending,
+            node_ids,
+            malicious_nodes,
+            &tamper_fn,
+        );
+        if rounds <= 10 || rounds % 10 == 0 {
+            println!(
+                "第{}轮: 处理{}条消息, 产生{}条新消息",
+                rounds,
+                msg_count,
+                pending.len()
+            );
+        }
+    }
+
+    println!("协议在{}轮后收敛", rounds);
+}
+
+#[test]
+fn test_byzantine_tampered_shard_data() {
+    // ========================================================================
+    // 恶意场景1：篡改分片数据
+    // 恶意节点在ECHO阶段发送被篡改的shard_data（但shard_hash不变）
+    // 预期：被第一层SHA-256校验拦截，诚实节点仍能正确完成协议
+    // ========================================================================
+    println!("\n=== 恶意场景1: 篡改分片数据（shard_data被修改，shard_hash不变）===");
+
+    let n = 7; // t=2，最多容忍2个恶意节点
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: tampered shard data attack".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_tamper_shard".to_string(), data.clone())
+        .unwrap();
+
+    // node_5 和 node_6 是恶意节点
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: {:?}", malicious);
+
+    // 恶意行为：篡改ECHO和READY消息中的分片数据（翻转所有字节）
+    let tamper_fn = |_source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        match msg {
+            RbcMessage::Echo {
+                instance_id,
+                sender,
+                data_hash,
+                shard_index,
+                mut shard_data,
+                shard_hash, // 保持原始哈希不变，制造哈希不匹配
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                // 翻转分片数据的每个字节
+                for byte in shard_data.iter_mut() {
+                    *byte = !*byte;
+                }
+                Some((
+                    dest,
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash,
+                        shard_index,
+                        shard_data,
+                        shard_hash, // 哈希不变，会被校验拦截
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                data_hash,
+                shard_index,
+                mut shard_data,
+                shard_hash,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                for byte in shard_data.iter_mut() {
+                    *byte = !*byte;
+                }
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash,
+                        shard_index,
+                        shard_data,
+                        shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    // 验证：诚实节点应该成功输出正确数据
+    let mut success_count = 0;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue; // 跳过恶意节点
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            assert_eq!(outputs[0].data, data, "诚实节点 {} 输出数据不正确", i);
+            success_count += 1;
+        }
+    }
+
+    println!(
+        "恶意场景1结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    // 5个诚实节点中至少3个应该成功
+    assert!(
+        success_count >= 3,
+        "篡改分片数据攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+}
+
+#[test]
+fn test_byzantine_fake_hash() {
+    // ========================================================================
+    // 恶意场景2：伪造数据哈希
+    // 恶意节点在ECHO阶段发送完全伪造的data_hash和对应的shard_data+shard_hash
+    // 预期：伪造哈希的投票数 ≤ t，达不到2t+1阈值，被多数投票机制拦截
+    // ========================================================================
+    println!("\n=== 恶意场景2: 伪造数据哈希（发送完全不同的假数据）===");
+
+    let n = 7;
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: fake hash attack with forged data".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_fake_hash".to_string(), data.clone())
+        .unwrap();
+
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: {:?}", malicious);
+
+    // 恶意行为：用完全不同的假数据替换，同时伪造匹配的哈希
+    let tamper_fn = |_source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        match msg {
+            RbcMessage::Echo {
+                instance_id,
+                sender,
+                data_hash: _,
+                shard_index,
+                shard_data: _,
+                shard_hash: _,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                // 生成完全不同的假分片数据
+                let fake_shard: Vec<u8> = vec![0xDE, 0xAD, 0xBE, 0xEF]
+                    .into_iter()
+                    .cycle()
+                    .take(original_size / data_shard_count + 1)
+                    .collect();
+                // 计算假分片的正确哈希（使哈希校验通过，但data_hash是假的）
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                let fake_data_hash = "aaaa_fake_hash_from_malicious_node_bbbb".to_string();
+
+                Some((
+                    dest,
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash: fake_data_hash,
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                data_hash: _,
+                shard_index,
+                shard_data: _,
+                shard_hash: _,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                let fake_shard: Vec<u8> = vec![0xCA, 0xFE, 0xBA, 0xBE]
+                    .into_iter()
+                    .cycle()
+                    .take(original_size / data_shard_count + 1)
+                    .collect();
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                let fake_data_hash = "aaaa_fake_hash_from_malicious_node_bbbb".to_string();
+
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash: fake_data_hash,
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            assert_eq!(outputs[0].data, data, "诚实节点 {} 输出了错误数据!", i);
+            success_count += 1;
+        }
+    }
+
+    println!(
+        "恶意场景2结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= 3,
+        "伪造哈希攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+}
+
+#[test]
+fn test_byzantine_selective_silence() {
+    // ========================================================================
+    // 恶意场景3：选择性沉默（部分消息丢弃）
+    // 恶意节点只向部分节点发送消息，对其他节点保持沉默
+    // 这是比完全掉线更隐蔽的攻击方式
+    // 预期：诚实节点通过READY放大机制仍能完成协议
+    // ========================================================================
+    println!("\n=== 恶意场景3: 选择性沉默（只向部分节点发送消息）===");
+
+    let n = 7;
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: selective silence attack".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_silence".to_string(), data.clone())
+        .unwrap();
+
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: {:?}", malicious);
+
+    // 恶意行为：只向node_0和node_1发送消息，对其他节点沉默
+    let tamper_fn = |_source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        // 恶意节点只向前两个节点发送消息
+        if dest == "node_0" || dest == "node_1" {
+            Some((dest, msg))
+        } else {
+            None // 对其他节点沉默
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            assert_eq!(outputs[0].data, data, "诚实节点 {} 输出了错误数据!", i);
+            success_count += 1;
+        }
+    }
+
+    println!(
+        "恶意场景3结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= 3,
+        "选择性沉默攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+}
+
+#[test]
+fn test_byzantine_contradictory_echo() {
+    // ========================================================================
+    // 恶意场景4：矛盾ECHO攻击（equivocation）
+    // 恶意节点给不同的节点发送不同的data_hash，试图分裂网络共识
+    // 预期：2t+1多数投票确保只有一个哈希能达到阈值
+    // ========================================================================
+    println!("\n=== 恶意场景4: 矛盾ECHO攻击（给不同节点发不同哈希）===");
+
+    let n = 7;
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: contradictory echo equivocation".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_contradict".to_string(), data.clone())
+        .unwrap();
+
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: {:?}", malicious);
+
+    // 恶意行为：给偶数索引节点发送假哈希A，给奇数索引节点发送假哈希B
+    let tamper_fn = |_source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        let dest_index: usize = dest
+            .strip_prefix("node_")
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(0);
+
+        match msg {
+            RbcMessage::Echo {
+                instance_id,
+                sender,
+                data_hash: _,
+                shard_index,
+                shard_data,
+                shard_hash,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                // 给不同节点发送不同的假哈希
+                let fake_hash = if dest_index % 2 == 0 {
+                    "fake_hash_AAAA_for_even_nodes".to_string()
+                } else {
+                    "fake_hash_BBBB_for_odd_nodes".to_string()
+                };
+
+                Some((
+                    dest,
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash: fake_hash,
+                        shard_index,
+                        shard_data,  // 保持分片数据不变
+                        shard_hash,  // 保持分片哈希不变（分片校验能通过）
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    let mut wrong_output = false;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            if outputs[0].data == data {
+                success_count += 1;
+            } else {
+                wrong_output = true;
+                println!("警告: 诚实节点 {} 输出了错误数据!", i);
+            }
+        }
+    }
+
+    // 关键断言：没有诚实节点输出错误数据
+    assert!(
+        !wrong_output,
+        "矛盾ECHO攻击不应导致任何诚实节点输出错误数据"
+    );
+
+    println!(
+        "恶意场景4结果: {}/{} 个诚实节点成功输出，无错误输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= 3,
+        "矛盾ECHO攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+}
+
+#[test]
+fn test_byzantine_mixed_attack_7_nodes() {
+    // ========================================================================
+    // 恶意场景5：混合攻击（最严苛测试）
+    // 2个恶意节点同时执行不同的攻击策略：
+    //   - node_5: 篡改分片数据+伪造哈希
+    //   - node_6: 选择性沉默（只向部分节点发消息）
+    // 预期：5个诚实节点仍能正确完成协议
+    // ========================================================================
+    println!("\n=== 恶意场景5: 混合攻击（篡改+沉默同时进行）===");
+
+    let n = 7;
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data = b"Byzantine test: mixed attack - the ultimate resilience test!".to_vec();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_mixed".to_string(), data.clone())
+        .unwrap();
+
+    let malicious: std::collections::HashSet<String> =
+        vec!["node_5".to_string(), "node_6".to_string()]
+            .into_iter()
+            .collect();
+
+    println!("恶意节点: node_5(篡改攻击), node_6(沉默攻击)");
+
+    let tamper_fn = |source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        if source == "node_6" {
+            // node_6: 选择性沉默，只向node_0发消息
+            if dest == "node_0" {
+                return Some((dest, msg));
+            } else {
+                return None;
+            }
+        }
+
+        // node_5: 篡改分片数据并伪造哈希
+        match msg {
+            RbcMessage::Echo {
+                instance_id,
+                sender,
+                data_hash: _,
+                shard_index,
+                shard_data: _,
+                shard_hash: _,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                let fake_shard: Vec<u8> = vec![0xFF; original_size / data_shard_count + 1];
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                Some((
+                    dest,
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash: "mixed_attack_fake_hash".to_string(),
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                data_hash: _,
+                shard_index,
+                shard_data: _,
+                shard_hash: _,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+            } => {
+                let fake_shard: Vec<u8> = vec![0xFF; original_size / data_shard_count + 1];
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash: "mixed_attack_fake_hash".to_string(),
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    let mut wrong_output = false;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            if outputs[0].data == data {
+                success_count += 1;
+                println!("诚实节点 {} 正确输出数据 ✓", i);
+            } else {
+                wrong_output = true;
+                println!("错误: 诚实节点 {} 输出了错误数据!", i);
+            }
+        } else {
+            println!("诚实节点 {} 未产生输出", i);
+        }
+    }
+
+    assert!(
+        !wrong_output,
+        "混合攻击不应导致任何诚实节点输出错误数据"
+    );
+
+    println!(
+        "恶意场景5结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= 3,
+        "混合攻击下，至少3个诚实节点应成功输出，实际: {}",
+        success_count
+    );
+}
+
+#[test]
+fn test_byzantine_max_tolerance_10_nodes() {
+    // ========================================================================
+    // 恶意场景6：10节点极限容错测试（t=3，3个恶意节点同时攻击）
+    // 验证在最大容错数量的恶意节点下系统仍然安全
+    // ========================================================================
+    println!("\n=== 恶意场景6: 10节点极限容错（3个恶意节点同时攻击）===");
+
+    let n = 10;
+    let config = RbcConfig::new(n).unwrap();
+    println!("{}", config.info());
+
+    let node_ids: Vec<String> = (0..n).map(|i| format!("node_{}", i)).collect();
+    let mut managers = create_managers(n);
+
+    let data: Vec<u8> = (0..10_000).map(|i| ((i * 13 + 7) % 256) as u8).collect();
+
+    let initial_msgs = managers[0]
+        .broadcast("byz_max_10".to_string(), data.clone())
+        .unwrap();
+
+    // 3个恶意节点（t=3的极限）
+    let malicious: std::collections::HashSet<String> = vec![
+        "node_7".to_string(),
+        "node_8".to_string(),
+        "node_9".to_string(),
+    ]
+    .into_iter()
+    .collect();
+
+    println!("恶意节点（t={}个）: {:?}", config.fault_tolerance, malicious);
+
+    // 恶意行为：全部发送伪造数据和哈希
+    let tamper_fn = |_source: &str, dest: String, msg: RbcMessage| -> Option<(String, RbcMessage)> {
+        match msg {
+            RbcMessage::Echo {
+                instance_id,
+                sender,
+                shard_index,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+                ..
+            } => {
+                let fake_shard: Vec<u8> = vec![0xAB; original_size / data_shard_count + 1];
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                Some((
+                    dest,
+                    RbcMessage::Echo {
+                        instance_id,
+                        sender,
+                        data_hash: "10node_fake_hash_from_byzantine".to_string(),
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            RbcMessage::Ready {
+                instance_id,
+                sender,
+                shard_index,
+                original_size,
+                data_shard_count,
+                parity_shard_count,
+                ..
+            } => {
+                let fake_shard: Vec<u8> = vec![0xAB; original_size / data_shard_count + 1];
+                let fake_shard_hash = {
+                    use sha2::{Digest, Sha256};
+                    let mut hasher = Sha256::new();
+                    hasher.update(&fake_shard);
+                    hex::encode(hasher.finalize())
+                };
+                Some((
+                    dest,
+                    RbcMessage::Ready {
+                        instance_id,
+                        sender,
+                        data_hash: "10node_fake_hash_from_byzantine".to_string(),
+                        shard_index,
+                        shard_data: fake_shard,
+                        shard_hash: fake_shard_hash,
+                        original_size,
+                        data_shard_count,
+                        parity_shard_count,
+                    },
+                ))
+            }
+            other => Some((dest, other)),
+        }
+    };
+
+    run_with_byzantine(&mut managers, initial_msgs, &node_ids, &malicious, tamper_fn);
+
+    let mut success_count = 0;
+    let mut wrong_output = false;
+    for (i, manager) in managers.iter_mut().enumerate() {
+        if malicious.contains(&node_ids[i]) {
+            continue;
+        }
+        let outputs = manager.drain_outputs();
+        if !outputs.is_empty() {
+            if outputs[0].data == data {
+                success_count += 1;
+            } else {
+                wrong_output = true;
+                println!("错误: 诚实节点 {} 输出了错误数据!", i);
+            }
+        }
+    }
+
+    assert!(
+        !wrong_output,
+        "10节点极限容错测试中不应有诚实节点输出错误数据"
+    );
+
+    println!(
+        "恶意场景6结果: {}/{} 个诚实节点成功输出",
+        success_count,
+        n - malicious.len()
+    );
+    assert!(
+        success_count >= n - 2 * config.fault_tolerance,
+        "10节点极限容错下，至少{}个诚实节点应成功输出，实际: {}",
+        n - 2 * config.fault_tolerance,
+        success_count
+    );
+}

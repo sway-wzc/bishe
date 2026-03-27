@@ -1,6 +1,5 @@
 use anyhow::Result;
 use log::{debug, error, info, warn};
-use std::collections::HashSet;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::net::{TcpListener, TcpStream};
@@ -75,7 +74,7 @@ impl P2PNode {
     }
 
     /// 启动P2P节点
-    pub async fn start(self) -> Result<()> {
+    pub async fn start(self: Arc<Self>) -> Result<()> {
         let listen_addr = format!("{}:{}", self.config.listen_addr, self.config.listen_port);
         let listener = TcpListener::bind(&listen_addr).await?;
         info!("节点 {} 开始监听 {}", self.node_id, listen_addr);
@@ -464,39 +463,37 @@ impl P2PNode {
                 // 反序列化RBC消息并交给RBC管理器处理
                 match bincode::deserialize::<RbcMessage>(&payload) {
                     Ok(rbc_msg) => {
-                        let mut manager_guard = self.rbc_manager.lock().await;
-                        if let Some(ref mut manager) = *manager_guard {
-                            match manager.handle_message(rbc_msg) {
-                                Ok(outgoing) => {
-                                    // 转发RBC产生的新消息到对应目标节点
-                                    for (target, msg) in outgoing {
-                                        if let Ok(serialized) = bincode::serialize(&msg) {
-                                            if let Some(sender) = self.peer_table.get_sender(&target) {
-                                                if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
-                                                    warn!("转发RBC消息到节点 {} 失败: {}", target, e);
+                        // 使用队列处理RBC消息，支持发给自己的消息递归处理
+                        let mut pending_msgs = vec![rbc_msg];
+                        while let Some(msg) = pending_msgs.pop() {
+                            let mut manager_guard = self.rbc_manager.lock().await;
+                            if let Some(ref mut manager) = *manager_guard {
+                                match manager.handle_message(msg) {
+                                    Ok(outgoing) => {
+                                        drop(manager_guard); // 释放锁后再发送
+                                        for (target, out_msg) in outgoing {
+                                            if target == self.node_id {
+                                                // 发给自己的消息加入待处理队列
+                                                pending_msgs.push(out_msg);
+                                            } else if let Ok(serialized) = bincode::serialize(&out_msg) {
+                                                if let Some(sender) = self.peer_table.get_sender(&target) {
+                                                    if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                                                        warn!("转发RBC消息到节点 {} 失败: {}", target, e);
+                                                    }
+                                                } else {
+                                                    debug!("RBC目标节点 {} 不在对等表中，跳过", target);
                                                 }
-                                            } else {
-                                                debug!("RBC目标节点 {} 不在对等表中，跳过", target);
                                             }
                                         }
                                     }
-                                    // 检查是否有完成的输出
-                                    let outputs = manager.drain_outputs();
-                                    for output in outputs {
-                                        info!(
-                                            "[RBC完成] 实例={}, 数据大小={}字节, hash={}...",
-                                            &output.instance_id[..8.min(output.instance_id.len())],
-                                            output.data.len(),
-                                            &output.data_hash[..16.min(output.data_hash.len())]
-                                        );
+                                    Err(e) => {
+                                        error!("处理RBC消息失败: {}", e);
                                     }
                                 }
-                                Err(e) => {
-                                    error!("处理RBC消息失败: {}", e);
-                                }
+                            } else {
+                                warn!("RBC管理器未初始化，忽略RBC消息");
+                                break;
                             }
-                        } else {
-                            warn!("RBC管理器未初始化，忽略RBC消息");
                         }
                     }
                     Err(e) => {
@@ -618,28 +615,24 @@ impl P2PNode {
             manager.broadcast(instance_id, data)?
         };
 
-        // 发送PROPOSE消息到各节点
-        for (target, msg) in outgoing {
-            if let Ok(serialized) = bincode::serialize(&msg) {
+        // 使用队列处理所有消息，包括发给自己的消息产生的后续消息
+        let mut pending: Vec<(String, RbcMessage)> = outgoing;
+        while !pending.is_empty() {
+            let current_batch: Vec<(String, RbcMessage)> = std::mem::take(&mut pending);
+            for (target, msg) in current_batch {
                 if target == self.node_id {
                     // 发给自己的消息直接处理
                     let mut guard = self.rbc_manager.lock().await;
                     if let Some(ref mut manager) = *guard {
-                        if let Ok(echo_msgs) = manager.handle_message(msg) {
-                            // 释放锁后再发送网络消息
-                            drop(guard);
-                            for (echo_target, echo_msg) in echo_msgs {
-                                if let Ok(echo_serialized) = bincode::serialize(&echo_msg) {
-                                    if let Some(sender) = self.peer_table.get_sender(&echo_target) {
-                                        let _ = sender.send(Message::Rbc { payload: echo_serialized }).await;
-                                    }
-                                }
-                            }
+                        if let Ok(new_msgs) = manager.handle_message(msg) {
+                            pending.extend(new_msgs);
                         }
                     }
-                } else if let Some(sender) = self.peer_table.get_sender(&target) {
-                    if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
-                        warn!("发送RBC PROPOSE到节点 {} 失败: {}", target, e);
+                } else if let Ok(serialized) = bincode::serialize(&msg) {
+                    if let Some(sender) = self.peer_table.get_sender(&target) {
+                        if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                            warn!("发送RBC消息到节点 {} 失败: {}", target, e);
+                        }
                     }
                 }
             }
