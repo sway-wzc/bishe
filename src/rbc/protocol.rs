@@ -82,8 +82,15 @@ pub struct RbcInstance {
     data_shard_count: Option<usize>,
     parity_shard_count: Option<usize>,
 
+    /// 广播者节点ID（从第一个PROPOSE或ECHO中获取）
+    broadcaster_id: Option<String>,
+
     /// 最终输出
     output: Option<RbcOutput>,
+
+    /// 跟踪的不同data_hash数量上限（防止内存膨胀攻击）
+    /// 恶意节点可能发送大量不同哈希的READY消息，导致ready_shards无限增长
+    max_tracked_hashes: usize,
 }
 
 impl RbcInstance {
@@ -106,6 +113,8 @@ impl RbcInstance {
             .ok_or_else(|| anyhow!("本节点ID {} 不在节点列表中", local_node_id))?;
 
         let codec = ErasureCodec::new(config.data_shards, config.parity_shards)?;
+        // 最多跟踪 t+2 个不同的哈希（1个正确 + t个恶意 + 1个余量）
+        let max_tracked_hashes = config.fault_tolerance + 2;
 
         info!(
             "[RBC-{}] 创建实例: 本节点={} (索引={}), {}",
@@ -137,7 +146,9 @@ impl RbcInstance {
             original_size: None,
             data_shard_count: None,
             parity_shard_count: None,
+            broadcaster_id: None,
             output: None,
+            max_tracked_hashes,
         })
     }
 
@@ -245,6 +256,9 @@ impl RbcInstance {
 
         // 算法第8行：h := hash(M)
         let data_hash = Self::compute_hash(data);
+
+        // 记录广播者ID
+        self.broadcaster_id = Some(broadcaster.to_string());
 
         info!(
             "[RBC-{}] 收到PROPOSE: 广播者={}, 数据大小={}, h={}...",
@@ -464,23 +478,53 @@ impl RbcInstance {
         // 按(data_hash, sender)去重：每个sender在每个hash组中只取第一条READY消息
         // sender的索引 j 就是 shard_index（因为每个诚实节点发送自己索引的分片）
         //
-        // 关键安全设计：ready_shards 按 data_hash 分组管理
+        // 关键安全设计1：通过sender在node_ids中的真实索引确定分片位置
+        // 不信任消息中的shard_index（恶意节点可能伪造索引污染其他位置）
+        let real_shard_index = match self.node_ids.iter().position(|id| id == sender) {
+            Some(idx) => idx,
+            None => {
+                warn!(
+                    "[RBC-{}] READY消息来自未知sender: {}, 忽略",
+                    &self.instance_id[..8.min(self.instance_id.len())],
+                    sender
+                );
+                return Ok(Vec::new());
+            }
+        };
+
+        // 关键安全设计2：ready_shards 按 data_hash 分组管理
         // 这样即使 confirmed_hash 尚未确立，不同哈希的 READY 也不会互相抢占分片Slot
         // 当 confirmed_hash 确立后，只使用对应哈希组的 T_h 进行解码
+        //
+        // 关键安全设计3：限制跟踪的不同哈希数量，防止内存膨胀攻击
+        // 恶意节点可能发送大量不同哈希的READY消息，导致ready_shards无限增长
         {
+            // 检查是否超过哈希跟踪上限（已存在的哈希不受限制）
+            if !self.ready_shards.contains_key(data_hash)
+                && self.ready_shards.len() >= self.max_tracked_hashes
+            {
+                debug!(
+                    "[RBC-{}] 已跟踪{}个不同哈希，拒绝新哈希: {}...",
+                    &self.instance_id[..8.min(self.instance_id.len())],
+                    self.ready_shards.len(),
+                    &data_hash[..16.min(data_hash.len())]
+                );
+                return Ok(Vec::new());
+            }
+
             let senders_for_hash = self.ready_senders
                 .entry(data_hash.to_string())
                 .or_insert_with(HashMap::new);
             if !senders_for_hash.contains_key(sender) {
-                senders_for_hash.insert(sender.to_string(), shard_index);
+                senders_for_hash.insert(sender.to_string(), real_shard_index);
                 // 将 (j, m_j*) 加入 T_h
-                // 注意：同一个shard_index可能被不同sender发送（恶意节点可能伪造索引），
-                // 但我们按sender去重，每个sender只取第一条
+                // 使用 real_shard_index（基于sender在node_ids中的真实位置）
+                // 而非消息中的 shard_index（可能被恶意伪造）
                 let shards_for_hash = self.ready_shards
                     .entry(data_hash.to_string())
                     .or_insert_with(HashMap::new);
                 shards_for_hash
-                    .entry(shard_index)
+                    .entry(real_shard_index)
                     .or_insert_with(|| shard_data.to_vec());
             }
         }
@@ -500,10 +544,11 @@ impl RbcInstance {
             .unwrap_or(0);
 
         debug!(
-            "[RBC-{}] 收到READY: sender={}, shard_index={}, h={}..., 计数={}, |T_h|={}",
+            "[RBC-{}] 收到READY: sender={}, claimed_index={}, real_index={}, h={}..., 计数={}, |T_h|={}",
             &self.instance_id[..8.min(self.instance_id.len())],
             sender,
             shard_index,
+            real_shard_index,
             &data_hash[..16.min(data_hash.len())],
             current_count,
             current_th_size
@@ -601,6 +646,17 @@ impl RbcInstance {
                 data_hash.to_string()
             }
         };
+
+        // 关键安全设计4：只对满足"放大阈值"(t+1)的哈希进行解码尝试
+        // 防止攻击者伪造大量不同data_hash触发昂贵的纠错运算（CPU DoS）
+        // 在算法中，只有当某个哈希收到了至少 t+1 个 READY 时，它才具有"合法性"倾向
+        let verified_hash_count = self.ready_hash_count
+            .get(&verified_hash)
+            .copied()
+            .unwrap_or(0);
+        if verified_hash_count < self.config.ready_amplify_threshold() {
+            return Ok(outgoing); // 票数不足，没必要浪费CPU去尝试解码
+        }
 
         // 从对应哈希组的 T_h 中获取分片数量
         let shard_count = self.ready_shards
@@ -811,7 +867,7 @@ impl RbcInstance {
             // 算法第21行：output M' and return
             Ok(Some(RbcOutput {
                 instance_id: self.instance_id.clone(),
-                broadcaster: String::new(),
+                broadcaster: self.broadcaster_id.clone().unwrap_or_default(),
                 data: recovered,
                 data_hash: recovered_hash,
             }))
