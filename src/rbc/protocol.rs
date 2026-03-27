@@ -45,7 +45,11 @@ pub struct RbcInstance {
     /// 每个sender只接受一次ECHO（去重）
     /// 注意：这里只存储发给自己（shard_index == local_index）的ECHO
     echo_received: HashMap<String, (Vec<u8>, String)>,
-    /// 按data_hash分组的ECHO计数，用于判断是否达到 2t+1 阈值
+    /// 按(shard_data, data_hash)组合分组的ECHO计数
+    /// 论文第11行 "matching" 要求 (m_i, h) 完全相同
+    /// key = (shard_data的SHA-256摘要, data_hash), value = 计数
+    echo_match_count: HashMap<(String, String), usize>,
+    /// 按data_hash分组的ECHO计数（用于READY放大路径第14行的t+1判断）
     echo_hash_count: HashMap<String, usize>,
     /// 本节点自己的分片 m_i（从ECHO中确认的）
     my_shard: Option<Vec<u8>>,
@@ -55,15 +59,15 @@ pub struct RbcInstance {
     ready_sent: bool,
 
     // === READY阶段状态（算法第16行）===
-    /// T_h: 收集到的READY分片集合
+    /// T_h: 按data_hash分组的READY分片集合
     /// 对应算法第16行：For the first ⟨READY, m_j*, h⟩ received from node j,
     ///                  add (j, m_j*) to T_h
-    /// key = sender的索引 j, value = 分片数据 m_j*
-    /// 每个sender只取第一条READY消息
-    ready_shards: HashMap<usize, Vec<u8>>,
-    /// 已收到READY的sender集合（用于去重，每个sender只接受一次）
-    /// key = sender_node_id, value = 该sender声称的shard_index
-    ready_senders: HashMap<String, usize>,
+    /// 外层key = data_hash, 内层key = sender的索引 j, value = 分片数据 m_j*
+    /// 按data_hash分组管理，防止不同哈希的READY互相抢占分片Slot
+    ready_shards: HashMap<String, HashMap<usize, Vec<u8>>>,
+    /// 按data_hash分组的sender去重集合
+    /// 外层key = data_hash, 内层key = sender_node_id, value = 该sender声称的shard_index
+    ready_senders: HashMap<String, HashMap<String, usize>>,
     /// 按data_hash分组的READY计数
     ready_hash_count: HashMap<String, usize>,
 
@@ -120,12 +124,13 @@ impl RbcInstance {
             codec,
             node_ids,
             echo_received: HashMap::new(),
+            echo_match_count: HashMap::new(),
             echo_hash_count: HashMap::new(),
             my_shard: None,
             confirmed_hash: None,
             ready_sent: false,
-            ready_shards: HashMap::new(),
-            ready_senders: HashMap::new(),
+            ready_shards: HashMap::new(),  // HashMap<data_hash, HashMap<shard_index, data>>
+            ready_senders: HashMap::new(), // HashMap<data_hash, HashMap<sender_id, shard_index>>
             ready_hash_count: HashMap::new(),
             last_failed_r: 0,
             last_decode_shard_count: 0,
@@ -354,35 +359,48 @@ impl RbcInstance {
             (shard_data.to_vec(), data_hash.to_string()),
         );
 
-        // 按data_hash计数（算法第11行的"matching"条件）
-        let count = self
+        // 按(m_i, h)组合计数（论文第11行的"matching"条件）
+        // 论文要求2t+1个ECHO的(m_i, h)完全相同，而非仅h相同
+        // 这样corrupt_shard节点（篡改分片但保持hash不变）的ECHO不会被计入匹配
+        let shard_digest = Self::compute_hash(shard_data);
+        let match_key = (shard_digest, data_hash.to_string());
+        let match_count = self
+            .echo_match_count
+            .entry(match_key)
+            .or_insert(0);
+        *match_count += 1;
+        let current_match_count = *match_count;
+
+        // 同时按data_hash计数（用于READY放大路径第14行的t+1判断）
+        let hash_count = self
             .echo_hash_count
             .entry(data_hash.to_string())
             .or_insert(0);
-        *count += 1;
-        let current_count = *count;
+        *hash_count += 1;
 
         debug!(
-            "[RBC-{}] 收到ECHO: sender={}, h={}..., 计数={}/{}",
+            "[RBC-{}] 收到ECHO: sender={}, h={}..., (m_i,h)匹配计数={}/{}",
             &self.instance_id[..8.min(self.instance_id.len())],
             sender,
             &data_hash[..16.min(data_hash.len())],
-            current_count,
+            current_match_count,
             self.config.echo_threshold()
         );
 
         // 算法第11行：upon receiving 2t+1 ⟨ECHO, m_i, h⟩ matching messages
         //             and not having sent a READY message do
-        if current_count >= self.config.echo_threshold() && !self.ready_sent {
+        // 严格按论文语义："matching" 要求 (m_i, h) 完全相同
+        if current_match_count >= self.config.echo_threshold() && !self.ready_sent {
             info!(
                 "[RBC-{}] ECHO阈值达到 ({}/{}), 确立分片m_i并发送READY",
                 &self.instance_id[..8.min(self.instance_id.len())],
-                current_count,
+                current_match_count,
                 self.config.echo_threshold()
             );
 
             // 确立自己的分片 m_i
-            // 从收到的2t+1个ECHO中，多数分片是正确的（2t+1 > t），取当前分片即可
+            // 由于2t+1个ECHO的(m_i, h)完全相同，当前shard_data就是正确的分片
+            // （corrupt_shard节点的篡改分片不会被计入匹配，因为m_i不同）
             self.my_shard = Some(shard_data.to_vec());
             self.confirmed_hash = Some(data_hash.to_string());
             self.state = RbcInstanceState::ReadyPhase;
@@ -443,17 +461,28 @@ impl RbcInstance {
         // 算法第16行：For the first ⟨READY, m_j*, h⟩ received from node j,
         //             add (j, m_j*) to T_h
         // ====================================================================
-        // 按sender去重：每个sender只取第一条READY消息
+        // 按(data_hash, sender)去重：每个sender在每个hash组中只取第一条READY消息
         // sender的索引 j 就是 shard_index（因为每个诚实节点发送自己索引的分片）
-        if !self.ready_senders.contains_key(sender) {
-            self.ready_senders
-                .insert(sender.to_string(), shard_index);
-            // 将 (j, m_j*) 加入 T_h
-            // 注意：同一个shard_index可能被不同sender发送（恶意节点可能伪造索引），
-            // 但我们按sender去重，每个sender只取第一条
-            self.ready_shards
-                .entry(shard_index)
-                .or_insert_with(|| shard_data.to_vec());
+        //
+        // 关键安全设计：ready_shards 按 data_hash 分组管理
+        // 这样即使 confirmed_hash 尚未确立，不同哈希的 READY 也不会互相抢占分片Slot
+        // 当 confirmed_hash 确立后，只使用对应哈希组的 T_h 进行解码
+        {
+            let senders_for_hash = self.ready_senders
+                .entry(data_hash.to_string())
+                .or_insert_with(HashMap::new);
+            if !senders_for_hash.contains_key(sender) {
+                senders_for_hash.insert(sender.to_string(), shard_index);
+                // 将 (j, m_j*) 加入 T_h
+                // 注意：同一个shard_index可能被不同sender发送（恶意节点可能伪造索引），
+                // 但我们按sender去重，每个sender只取第一条
+                let shards_for_hash = self.ready_shards
+                    .entry(data_hash.to_string())
+                    .or_insert_with(HashMap::new);
+                shards_for_hash
+                    .entry(shard_index)
+                    .or_insert_with(|| shard_data.to_vec());
+            }
         }
 
         // 按data_hash计数READY
@@ -464,6 +493,12 @@ impl RbcInstance {
         *count += 1;
         let current_count = *count;
 
+        // 计算当前哈希组的T_h大小
+        let current_th_size = self.ready_shards
+            .get(data_hash)
+            .map(|s| s.len())
+            .unwrap_or(0);
+
         debug!(
             "[RBC-{}] 收到READY: sender={}, shard_index={}, h={}..., 计数={}, |T_h|={}",
             &self.instance_id[..8.min(self.instance_id.len())],
@@ -471,7 +506,7 @@ impl RbcInstance {
             shard_index,
             &data_hash[..16.min(data_hash.len())],
             current_count,
-            self.ready_shards.len()
+            current_th_size
         );
 
         let mut outgoing = Vec::new();
@@ -492,16 +527,16 @@ impl RbcInstance {
             );
 
             // 算法第14行：Wait for t+1 matching ⟨ECHO, m_i', h⟩
-            let echo_count_for_hash = self
-                .echo_hash_count
-                .get(data_hash)
-                .copied()
-                .unwrap_or(0);
+            // 论文要求 (m_i', h) 完全匹配，与第11行的matching语义一致
+            // 查找echo_match_count中是否有某个(shard_digest, h)组合达到t+1
+            let amplify_threshold = self.config.ready_amplify_threshold();
+            let matching_echo = self.echo_match_count.iter()
+                .find(|((_, h), count)| h == data_hash && **count >= amplify_threshold);
 
-            if echo_count_for_hash >= self.config.ready_amplify_threshold() {
-                // 有足够的ECHO确认
+            if matching_echo.is_some() {
+                // 有足够的(m_i', h)完全匹配的ECHO
                 if let Some(ref shard) = self.my_shard {
-                    // 已有确认的分片，直接使用
+                    // 已有确认的分片（来自第11行路径），直接使用
                     let shard_clone = shard.clone();
                     self.confirmed_hash = Some(data_hash.to_string());
                     self.state = RbcInstanceState::ReadyPhase;
@@ -509,14 +544,11 @@ impl RbcInstance {
                     let msgs = self.send_ready(data_hash, &shard_clone)?;
                     outgoing.extend(msgs);
                 } else {
-                    // 从匹配的ECHO中取分片作为自己的分片
-                    let matching_shard: Option<Vec<u8>> = self
-                        .echo_received
-                        .values()
-                        .find(|(_, h)| h == data_hash)
-                        .map(|(data, _)| data.clone());
+                    // 从匹配的ECHO中选择出现次数最多的分片（多数投票）
+                    // 因为t+1个(m_i', h)匹配的ECHO中，分片数据都相同
+                    let majority_shard = self.select_majority_shard_for_hash(data_hash);
 
-                    if let Some(shard) = matching_shard {
+                    if let Some(shard) = majority_shard {
                         self.my_shard = Some(shard.clone());
                         self.confirmed_hash = Some(data_hash.to_string());
                         self.state = RbcInstanceState::ReadyPhase;
@@ -530,10 +562,16 @@ impl RbcInstance {
                     }
                 }
             } else {
+                // 没有足够的(m_i', h)完全匹配的ECHO
+                let max_echo_match = self.echo_match_count.iter()
+                    .filter(|((_, h), _)| h == data_hash)
+                    .map(|(_, count)| *count)
+                    .max()
+                    .unwrap_or(0);
                 debug!(
-                    "[RBC-{}] READY放大触发但ECHO不足 ({}/{}), 等待更多ECHO",
+                    "[RBC-{}] READY放大触发但ECHO(m_i,h)匹配不足 ({}/{}), 等待更多ECHO",
                     &self.instance_id[..8.min(self.instance_id.len())],
-                    echo_count_for_hash,
+                    max_echo_match,
                     self.config.ready_amplify_threshold()
                 );
             }
@@ -553,7 +591,22 @@ impl RbcInstance {
         //   2. 用 last_decode_shard_count 记录上次分片数，若无变化则跳过
         //   3. 收到新分片时重置 last_failed_r（新分片可能改变解码结果）
         // ====================================================================
-        let shard_count = self.ready_shards.len();
+
+        // 使用confirmed_hash（ECHO阶段确认的正确哈希）进行验证，
+        // 而非当前READY消息的data_hash（可能来自wrong_hash恶意节点）
+        let verified_hash = match &self.confirmed_hash {
+            Some(h) => h.clone(),
+            None => {
+                // 如果还没有confirmed_hash，暂时使用当前消息的data_hash
+                data_hash.to_string()
+            }
+        };
+
+        // 从对应哈希组的 T_h 中获取分片数量
+        let shard_count = self.ready_shards
+            .get(&verified_hash)
+            .map(|s| s.len())
+            .unwrap_or(0);
 
         // 优化1：分片集合无变化时，跳过本轮解码尝试
         if shard_count == self.last_decode_shard_count && shard_count > 0 {
@@ -574,7 +627,7 @@ impl RbcInstance {
             let threshold = self.config.reconstruct_threshold(r);
             if shard_count >= threshold {
                 // 算法第19行：Let M' be coefficients of RSDec(t+1, r, T)
-                match self.try_reconstruct(data_hash) {
+                match self.try_reconstruct_from_hash(&verified_hash) {
                     Ok(Some(output)) => {
                         // 算法第20-21行：if hash(M') = h then output M' and return
                         info!(
@@ -619,6 +672,33 @@ impl RbcInstance {
     // ========================================================================
     // 内部辅助方法
     // ========================================================================
+
+    /// 从data_hash匹配的ECHO中选择出现次数最多的分片数据（多数投票）
+    ///
+    /// 用于READY放大路径（算法第14行），当my_shard尚未确立时，
+    /// 从t+1个匹配的ECHO中选择正确的分片。
+    /// 由于t+1个匹配ECHO中至少1个来自诚实节点，正确分片一定存在。
+    fn select_majority_shard_for_hash(&self, target_hash: &str) -> Option<Vec<u8>> {
+        let mut shard_counts: HashMap<Vec<u8>, usize> = HashMap::new();
+        for (shard_data, hash) in self.echo_received.values() {
+            if hash == target_hash {
+                let count = shard_counts.entry(shard_data.clone()).or_insert(0);
+                *count += 1;
+            }
+        }
+
+        shard_counts
+            .into_iter()
+            .max_by_key(|(_, count)| *count)
+            .map(|(data, count)| {
+                debug!(
+                    "[RBC-{}] READY放大分片选择: 选择出现{}次的分片数据",
+                    &self.instance_id[..8.min(self.instance_id.len())],
+                    count
+                );
+                data
+            })
+    }
 
     /// 发送READY消息到所有节点（算法第12行/第15行）
     ///
@@ -666,7 +746,7 @@ impl RbcInstance {
         Ok(messages)
     }
 
-    /// 尝试从 T_h 中纠错解码恢复原始数据（算法第19-21行）
+    /// 尝试从指定哈希组的 T_h 中纠错解码恢复原始数据（算法第19-21行）
     ///
     /// ```text
     /// 19: Let M' be coefficients of RSDec(t+1, r, T)
@@ -677,7 +757,7 @@ impl RbcInstance {
     /// 使用 Berlekamp-Welch 算法进行纠错解码：
     /// - 自动检测和纠正 T_h 中的错误分片（恶意节点发送的假分片）
     /// - 无需知道哪些分片是错误的
-    fn try_reconstruct(&self, expected_hash: &str) -> Result<Option<RbcOutput>> {
+    fn try_reconstruct_from_hash(&self, expected_hash: &str) -> Result<Option<RbcOutput>> {
         let original_size = self
             .original_size
             .ok_or_else(|| anyhow!("缺少original_size元信息"))?;
@@ -688,9 +768,14 @@ impl RbcInstance {
             .parity_shard_count
             .ok_or_else(|| anyhow!("缺少parity_shard_count元信息"))?;
 
+        // 从对应哈希组的 T_h 中获取分片
+        let hash_shards = match self.ready_shards.get(expected_hash) {
+            Some(shards) => shards,
+            None => return Ok(None), // 该哈希组没有分片
+        };
+
         // 将 T_h 中的分片构造为 DataShard 对象
-        let shards: Vec<DataShard> = self
-            .ready_shards
+        let shards: Vec<DataShard> = hash_shards
             .iter()
             .map(|(&index, data)| {
                 let is_parity = index >= data_shard_count;
