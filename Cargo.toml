@@ -17,5 +17,5 @@ thiserror = "1"
 anyhow = "1"
 chrono = { version = "0.4", features = ["serde"] }
 dashmap = "5"
-reed-solomon-erasure = "6.0"
 hex = "0.4.3"
+reed_solomon_rs = "0.1.2"

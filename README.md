@@ -17,7 +17,7 @@
 ├─────────────────────────────────────────────────┤
 │            纠删码层 (src/erasure/)               │
 │  codec.rs     - Reed-Solomon编解码器             │
-│  shard.rs     - 分片数据结构与哈希校验            │
+│  shard.rs     - 分片数据结构与序列化              │
 │  test_erasure.rs - 纠删码单元测试                │
 ├─────────────────────────────────────────────────┤
 │             网络层 (src/network/)                │
@@ -171,10 +171,13 @@ r=1: 需要 2t+2 个分片，纠 1 个错
 r=t: 需要 3t+1 个分片，纠 t 个错（极限容错）
 ```
 
-#### 4. 双重完整性校验
+#### 4. Berlekamp-Welch 纠错 + 整体哈希验证
 
-- **分片级校验**：每个分片携带独立的 SHA-256 哈希，接收时立即验证，防止传输损坏
-- **消息级校验**：重建后的完整消息通过哈希 h 验证，确保最终输出与广播者原始消息一致
+本协议**不在分片级别做哈希校验**，而是依赖底层 RS 码的 Berlekamp-Welch 纠错能力自动检测和纠正恶意分片。这是算法4的核心设计：
+
+- **纠错解码**：`RSDec(t+1, r, T_h)` 使用 Berlekamp-Welch 算法，可在不知道哪些分片被篡改的情况下，自动纠正最多 `⌊(|T_h| - k) / 2⌋` 个错误分片
+- **整体哈希验证**：解码后通过 `hash(M') = h` 验证最终结果的正确性，确保输出与广播者原始消息一致
+- **无分片级校验**：ECHO 和 READY 消息中不携带分片哈希（`shard_hash`），恶意分片直接进入 T_h 集合，由纠错解码统一处理
 
 ### 安全性保证
 
@@ -224,7 +227,7 @@ cargo build --release
 
 | 层次 | 测试内容 | 运行方式 | 耗时 |
 |------|---------|---------|------|
-| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播 | `cargo test` | ~5秒 |
+| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播（42个用例） | `cargo test` | ~5秒 |
 | **P2P网络集成测试** | Docker多节点组网、握手、心跳、容错 | `bash test_p2p.sh [-n N]` | ~3分钟 |
 | **RBC端到端测试** | Docker多节点文件广播分发与数据完整性验证 | `bash test_rbc_docker.sh [-n N]` | ~20分钟 |
 
@@ -241,7 +244,7 @@ cargo test --lib -- --nocapture
 #### 按模块运行测试
 
 ```bash
-# 纠删码模块测试（15个用例）
+# 纠删码模块测试（21个用例）
 cargo test --lib erasure::test_erasure -- --nocapture
 
 # RBC协议模块测试（14个用例）
@@ -292,6 +295,12 @@ cargo test --lib rbc::test_rbc::test_byzantine_mixed_attack_7_nodes -- --nocaptu
 | `test_empty_data_error` | 空数据错误处理 |
 | `test_invalid_codec_params` | 无效参数错误处理 |
 | `test_different_codec_configurations` | 不同编码配置测试 |
+| `test_error_correction_single_corruption` | 🔧 Berlekamp-Welch 单分片纠错 |
+| `test_error_correction_two_corruptions` | 🔧 Berlekamp-Welch 双分片纠错 |
+| `test_error_correction_mixed_loss_and_corruption` | 🔧 丢失+篡改混合纠错 |
+| `test_error_correction_with_larger_parity` | 🔧 高冗余配置纠错 |
+| `test_error_correction_capacity_values` | 🔧 纠错容量边界值测试 |
+| `test_error_correction_large_data` | 🔧 大数据纠错测试 |
 
 **RBC协议模块** (`src/rbc/test_rbc.rs`)：
 
@@ -483,7 +492,7 @@ bishe/
     │   ├── mod.rs
     │   ├── codec.rs            # Reed-Solomon编解码器
     │   ├── shard.rs            # 分片数据结构
-    │   └── test_erasure.rs     # 纠删码单元测试（15个用例）
+    │   └── test_erasure.rs     # 纠删码单元测试（21个用例，含6个Berlekamp-Welch纠错测试）
     ├── rbc/                    # RBC协议模块
     │   ├── mod.rs
     │   ├── protocol.rs         # Bracha RBC协议实现

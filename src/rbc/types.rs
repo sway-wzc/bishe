@@ -2,8 +2,15 @@ use serde::{Deserialize, Serialize};
 
 /// RBC协议消息类型
 ///
-/// 实现四轮长消息RBC协议（融合优化方案），将ADD的"编码与分发"
-/// 过程融入到Bracha RBC的投票（ECHO和READY）消息中。
+/// 严格对应论文算法4：Four-round RBC protocol for long messages
+/// 消息格式：
+///   - PROPOSE: ⟨PROPOSE, M⟩
+///   - ECHO:    ⟨ECHO, m_j, h⟩
+///   - READY:   ⟨READY, m_i, h⟩
+///
+/// 注意：ECHO和READY消息中**不包含shard_hash**。
+/// 因为底层RS码已具备Berlekamp-Welch纠错能力，恶意分片会被自动纠正，
+/// 最终通过 hash(M') == h 的整体哈希验证确保正确性。
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum RbcMessage {
     /// 第1轮：提议（PROPOSE）
@@ -17,9 +24,9 @@ pub enum RbcMessage {
         data: Vec<u8>,
     },
 
-    /// 第2轮：回声（ECHO）— 融合编码与分发
-    /// 节点收到 M 后计算 h=hash(M)，用RS码编码为 n 个分片，
-    /// 向节点 j 发送其专属的分片 m_j 和哈希 h
+    /// 第2轮：回声（ECHO）— 算法第6-10行
+    /// 节点收到 M 后：h := hash(M)，RS编码为 n 个分片，
+    /// 向节点 j 发送 ⟨ECHO, m_j, h⟩
     Echo {
         /// 广播实例唯一标识
         instance_id: String,
@@ -27,36 +34,32 @@ pub enum RbcMessage {
         sender: String,
         /// 原始数据的SHA-256哈希 h = hash(M)
         data_hash: String,
-        /// 目标节点专属的分片索引
+        /// 目标节点专属的分片索引 j
         shard_index: usize,
-        /// 目标节点专属的分片数据
+        /// 目标节点专属的分片数据 m_j
         shard_data: Vec<u8>,
-        /// 分片的SHA-256哈希（用于完整性校验）
-        shard_hash: String,
         /// 原始数据大小（解码时需要）
         original_size: usize,
-        /// 数据分片数量（RS编码参数）
+        /// 数据分片数量 k = t+1（RS编码参数）
         data_shard_count: usize,
-        /// 校验分片数量（RS编码参数）
+        /// 校验分片数量 n-k（RS编码参数）
         parity_shard_count: usize,
     },
 
-    /// 第3轮：就绪（READY）— 确认与Reconstruction共享
-    /// 当节点收到 2t+1 个匹配的 ECHO 消息时，确立自己的分片，
-    /// 并向全网广播带有该分片的就绪消息
+    /// 第3轮：就绪（READY）— 算法第11-15行
+    /// 当节点 i 收到 2t+1 个匹配的 ⟨ECHO, m_i, h⟩ 时，
+    /// 确立自己的分片 m_i，并向全网广播 ⟨READY, m_i, h⟩
     Ready {
         /// 广播实例唯一标识
         instance_id: String,
-        /// 发送者节点ID
+        /// 发送者节点ID（即节点 j）
         sender: String,
-        /// 原始数据的SHA-256哈希
+        /// 原始数据的SHA-256哈希 h
         data_hash: String,
-        /// 发送者自己的分片索引
+        /// 发送者自己的分片索引（= sender在节点列表中的索引）
         shard_index: usize,
-        /// 发送者自己的分片数据
+        /// 发送者自己的分片数据 m_j
         shard_data: Vec<u8>,
-        /// 分片的SHA-256哈希
-        shard_hash: String,
         /// 原始数据大小
         original_size: usize,
         /// 数据分片数量
