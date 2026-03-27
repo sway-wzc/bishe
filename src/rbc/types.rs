@@ -166,3 +166,44 @@ pub struct RbcOutput {
     /// 消息哈希
     pub data_hash: String,
 }
+
+// ============================================================================
+// 超大文件分块广播相关类型
+// ============================================================================
+
+/// 默认分块大小：4MB（确保单条消息在16MB限制内，PROPOSE消息包含完整块数据）
+pub const DEFAULT_CHUNK_SIZE: usize = 4 * 1024 * 1024;
+
+/// 分块广播元信息
+/// 广播者在发起分块广播前，先通过RBC广播此元信息，
+/// 让所有节点知道即将接收的文件的分块数量和校验信息
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChunkedBroadcastMeta {
+    /// 分块广播会话唯一标识
+    pub session_id: String,
+    /// 原始文件总大小（字节）
+    pub total_size: usize,
+    /// 分块大小（字节）
+    pub chunk_size: usize,
+    /// 总分块数
+    pub total_chunks: usize,
+    /// 原始文件的SHA-256哈希（用于最终完整性校验）
+    pub file_hash: String,
+    /// 每个分块的SHA-256哈希列表（按顺序）
+    pub chunk_hashes: Vec<String>,
+}
+
+/// 分块广播的输出结果（完整文件重组后）
+#[derive(Debug, Clone)]
+pub struct ChunkedBroadcastOutput {
+    /// 分块广播会话ID
+    pub session_id: String,
+    /// 恢复的完整文件数据
+    pub data: Vec<u8>,
+    /// 文件SHA-256哈希
+    pub file_hash: String,
+    /// 文件总大小
+    pub total_size: usize,
+    /// 分块数量
+    pub total_chunks: usize,
+}

@@ -64,7 +64,9 @@ done
 # RBC广播等待延迟（秒），节点越多需要等待越久
 RBC_BROADCAST_DELAY=$((25 + NODE_COUNT * 2))
 # RBC协议完成等待时间（秒），节点越多需要等待越久
-RBC_COMPLETION_WAIT=$((60 + NODE_COUNT * 5))
+# 超大文件分块广播需要更多时间（每个分块独立走一次RBC）
+# 50MB文件约13个分块，每个分块需要完整RBC流程
+RBC_COMPLETION_WAIT=$((120 + NODE_COUNT * 12))
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.dynamic.yml"
@@ -201,6 +203,10 @@ dd if=/dev/urandom of="$TEST_DIR/large_1mb.bin" bs=1024 count=1024 2>/dev/null
 for i in $(seq 1 5000); do
     echo "Hello, 高容错分布式数据分发系统! Line $i - $(date +%s%N)"
 done > "$TEST_DIR/text_file.txt"
+# 5. 超大文件 (20MB) - 测试分块广播（超过16MB单消息限制）
+dd if=/dev/urandom of="$TEST_DIR/huge_20mb.bin" bs=1024 count=20480 2>/dev/null
+# 6. 超大文件 (50MB) - 测试分块广播极限
+dd if=/dev/urandom of="$TEST_DIR/huge_50mb.bin" bs=1024 count=51200 2>/dev/null
 
 # 计算各文件的SHA-256哈希
 for f in "$TEST_DIR"/*.bin "$TEST_DIR"/*.txt; do
@@ -494,6 +500,18 @@ run_rbc_test "测试6: ${T}节点故障容错(100KB) [n=${NODE_COUNT},t=${T},极
 TEST6_RESULT=$?
 
 # ==========================================
+# 测试7: 超大文件分块广播 (5MB)
+# ==========================================
+run_rbc_test "测试7: 超大文件分块广播(20MB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/huge_20mb.bin" ""
+TEST7_RESULT=$?
+
+# ==========================================
+# 测试8: 超大文件分块广播 (50MB)
+# ==========================================
+run_rbc_test "测试8: 超大文件分块广播(50MB) [n=${NODE_COUNT},t=${T}]" "$TEST_DIR/huge_50mb.bin" ""
+TEST8_RESULT=$?
+
+# ==========================================
 # 测试结果汇总
 # ==========================================
 echo ""
@@ -522,6 +540,8 @@ print_result "测试3: 大文件广播(1MB)" "$TEST3_RESULT"
 print_result "测试4: 文本文件广播" "$TEST4_RESULT"
 print_result "测试5: 单节点故障容错(1MB)" "$TEST5_RESULT"
 print_result "测试6: ${T}节点故障容错(100KB)" "$TEST6_RESULT"
+print_result "测试7: 超大文件分块广播(20MB)" "$TEST7_RESULT"
+print_result "测试8: 超大文件分块广播(50MB)" "$TEST8_RESULT"
 
 echo ""
 echo "通过: $TOTAL_PASS / $((TOTAL_PASS + TOTAL_FAIL))"

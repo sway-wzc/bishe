@@ -12,7 +12,7 @@ use crate::network::connection::Connection;
 use crate::network::discovery::DiscoveryService;
 use crate::network::message::{Message, PeerInfo};
 use crate::network::peer::{Peer, PeerTable};
-use crate::rbc::{RbcConfig, RbcManager, RbcMessage};
+use crate::rbc::{RbcConfig, RbcManager, RbcMessage, ChunkedBroadcastManager};
 
 /// P2P节点内部事件
 #[derive(Debug)]
@@ -45,6 +45,8 @@ pub struct P2PNode {
     discovery: DiscoveryService,
     /// RBC协议管理器（使用Arc<Mutex>支持异步共享访问）
     rbc_manager: Arc<Mutex<Option<RbcManager>>>,
+    /// 分块广播管理器（超大文件支持）
+    chunked_manager: Arc<Mutex<Option<ChunkedBroadcastManager>>>,
 }
 
 impl P2PNode {
@@ -70,6 +72,7 @@ impl P2PNode {
             peer_table,
             discovery,
             rbc_manager: Arc::new(Mutex::new(None)),
+            chunked_manager: Arc::new(Mutex::new(None)),
         })
     }
 
@@ -672,14 +675,42 @@ impl P2PNode {
         let mut guard = self.rbc_manager.lock().await;
         *guard = Some(manager);
 
+        // 同时初始化分块广播管理器
+        let mut chunked_guard = self.chunked_manager.lock().await;
+        *chunked_guard = Some(ChunkedBroadcastManager::new());
+
         Ok(())
     }
 
     /// 通过RBC协议广播数据到所有节点
     ///
+    /// 自动判断数据大小：
+    /// - 小于等于4MB：直接使用单次RBC广播
+    /// - 大于4MB：使用分块广播（自动拆分为多个RBC实例）
+    ///
     /// # 参数
     /// - `data`: 要广播的数据
     pub async fn rbc_broadcast(&self, data: Vec<u8>) -> Result<()> {
+        let data_size = data.len();
+        let chunk_threshold = crate::rbc::DEFAULT_CHUNK_SIZE;
+
+        if data_size > chunk_threshold {
+            // 超大文件：使用分块广播
+            info!(
+                "数据大小={}字节 ({:.2}MB) 超过阈值 {}字节，使用分块广播",
+                data_size,
+                data_size as f64 / 1024.0 / 1024.0,
+                chunk_threshold
+            );
+            self.rbc_chunked_broadcast(data).await
+        } else {
+            // 普通大小：直接RBC广播
+            self.rbc_direct_broadcast(data).await
+        }
+    }
+
+    /// 直接RBC广播（适用于小于4MB的数据）
+    async fn rbc_direct_broadcast(&self, data: Vec<u8>) -> Result<()> {
         let instance_id = Uuid::new_v4().to_string();
         info!(
             "发起RBC广播: instance={}, 数据大小={}字节",
@@ -694,8 +725,39 @@ impl P2PNode {
             manager.broadcast(instance_id, data)?
         };
 
-        // 使用队列处理所有消息，包括发给自己的消息产生的后续消息
-        let mut pending: Vec<(String, RbcMessage)> = outgoing;
+        self.send_rbc_messages(outgoing).await;
+        Ok(())
+    }
+
+    /// 分块RBC广播（适用于超大文件）
+    async fn rbc_chunked_broadcast(&self, data: Vec<u8>) -> Result<()> {
+        let session_id = Uuid::new_v4().to_string();
+        info!(
+            "发起分块RBC广播: session={}, 数据大小={}字节 ({:.2}MB)",
+            &session_id[..8],
+            data.len(),
+            data.len() as f64 / 1024.0 / 1024.0
+        );
+
+        let outgoing = {
+            let mut rbc_guard = self.rbc_manager.lock().await;
+            let rbc_manager = rbc_guard.as_mut()
+                .ok_or_else(|| anyhow::anyhow!("RBC管理器未初始化"))?;
+
+            let mut chunked_guard = self.chunked_manager.lock().await;
+            let chunked_manager = chunked_guard.as_mut()
+                .ok_or_else(|| anyhow::anyhow!("分块广播管理器未初始化"))?;
+
+            chunked_manager.broadcast(session_id, data, rbc_manager)?
+        };
+
+        self.send_rbc_messages(outgoing).await;
+        Ok(())
+    }
+
+    /// 发送RBC消息（处理发给自己的消息递归）
+    async fn send_rbc_messages(&self, messages: Vec<(String, RbcMessage)>) {
+        let mut pending = messages;
         while !pending.is_empty() {
             let current_batch: Vec<(String, RbcMessage)> = std::mem::take(&mut pending);
             for (target, msg) in current_batch {
@@ -716,12 +778,15 @@ impl P2PNode {
                 }
             }
         }
-
-        Ok(())
     }
 
     /// 获取RBC管理器的引用（用于外部查询状态）
     pub fn rbc_manager(&self) -> Arc<Mutex<Option<RbcManager>>> {
         self.rbc_manager.clone()
+    }
+
+    /// 获取分块广播管理器的引用
+    pub fn chunked_manager(&self) -> Arc<Mutex<Option<ChunkedBroadcastManager>>> {
+        self.chunked_manager.clone()
     }
 }
