@@ -2,8 +2,9 @@ use anyhow::Result;
 use log::{debug, error, info, warn};
 use std::collections::HashSet;
 use std::net::SocketAddr;
+use std::sync::Arc;
 use tokio::net::{TcpListener, TcpStream};
-use tokio::sync::mpsc;
+use tokio::sync::{mpsc, Mutex};
 use tokio::time;
 use uuid::Uuid;
 
@@ -12,6 +13,7 @@ use crate::network::connection::Connection;
 use crate::network::discovery::DiscoveryService;
 use crate::network::message::{Message, PeerInfo};
 use crate::network::peer::{Peer, PeerTable};
+use crate::rbc::{RbcConfig, RbcManager, RbcMessage};
 
 /// P2P节点内部事件
 #[derive(Debug)]
@@ -42,6 +44,8 @@ pub struct P2PNode {
     peer_table: PeerTable,
     /// 节点发现服务
     discovery: DiscoveryService,
+    /// RBC协议管理器（使用Arc<Mutex>支持异步共享访问）
+    rbc_manager: Arc<Mutex<Option<RbcManager>>>,
 }
 
 impl P2PNode {
@@ -66,6 +70,7 @@ impl P2PNode {
             config,
             peer_table,
             discovery,
+            rbc_manager: Arc::new(Mutex::new(None)),
         })
     }
 
@@ -146,6 +151,9 @@ impl P2PNode {
             }
         });
 
+        // RBC初始化状态标记
+        let mut rbc_initialized = false;
+
         // 主事件循环
         info!("节点 {} 主事件循环启动", self.node_id);
         while let Some(event) = event_rx.recv().await {
@@ -158,6 +166,31 @@ impl P2PNode {
                 }
                 NodeEvent::PeerDisconnected { node_id } => {
                     self.handle_peer_disconnected(&node_id).await;
+                }
+            }
+
+            // 检查是否可以自动初始化RBC（需要至少4个节点，包括自己）
+            if !rbc_initialized {
+                let peer_count = self.peer_table.connection_count();
+                let total_nodes = peer_count + 1; // 加上自己
+                if total_nodes >= 4 {
+                    // 收集所有节点ID（包括自己）
+                    let mut node_ids: Vec<String> = self.peer_table
+                        .get_connected_peers()
+                        .iter()
+                        .map(|p| p.node_id.clone())
+                        .collect();
+                    node_ids.push(self.node_id.clone());
+
+                    match self.init_rbc(node_ids).await {
+                        Ok(()) => {
+                            info!("RBC协议自动初始化成功，参与节点数: {}", total_nodes);
+                            rbc_initialized = true;
+                        }
+                        Err(e) => {
+                            warn!("RBC协议自动初始化失败: {}", e);
+                        }
+                    }
                 }
             }
         }
@@ -422,6 +455,55 @@ impl P2PNode {
                 );
                 // TODO: 去重后转发给其他节点
             }
+            Message::Rbc { payload } => {
+                debug!(
+                    "收到节点 {} 的RBC协议消息，大小 {} 字节",
+                    from,
+                    payload.len()
+                );
+                // 反序列化RBC消息并交给RBC管理器处理
+                match bincode::deserialize::<RbcMessage>(&payload) {
+                    Ok(rbc_msg) => {
+                        let mut manager_guard = self.rbc_manager.lock().await;
+                        if let Some(ref mut manager) = *manager_guard {
+                            match manager.handle_message(rbc_msg) {
+                                Ok(outgoing) => {
+                                    // 转发RBC产生的新消息到对应目标节点
+                                    for (target, msg) in outgoing {
+                                        if let Ok(serialized) = bincode::serialize(&msg) {
+                                            if let Some(sender) = self.peer_table.get_sender(&target) {
+                                                if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                                                    warn!("转发RBC消息到节点 {} 失败: {}", target, e);
+                                                }
+                                            } else {
+                                                debug!("RBC目标节点 {} 不在对等表中，跳过", target);
+                                            }
+                                        }
+                                    }
+                                    // 检查是否有完成的输出
+                                    let outputs = manager.drain_outputs();
+                                    for output in outputs {
+                                        info!(
+                                            "[RBC完成] 实例={}, 数据大小={}字节, hash={}...",
+                                            &output.instance_id[..8.min(output.instance_id.len())],
+                                            output.data.len(),
+                                            &output.data_hash[..16.min(output.data_hash.len())]
+                                        );
+                                    }
+                                }
+                                Err(e) => {
+                                    error!("处理RBC消息失败: {}", e);
+                                }
+                            }
+                        } else {
+                            warn!("RBC管理器未初始化，忽略RBC消息");
+                        }
+                    }
+                    Err(e) => {
+                        error!("反序列化RBC消息失败: {}", e);
+                    }
+                }
+            }
             Message::Disconnect { reason } => {
                 info!("节点 {} 主动断开，原因: {}", from, reason);
                 self.handle_peer_disconnected(from).await;
@@ -483,5 +565,91 @@ impl P2PNode {
     /// 获取本节点ID
     pub fn node_id(&self) -> &str {
         &self.node_id
+    }
+
+    /// 初始化RBC协议管理器
+    ///
+    /// 在所有节点连接建立后调用，传入所有参与节点的ID列表
+    /// # 参数
+    /// - `node_ids`: 所有参与RBC协议的节点ID列表
+    pub async fn init_rbc(&self, node_ids: Vec<String>) -> Result<()> {
+        let n = node_ids.len();
+        if n < 4 {
+            return Err(anyhow::anyhow!("RBC协议至少需要4个节点，当前: {}", n));
+        }
+
+        let config = RbcConfig::new(n)
+            .map_err(|e| anyhow::anyhow!("创建RBC配置失败: {}", e))?;
+
+        info!(
+            "初始化RBC管理器: 本节点={}, {}",
+            self.node_id,
+            config.info()
+        );
+
+        let manager = RbcManager::new(
+            self.node_id.clone(),
+            config,
+            node_ids,
+        );
+
+        let mut guard = self.rbc_manager.lock().await;
+        *guard = Some(manager);
+
+        Ok(())
+    }
+
+    /// 通过RBC协议广播数据到所有节点
+    ///
+    /// # 参数
+    /// - `data`: 要广播的数据
+    pub async fn rbc_broadcast(&self, data: Vec<u8>) -> Result<()> {
+        let instance_id = Uuid::new_v4().to_string();
+        info!(
+            "发起RBC广播: instance={}, 数据大小={}字节",
+            &instance_id[..8],
+            data.len()
+        );
+
+        let outgoing = {
+            let mut guard = self.rbc_manager.lock().await;
+            let manager = guard.as_mut()
+                .ok_or_else(|| anyhow::anyhow!("RBC管理器未初始化，请先调用init_rbc"))?;
+            manager.broadcast(instance_id, data)?
+        };
+
+        // 发送PROPOSE消息到各节点
+        for (target, msg) in outgoing {
+            if let Ok(serialized) = bincode::serialize(&msg) {
+                if target == self.node_id {
+                    // 发给自己的消息直接处理
+                    let mut guard = self.rbc_manager.lock().await;
+                    if let Some(ref mut manager) = *guard {
+                        if let Ok(echo_msgs) = manager.handle_message(msg) {
+                            // 释放锁后再发送网络消息
+                            drop(guard);
+                            for (echo_target, echo_msg) in echo_msgs {
+                                if let Ok(echo_serialized) = bincode::serialize(&echo_msg) {
+                                    if let Some(sender) = self.peer_table.get_sender(&echo_target) {
+                                        let _ = sender.send(Message::Rbc { payload: echo_serialized }).await;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if let Some(sender) = self.peer_table.get_sender(&target) {
+                    if let Err(e) = sender.send(Message::Rbc { payload: serialized }).await {
+                        warn!("发送RBC PROPOSE到节点 {} 失败: {}", target, e);
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    /// 获取RBC管理器的引用（用于外部查询状态）
+    pub fn rbc_manager(&self) -> Arc<Mutex<Option<RbcManager>>> {
+        self.rbc_manager.clone()
     }
 }

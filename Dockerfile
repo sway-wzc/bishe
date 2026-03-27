@@ -4,17 +4,19 @@ FROM rust:1.85-bookworm AS builder
 WORKDIR /app
 
 # 先复制依赖文件，利用Docker缓存
-COPY Cargo.toml Cargo.lock* ./
+COPY Cargo.toml Cargo.lock ./
 
-# 创建空的main.rs用于预编译依赖
-RUN mkdir -p src && echo 'fn main() {}' > src/main.rs
+# 创建空的源文件用于预编译依赖（需要同时创建main.rs和lib.rs）
+RUN mkdir -p src && \
+    echo 'fn main() {}' > src/main.rs && \
+    echo '' > src/lib.rs
 RUN cargo build --release 2>/dev/null || true
 
 # 复制实际源码
 COPY src/ src/
 
 # 清除之前的空编译产物，重新编译
-RUN touch src/main.rs && cargo build --release
+RUN touch src/main.rs src/lib.rs && cargo build --release
 
 # ==================== 运行阶段 ====================
 FROM debian:bookworm-slim

@@ -86,6 +86,12 @@ pub enum Message {
     Disconnect {
         reason: String,
     },
+
+    /// RBC协议消息（四轮长消息可靠广播）
+    Rbc {
+        /// 序列化后的RBC消息（使用bincode序列化的RbcMessage）
+        payload: Vec<u8>,
+    },
 }
 
 /// 消息帧编码器/解码器

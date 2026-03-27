@@ -1,5 +1,6 @@
 mod network;
 pub mod erasure;
+pub mod rbc;
 
 use anyhow::Result;
 use log::info;

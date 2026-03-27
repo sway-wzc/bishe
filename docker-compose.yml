@@ -10,7 +10,7 @@ services:
       - RUST_LOG=info
     networks:
       p2p-net:
-        ipv4_address: 172.30.0.10
+        ipv4_address: 172.20.0.10
     ports:
       - "8000:8000"
     healthcheck:
@@ -27,11 +27,11 @@ services:
     environment:
       - NODE_ID=node1
       - LISTEN_PORT=8000
-      - SEED_ADDR=172.30.0.10:8000
+      - SEED_ADDR=172.20.0.10:8000
       - RUST_LOG=info
     networks:
       p2p-net:
-        ipv4_address: 172.30.0.11
+        ipv4_address: 172.20.0.11
     ports:
       - "8001:8000"
     depends_on:
@@ -45,11 +45,11 @@ services:
     environment:
       - NODE_ID=node2
       - LISTEN_PORT=8000
-      - SEED_ADDR=172.30.0.10:8000
+      - SEED_ADDR=172.20.0.10:8000
       - RUST_LOG=info
     networks:
       p2p-net:
-        ipv4_address: 172.30.0.12
+        ipv4_address: 172.20.0.12
     ports:
       - "8002:8000"
     depends_on:
@@ -63,11 +63,11 @@ services:
     environment:
       - NODE_ID=node3
       - LISTEN_PORT=8000
-      - SEED_ADDR=172.30.0.10:8000
+      - SEED_ADDR=172.20.0.10:8000
       - RUST_LOG=info
     networks:
       p2p-net:
-        ipv4_address: 172.30.0.13
+        ipv4_address: 172.20.0.13
     ports:
       - "8003:8000"
     depends_on:
@@ -81,13 +81,49 @@ services:
     environment:
       - NODE_ID=node4
       - LISTEN_PORT=8000
-      - SEED_ADDR=172.30.0.10:8000
+      - SEED_ADDR=172.20.0.10:8000
       - RUST_LOG=info
     networks:
       p2p-net:
-        ipv4_address: 172.30.0.14
+        ipv4_address: 172.20.0.14
     ports:
       - "8004:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+  node5:
+    build: .
+    container_name: p2p-node5
+    hostname: node5
+    environment:
+      - NODE_ID=node5
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.20.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.20.0.15
+    ports:
+      - "8005:8000"
+    depends_on:
+      seed:
+        condition: service_healthy
+
+  node6:
+    build: .
+    container_name: p2p-node6
+    hostname: node6
+    environment:
+      - NODE_ID=node6
+      - LISTEN_PORT=8000
+      - SEED_ADDR=172.20.0.10:8000
+      - RUST_LOG=info
+    networks:
+      p2p-net:
+        ipv4_address: 172.20.0.16
+    ports:
+      - "8006:8000"
     depends_on:
       seed:
         condition: service_healthy
@@ -97,4 +133,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.30.0.0/16
+        - subnet: 172.20.0.0/16
