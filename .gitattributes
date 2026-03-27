@@ -1,0 +1,9 @@
+# 自动处理换行符
+* text=auto
+
+# Shell脚本强制使用LF换行符（Linux兼容）
+*.sh text eol=lf
+
+# Dockerfile强制使用LF
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
