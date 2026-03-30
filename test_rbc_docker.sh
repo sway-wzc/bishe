@@ -62,7 +62,9 @@ for i in $(seq 1 $((NODE_COUNT - 1))); do
 done
 
 # RBC广播等待延迟（秒），节点越多需要等待越久
-RBC_BROADCAST_DELAY=$((25 + NODE_COUNT * 2))
+# 容错测试中需要额外时间：sleep5(启动检查) + sleep20(网络就绪) + 停止节点(~10s/节点) + sleep3 + 基线采集
+# 因此延迟需要足够大，确保基线采集完成后广播才开始
+RBC_BROADCAST_DELAY=$((60 + NODE_COUNT * 3))
 # RBC协议完成等待时间（秒），节点越多需要等待越久
 # 超大文件分块广播需要更多时间（每个分块独立走一次RBC）
 # 50MB文件约13个分块，每个分块需要完整RBC流程
@@ -586,6 +588,8 @@ run_rbc_test() {
     fi
 
     # 4.5 采集网络流量基线快照（在RBC广播开始前）
+    # 注意：对于容错测试，停止节点耗时较长，需确保此时RBC广播尚未开始
+    # RBC_BROADCAST_DELAY 必须大于 (sleep5 + sleep20 + 停止节点耗时 + sleep3 + 采集耗时)
     step "采集网络流量基线..."
     local NET_BEFORE="${STATS_DIR}/${TEST_ID}_net_before.txt"
     local NET_AFTER="${STATS_DIR}/${TEST_ID}_net_after.txt"
