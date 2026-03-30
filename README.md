@@ -1,6 +1,6 @@
 # 高容错分布式数据分发系统
 
-基于 **Bracha RBC（可靠广播协议）** 和 **Reed-Solomon 纠删码** 的拜占庭容错分布式数据分发系统。
+基于 **Bracha RBC（可靠广播协议）** ，**去中心化P2P网络**和 **Reed-Solomon 纠删码** 的拜占庭容错分布式数据分发系统。
 
 ## 系统架构
 
@@ -30,6 +30,44 @@
 │  config.rs     - 节点配置                        │
 └─────────────────────────────────────────────────┘
 ```
+## 项目结构
+
+```
+bishe/
+├── Cargo.toml                  # Rust项目配置和依赖
+├── Cargo.lock                  # 依赖锁定文件
+├── Dockerfile                  # Docker镜像构建文件
+├── docker-compose.yml          # 默认7节点集群编排配置（向后兼容）
+├── docker-compose.dynamic.yml  # 测试脚本动态生成的配置（自动创建）
+├── test_p2p.sh                 # P2P网络集成测试脚本（支持 -n 参数）
+├── test_rbc_docker.sh          # RBC端到端测试脚本（支持 -n 参数）
+├── README.md                   # 本文件
+└── src/
+    ├── main.rs                 # 程序入口
+    ├── lib.rs                  # 库模块声明
+    ├── erasure/                # 纠删码模块
+    │   ├── mod.rs
+    │   ├── codec.rs            # Reed-Solomon编解码器
+    │   ├── shard.rs            # 分片数据结构
+    │   └── test_erasure.rs     # 纠删码单元测试（22个用例，含7个Berlekamp-Welch纠错测试）
+    ├── rbc/                    # RBC协议模块
+    │   ├── mod.rs
+    │   ├── protocol.rs         # Bracha RBC协议核心状态机（含RS编解码/哈希计时日志）
+    │   ├── manager.rs          # 多实例并发管理器（RbcManager）
+    │   ├── chunked.rs          # 超大文件分块广播管理器（6个单元测试）
+    │   ├── types.rs            # 类型定义（含自定义分片参数 with_custom_shards）
+    │   └── test_rbc.rs         # RBC单元测试（22个用例，含8个拜占庭+6个切片策略对比实验）
+    └── network/                # P2P网络模块
+        ├── mod.rs
+        ├── node.rs             # P2P节点核心
+        ├── connection.rs       # TCP连接管理
+        ├── discovery.rs        # 节点发现
+        ├── peer.rs             # 对等节点管理
+        ├── message.rs          # 消息序列化
+        └── config.rs           # 节点配置
+```
+
+---
 
 ## 核心算法：基于 ADD 优化的四轮长消息 RBC 协议
 
@@ -427,6 +465,7 @@ bash test_rbc_docker.sh -h
 ## Docker 部署说明
 
 ### 网络拓扑
+系统采用种子节点引导的去中心化架构，种子节点仅在启动阶段提供节点发现服务，稳态运行后所有节点完全对等，且支持多种子节点配置以消除单点故障。
 
 测试脚本会根据 `-n` 参数动态生成 `docker-compose.dynamic.yml`，自动分配节点 IP 和端口：
 
@@ -439,6 +478,171 @@ bash test_rbc_docker.sh -h
 | nodeN | p2p-nodeN | 172.28.1.N | 800N | 普通节点 |
 
 > 默认的 `docker-compose.yml` 仍保留7节点静态配置，可直接用 `docker compose up -d` 手动启动。
+
+### 网络初始化过程
+
+#### 阶段一：种子节点引导（启动阶段）
+
+所有普通节点启动时，首先通过 TCP 连接到种子节点（Seed），完成握手（Handshake / HandshakeAck）：
+
+```mermaid
+graph TD
+    subgraph 引导阶段
+        SEED["🌱 Seed 种子节点<br/>172.28.0.10:8000<br/>（广播发起者）"]
+        N1["📦 Node1<br/>172.28.1.1:8001"]
+        N2["📦 Node2<br/>172.28.1.2:8002"]
+        N3["📦 Node3<br/>:8003"]
+        N4["📦 Node4<br/>:8004"]
+        N5["📦 Node5<br/>:8005"]
+        N6["📦 Node6<br/>:8006"]
+
+        N1 -->|"TCP 握手"| SEED
+        N2 -->|"TCP 握手"| SEED
+        N3 -->|"TCP 握手"| SEED
+        N4 -->|"TCP 握手"| SEED
+        N5 -->|"TCP 握手"| SEED
+        N6 -->|"TCP 握手"| SEED
+    end
+
+    style SEED fill:#ff9800,stroke:#e65100,color:#fff,stroke-width:2px
+    style N1 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N2 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N3 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N4 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N5 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N6 fill:#42a5f5,stroke:#1565c0,color:#fff
+```
+
+#### 阶段二：节点发现 → 全连接 Mesh 网络（稳态）
+
+通过 `DiscoverRequest/Response` 消息交换已知节点列表，各节点自动发现并连接所有其他节点，最终形成**全连接 Mesh 拓扑**（每对节点之间都有一条 TCP 长连接）：
+
+```mermaid
+graph TD
+    SEED["🌱 Seed<br/>种子节点"]
+    N1["📦 Node1"]
+    N2["📦 Node2"]
+    N3["📦 Node3"]
+    N4["📦 Node4"]
+    N5["📦 Node5"]
+    N6["📦 Node6"]
+
+    SEED <-->|TCP| N1
+    SEED <-->|TCP| N2
+    SEED <-->|TCP| N3
+    SEED <-->|TCP| N4
+    SEED <-->|TCP| N5
+    SEED <-->|TCP| N6
+
+    N1 <-->|TCP| N2
+    N1 <-->|TCP| N3
+    N1 <-->|TCP| N4
+    N1 <-->|TCP| N5
+    N1 <-->|TCP| N6
+
+    N2 <-->|TCP| N3
+    N2 <-->|TCP| N4
+    N2 <-->|TCP| N5
+    N2 <-->|TCP| N6
+
+    N3 <-->|TCP| N4
+    N3 <-->|TCP| N5
+    N3 <-->|TCP| N6
+
+    N4 <-->|TCP| N5
+    N4 <-->|TCP| N6
+
+    N5 <-->|TCP| N6
+
+    style SEED fill:#ff9800,stroke:#e65100,color:#fff,stroke-width:2px
+    style N1 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N2 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N3 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N4 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N5 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N6 fill:#42a5f5,stroke:#1565c0,color:#fff
+```
+
+> **说明**：以 n=7 为例，全连接 Mesh 网络共有 C(7,2) = **21 条 TCP 长连接**。每条连接上承载握手、心跳（Ping/Pong）、节点发现（DiscoverRequest/Response）以及 RBC 协议消息（Propose/Echo/Ready）。
+
+#### 节点组网与通信机制
+
+```mermaid
+sequenceDiagram
+    participant N as 新节点 (NodeX)
+    participant S as 种子节点 (Seed)
+    participant P as 已有节点 (NodeY)
+
+    Note over N,P: 第1步：连接种子节点
+    N->>S: TCP Connect
+    N->>S: Handshake {node_id, listen_port, version}
+    S->>N: HandshakeAck {node_id, listen_port, version}
+    Note over N,S: ✅ 握手完成，建立长连接
+
+    Note over N,P: 第2步：节点发现
+    N->>S: DiscoverRequest
+    S->>N: DiscoverResponse {已知节点列表}
+    Note over N: 获知 NodeY 等其他节点的地址
+
+    Note over N,P: 第3步：自动连接新发现的节点
+    N->>P: TCP Connect
+    N->>P: Handshake {node_id, listen_port, version}
+    P->>N: HandshakeAck {node_id, listen_port, version}
+    Note over N,P: ✅ 全连接 Mesh 逐步形成
+
+    Note over N,P: 第4步：心跳保活（持续进行）
+    loop 每 5 秒
+        N->>S: Ping {timestamp}
+        S->>N: Pong {timestamp}
+        N->>P: Ping {timestamp}
+        P->>N: Pong {timestamp}
+    end
+
+    Note over N,P: 第5步：RBC 协议初始化
+    Note over N: 节点数稳定后<br/>自动初始化 RBC 协议
+```
+
+#### 容错场景下的网络拓扑（n=7, t=2）
+
+```mermaid
+graph TD
+    subgraph 正常节点
+        SEED["🌱 Seed"]
+        N1["📦 Node1"]
+        N2["📦 Node2"]
+        N3["📦 Node3"]
+        N4["📦 Node4"]
+    end
+
+    subgraph 故障节点
+        N5["💀 Node5<br/>（宕机）"]
+        N6["💀 Node6<br/>（宕机）"]
+    end
+
+    SEED <-->|TCP| N1
+    SEED <-->|TCP| N2
+    SEED <-->|TCP| N3
+    SEED <-->|TCP| N4
+    N1 <-->|TCP| N2
+    N1 <-->|TCP| N3
+    N1 <-->|TCP| N4
+    N2 <-->|TCP| N3
+    N2 <-->|TCP| N4
+    N3 <-->|TCP| N4
+
+    SEED -.-x|"❌ 断开"| N5
+    SEED -.-x|"❌ 断开"| N6
+
+    style SEED fill:#ff9800,stroke:#e65100,color:#fff,stroke-width:2px
+    style N1 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N2 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N3 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N4 fill:#42a5f5,stroke:#1565c0,color:#fff
+    style N5 fill:#ef5350,stroke:#b71c1c,color:#fff
+    style N6 fill:#ef5350,stroke:#b71c1c,color:#fff
+```
+
+> **容错说明**：当 n=7 时，最大容错 t=2，即最多允许 2 个节点同时宕机或作恶。剩余 5 个诚实节点（≥ 2t+1=5）仍可正常完成 RBC 协议的广播与数据重建。心跳超时机制会自动检测并标记故障节点，故障节点恢复后可重新握手接入网络。
 
 ### 手动启动集群
 
@@ -494,44 +698,7 @@ docker compose down -v --remove-orphans
 
 ---
 
-## 项目结构
 
-```
-bishe/
-├── Cargo.toml                  # Rust项目配置和依赖
-├── Cargo.lock                  # 依赖锁定文件
-├── Dockerfile                  # Docker镜像构建文件
-├── docker-compose.yml          # 默认7节点集群编排配置（向后兼容）
-├── docker-compose.dynamic.yml  # 测试脚本动态生成的配置（自动创建）
-├── test_p2p.sh                 # P2P网络集成测试脚本（支持 -n 参数）
-├── test_rbc_docker.sh          # RBC端到端测试脚本（支持 -n 参数）
-├── README.md                   # 本文件
-└── src/
-    ├── main.rs                 # 程序入口
-    ├── lib.rs                  # 库模块声明
-    ├── erasure/                # 纠删码模块
-    │   ├── mod.rs
-    │   ├── codec.rs            # Reed-Solomon编解码器
-    │   ├── shard.rs            # 分片数据结构
-    │   └── test_erasure.rs     # 纠删码单元测试（22个用例，含7个Berlekamp-Welch纠错测试）
-    ├── rbc/                    # RBC协议模块
-    │   ├── mod.rs
-    │   ├── protocol.rs         # Bracha RBC协议核心状态机（含RS编解码/哈希计时日志）
-    │   ├── manager.rs          # 多实例并发管理器（RbcManager）
-    │   ├── chunked.rs          # 超大文件分块广播管理器（6个单元测试）
-    │   ├── types.rs            # 类型定义（含自定义分片参数 with_custom_shards）
-    │   └── test_rbc.rs         # RBC单元测试（22个用例，含8个拜占庭+6个切片策略对比实验）
-    └── network/                # P2P网络模块
-        ├── mod.rs
-        ├── node.rs             # P2P节点核心
-        ├── connection.rs       # TCP连接管理
-        ├── discovery.rs        # 节点发现
-        ├── peer.rs             # 对等节点管理
-        ├── message.rs          # 消息序列化
-        └── config.rs           # 节点配置
-```
-
----
 
 ## 超大文件分块广播
 
