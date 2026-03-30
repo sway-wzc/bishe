@@ -10,7 +10,8 @@
 │         程序入口、环境变量配置、RBC输出监控        │
 ├─────────────────────────────────────────────────┤
 │              RBC协议层 (src/rbc/)                │
-│  protocol.rs  - Bracha RBC协议核心实现           │
+│  protocol.rs  - Bracha RBC协议核心状态机         │
+│  manager.rs   - 多实例并发管理器                 │
 │  chunked.rs   - 超大文件分块广播管理器          │
 │  types.rs     - 消息类型、配置、状态定义          │
 │  test_rbc.rs  - 单元测试（含拜占庭容错测试）      │
@@ -505,7 +506,8 @@ bishe/
     │   └── test_erasure.rs     # 纠删码单元测试（22个用例，含7个Berlekamp-Welch纠错测试）
     ├── rbc/                    # RBC协议模块
     │   ├── mod.rs
-    │   ├── protocol.rs         # Bracha RBC协议实现
+    │   ├── protocol.rs         # Bracha RBC协议核心状态机（RbcInstance）
+    │   ├── manager.rs          # 多实例并发管理器（RbcManager）
     │   ├── chunked.rs          # 超大文件分块广播管理器（6个单元测试）
     │   ├── types.rs            # 类型定义
     │   └── test_rbc.rs         # RBC单元测试（16个用例，含8个拜占庭测试）
