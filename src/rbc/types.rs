@@ -112,6 +112,42 @@ impl RbcConfig {
         })
     }
 
+    /// 根据总节点数和自定义数据分片数创建RBC配置
+    ///
+    /// 用于切片策略对比实验，允许自定义 data_shards (k) 值。
+    ///
+    /// # 参数
+    /// - `total_nodes`: 网络中的总节点数 n（需 >= 4）
+    /// - `data_shards`: 自定义数据分片数 k（需满足 1 <= k < n）
+    ///
+    /// # 注意
+    /// 自定义 k 值可能不满足 BFT 安全性要求（标准要求 k = t+1），
+    /// 仅用于实验对比传输开销与计算开销。
+    pub fn with_custom_shards(total_nodes: usize, data_shards: usize) -> Result<Self, String> {
+        if total_nodes < 4 {
+            return Err(format!(
+                "节点数必须 >= 4 以满足 n >= 3t+1，当前: {}",
+                total_nodes
+            ));
+        }
+        if data_shards == 0 || data_shards >= total_nodes {
+            return Err(format!(
+                "数据分片数必须满足 1 <= k < n，当前: k={}, n={}",
+                data_shards, total_nodes
+            ));
+        }
+
+        let fault_tolerance = (total_nodes - 1) / 3;
+        let parity_shards = total_nodes - data_shards;
+
+        Ok(Self {
+            total_nodes,
+            fault_tolerance,
+            data_shards,
+            parity_shards,
+        })
+    }
+
     /// ECHO消息的确认阈值：2t + 1
     pub fn echo_threshold(&self) -> usize {
         2 * self.fault_tolerance + 1

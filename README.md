@@ -10,11 +10,11 @@
 │         程序入口、环境变量配置、RBC输出监控        │
 ├─────────────────────────────────────────────────┤
 │              RBC协议层 (src/rbc/)                │
-│  protocol.rs  - Bracha RBC协议核心状态机         │
+│  protocol.rs  - Bracha RBC协议核心状态机（含计时日志）│
 │  manager.rs   - 多实例并发管理器                 │
 │  chunked.rs   - 超大文件分块广播管理器          │
 │  types.rs     - 消息类型、配置、状态定义          │
-│  test_rbc.rs  - 单元测试（含拜占庭容错测试）      │
+│  test_rbc.rs  - 单元测试（含拜占庭容错+切片策略对比）│
 ├─────────────────────────────────────────────────┤
 │            纠删码层 (src/erasure/)               │
 │  codec.rs     - Reed-Solomon编解码器             │
@@ -228,7 +228,7 @@ cargo build --release
 
 | 层次 | 测试内容 | 运行方式 | 耗时 |
 |------|---------|---------|------|
-| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播（44个用例） | `cargo test` | ~5秒 |
+| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播 + 切片策略对比实验（50个用例） | `cargo test` | ~5秒 |
 | **P2P网络集成测试** | Docker多节点组网、握手、心跳、容错 | `bash test_p2p.sh [-n N]` | ~3分钟 |
 | **RBC端到端测试** | Docker多节点文件广播分发与数据完整性验证 | `bash test_rbc_docker.sh [-n N]` | ~20分钟 |
 
@@ -248,7 +248,7 @@ cargo test --lib -- --nocapture
 # 纠删码模块测试（22个用例）
 cargo test --lib erasure::test_erasure -- --nocapture
 
-# RBC协议模块测试（16个用例）
+# RBC协议模块测试（22个用例，含6个切片策略对比实验）
 cargo test --lib rbc::test_rbc -- --nocapture
 ```
 
@@ -260,6 +260,9 @@ cargo test --lib rbc::test_rbc::test_rbc -- --nocapture
 
 # 仅运行拜占庭恶意节点测试（8个用例）
 cargo test --lib rbc::test_rbc::test_byzantine -- --nocapture
+
+# 仅运行切片策略对比实验（6个用例）
+cargo test --lib rbc::test_rbc::test_strategy -- --nocapture
 
 # 仅运行分块广播测试（6个用例）
 cargo test --lib rbc::chunked -- --nocapture
@@ -324,6 +327,12 @@ cargo test --lib rbc::test_rbc::test_byzantine_mixed_attack_7_nodes -- --nocaptu
 | `test_byzantine_max_tolerance_10_nodes` | 🔴 恶意场景：10节点极限容错 |
 | `test_byzantine_forged_shard_index` | 🔴 恶意场景：伪造分片索引（7节点） |
 | `test_byzantine_forged_shard_index_10_nodes` | 🔴 恶意场景：10节点极限伪造索引攻击 |
+| `test_strategy_compare_k_values_7_nodes` | 📊 实验1：RS编码参数对比（n=7, 不同k值对传输/计算开销的影响） |
+| `test_strategy_compare_k_values_10_nodes` | 📊 实验1b：RS编码参数对比（n=10, 不同k值） |
+| `test_strategy_compare_file_sizes` | 📊 实验2：文件大小扩展性（不同文件大小对开销的影响） |
+| `test_strategy_compare_chunk_sizes` | 📊 实验3：分块大小对比（不同分块大小对大文件传输开销的影响） |
+| `test_strategy_compare_node_scales` | 📊 实验4：节点规模扩展性（不同节点数对开销的影响） |
+| `test_strategy_no_coding_baseline` | 📊 实验5：无编码基线对比（证明纠删码的传输优化价值） |
 
 **分块广播模块** (`src/rbc/chunked.rs`)：
 
@@ -411,6 +420,7 @@ bash test_rbc_docker.sh -h
 
 - 测试1-8 验证所有存活节点接收到的数据的 **SHA-256 哈希** 是否与原始文件一致
 - 测试9-12 为**拜占庭容错测试**，验证在恶意节点存在的情况下，所有诚实节点仍能正确完成 RBC 协议并输出正确数据，同时通过日志确认恶意行为已实际执行
+- 每个测试用例自动采集**传输开销**（各节点网络收发字节数、传输放大比）和**计算开销**（RS编码/解码耗时、SHA-256哈希耗时），统计数据保存至 `rbc_stats_tmp/overhead_summary.csv`
 
 ---
 
@@ -506,11 +516,11 @@ bishe/
     │   └── test_erasure.rs     # 纠删码单元测试（22个用例，含7个Berlekamp-Welch纠错测试）
     ├── rbc/                    # RBC协议模块
     │   ├── mod.rs
-    │   ├── protocol.rs         # Bracha RBC协议核心状态机（RbcInstance）
+    │   ├── protocol.rs         # Bracha RBC协议核心状态机（含RS编解码/哈希计时日志）
     │   ├── manager.rs          # 多实例并发管理器（RbcManager）
     │   ├── chunked.rs          # 超大文件分块广播管理器（6个单元测试）
-    │   ├── types.rs            # 类型定义
-    │   └── test_rbc.rs         # RBC单元测试（16个用例，含8个拜占庭测试）
+    │   ├── types.rs            # 类型定义（含自定义分片参数 with_custom_shards）
+    │   └── test_rbc.rs         # RBC单元测试（22个用例，含8个拜占庭+6个切片策略对比实验）
     └── network/                # P2P网络模块
         ├── mod.rs
         ├── node.rs             # P2P节点核心
@@ -574,3 +584,65 @@ graph TD
 | **拜占庭容错** | 每个分块独立走 RBC 协议，继承完整的 BFT 保证 |
 | **并发广播** | 多个分块可并发进行 RBC 广播 |
 | **透明切换** | 调用者无需关心文件大小，系统自动选择广播模式 |
+
+---
+
+## 切片策略对比实验
+
+系统内置了 **6 组切片策略对比实验**，用于量化分析不同 RS 编码参数对传输开销与计算开销的影响。
+
+### 运行实验
+
+```bash
+# 运行全部6个切片策略对比实验
+cargo test --lib rbc::test_rbc::test_strategy -- --nocapture
+
+# 运行单个实验
+cargo test --lib rbc::test_rbc::test_strategy_compare_k_values_7_nodes -- --nocapture
+cargo test --lib rbc::test_rbc::test_strategy_no_coding_baseline -- --nocapture
+```
+
+### 实验设计
+
+| 实验 | 变量 | 固定参数 | 目的 |
+|------|------|---------|------|
+| **实验1** | k=2,3,4,5,6 | n=7, 100KB | 不同 k 值对传输放大比和编解码耗时的影响 |
+| **实验1b** | k=2,4,5,7,9 | n=10, 100KB | 10 节点场景下的 k 值对比 |
+| **实验2** | 1KB~1MB | n=7, k=3 | 文件大小对传输放大比和编解码耗时的扩展性 |
+| **实验3** | 5KB~50KB 分块 | n=7, 50KB | 不同分块大小对大文件传输开销的影响 |
+| **实验4** | n=4,7,10,13 | k=t+1, 100KB | 节点规模对传输放大比的扩展性 |
+| **实验5** | k=1~6 | n=7, 100KB | 无编码基线 vs 纠删码策略的传输优化价值 |
+
+### 统计指标
+
+每个实验自动统计以下指标：
+
+| 指标 | 说明 |
+|------|------|
+| **传输消息数** | RBC 协议中 PROPOSE/ECHO/READY 消息的总数 |
+| **传输字节数** | 所有消息的总传输量（含分片数据和元信息） |
+| **传输放大比** | 总传输字节数 / 原始文件大小 |
+| **RS 编码耗时** | Reed-Solomon 编码的计算时间 |
+| **RS 解码耗时** | Reed-Solomon 解码的计算时间 |
+| **端到端总耗时** | 从广播发起到所有节点完成的总时间 |
+
+### 实验结论示例（n=7, 100KB）
+
+| 策略 | k | p | 传输放大比 | RS编码 | RS解码 |
+|------|---|---|-----------|--------|--------|
+| 无编码基线 | 1 | 6 | **105.13x** | 14.0ms | 12.6ms |
+| 高冗余 | 2 | 5 | 56.13x | 8.7ms | 6.5ms |
+| **标准(k=t+1)** | **3** | **4** | **39.80x** | **6.5ms** | **4.1ms** |
+| 对称 | 4 | 3 | 31.63x | 5.2ms | 2.7ms |
+| 低冗余 | 6 | 1 | 23.46x | 3.4ms | 0.9ms |
+
+> **结论**：k 越大，传输放大比和计算开销均越低，但纠错能力越弱。标准策略 k=t+1 是安全性与效率的最佳平衡点——相比无编码基线节省 **62.1%** 传输量，同时计算开销也更低。
+
+### Docker 端到端开销统计
+
+RBC 端到端测试脚本（`test_rbc_docker.sh`）也内置了开销统计功能：
+
+- **传输开销**：通过 Docker 容器网络接口统计（`/sys/class/net/eth0/statistics/`）采集各节点收发字节数
+- **计算开销**：从容器日志中提取 RS 编码/解码和 SHA-256 哈希的耗时数据
+- **理论分析**：自动计算 PROPOSE/ECHO/READY 各阶段的理论传输量和传输放大比
+- **CSV 汇总**：所有测试的开销数据自动写入 `rbc_stats_tmp/overhead_summary.csv`，便于后续分析
