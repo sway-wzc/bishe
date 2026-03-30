@@ -78,6 +78,8 @@ SUBNET="172.28.0.0/16"
 # 开销统计数据目录
 STATS_DIR="${SCRIPT_DIR}/rbc_stats_tmp"
 mkdir -p "$STATS_DIR"
+# 清理上次测试残留的CSV汇总文件，避免新数据追加到旧数据后面
+rm -f "${STATS_DIR}/overhead_summary.csv"
 
 echo "=========================================="
 echo "  高容错分布式数据分发系统 RBC协议测试"
@@ -1151,8 +1153,7 @@ if [ -f "${STATS_DIR}/overhead_summary.csv" ]; then
     echo -e "  详细数据目录: ${STATS_DIR}/"
     echo ""
     echo -e "  ${BLUE}CSV文件内容预览:${NC}"
-    head -5 "${STATS_DIR}/overhead_summary.csv" | column -t -s ','
-    echo "  ..."
+    column -t -s ',' "${STATS_DIR}/overhead_summary.csv"
     echo ""
     echo -e "  ${BLUE}提示: 可用以下命令查看完整CSV:${NC}"
     echo -e "    column -t -s ',' ${STATS_DIR}/overhead_summary.csv"
