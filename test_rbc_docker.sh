@@ -295,6 +295,10 @@ print_overhead_report() {
         local THEORY_AMP
         THEORY_AMP=$(echo "scale=2; $THEORY_TOTAL / $FILE_SIZE" | bc)
         echo -e "${CYAN}│${NC}   理论传输放大比:      ${THEORY_AMP}x"
+        # 修正理论值：本地消息不经过网卡，实际TX = 理论值 × (n-1)/n
+        local CORRECTED_AMP
+        CORRECTED_AMP=$(echo "scale=2; $THEORY_AMP * ($NODE_COUNT - 1) / $NODE_COUNT" | bc)
+        echo -e "${CYAN}│${NC}   修正传输放大比(TX):  ${CORRECTED_AMP}x (×(n-1)/n, 本地消息不经网卡)"
     fi
 
     echo -e "${CYAN}└──────────────────────────────────────────────────────┘${NC}"
@@ -303,7 +307,7 @@ print_overhead_report() {
     # 将统计数据写入CSV文件（便于后续分析）
     local CSV_FILE="${STATS_DIR}/overhead_summary.csv"
     if [ ! -f "$CSV_FILE" ]; then
-        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比" > "$CSV_FILE"
+        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比,修正理论放大比" > "$CSV_FILE"
     fi
     local AMP_VAL="0"
     local THEORY_AMP_VAL="0"
@@ -313,7 +317,11 @@ print_overhead_report() {
     if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
         THEORY_AMP_VAL=$(echo "scale=4; $THEORY_TOTAL / $FILE_SIZE" | bc)
     fi
-    echo "${TEST_NAME},${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL}" >> "$CSV_FILE"
+    local CORRECTED_AMP_VAL="0"
+    if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
+        CORRECTED_AMP_VAL=$(echo "scale=4; $THEORY_AMP_VAL * ($NODE_COUNT - 1) / $NODE_COUNT" | bc)
+    fi
+    echo "${TEST_NAME},${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
 }
 
 # ==========================================
