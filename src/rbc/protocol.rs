@@ -2,6 +2,7 @@ use anyhow::{anyhow, Result};
 use log::{debug, info, warn};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
+use std::time::Instant;
 
 use crate::erasure::codec::ErasureCodec;
 use crate::erasure::shard::DataShard;
@@ -255,21 +256,35 @@ impl RbcInstance {
         }
 
         // 算法第8行：h := hash(M)
+        let hash_start = Instant::now();
         let data_hash = Self::compute_hash(data);
+        let hash_elapsed = hash_start.elapsed();
 
         // 记录广播者ID
         self.broadcaster_id = Some(broadcaster.to_string());
 
         info!(
-            "[RBC-{}] 收到PROPOSE: 广播者={}, 数据大小={}, h={}...",
+            "[RBC-{}] 收到PROPOSE: 广播者={}, 数据大小={}, h={}..., SHA-256哈希耗时={:.3}ms",
             &self.instance_id[..8.min(self.instance_id.len())],
             broadcaster,
             data.len(),
-            &data_hash[..16]
+            &data_hash[..16],
+            hash_elapsed.as_secs_f64() * 1000.0
         );
 
         // 算法第9行：M' := [m_1, ..., m_n] := RSEnc(M_i, n, t+1)
+        let encode_start = Instant::now();
         let shard_group = self.codec.encode(data)?;
+        let encode_elapsed = encode_start.elapsed();
+
+        info!(
+            "[RBC-{}] RS编码耗时={:.3}ms, 数据大小={}B, 分片数={}, 分片大小={}B",
+            &self.instance_id[..8.min(self.instance_id.len())],
+            encode_elapsed.as_secs_f64() * 1000.0,
+            data.len(),
+            shard_group.shards.len(),
+            shard_group.shards.first().map(|s| s.data.len()).unwrap_or(0)
+        );
 
         // 保存元信息
         self.original_size = Some(shard_group.original_size);
@@ -879,12 +894,25 @@ impl RbcInstance {
 
         // 算法第19行：RSDec(t+1, r, T)
         // 使用Berlekamp-Welch纠错解码
+        let decode_start = Instant::now();
         let recovered = self.codec.decode(&shards)?;
+        let decode_elapsed = decode_start.elapsed();
 
         // 算法第20行：if hash(M') = h then
+        let hash_start = Instant::now();
         let recovered_hash = Self::compute_hash(&recovered);
+        let hash_elapsed = hash_start.elapsed();
+
         if recovered_hash == expected_hash {
             // 算法第21行：output M' and return
+            info!(
+                "[RBC-{}] 纠错解码成功: RS解码耗时={:.3}ms, 哈希验证耗时={:.3}ms, 数据大小={}B, |T_h|={}",
+                &self.instance_id[..8.min(self.instance_id.len())],
+                decode_elapsed.as_secs_f64() * 1000.0,
+                hash_elapsed.as_secs_f64() * 1000.0,
+                recovered.len(),
+                shards.len()
+            );
             Ok(Some(RbcOutput {
                 instance_id: self.instance_id.clone(),
                 broadcaster: self.broadcaster_id.clone().unwrap_or_default(),

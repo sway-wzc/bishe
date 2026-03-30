@@ -73,14 +73,246 @@ COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.dynamic.yml"
 SEED_IP="172.28.0.10"
 SUBNET="172.28.0.0/16"
 
+# 开销统计数据目录
+STATS_DIR="${SCRIPT_DIR}/rbc_stats_tmp"
+mkdir -p "$STATS_DIR"
+
 echo "=========================================="
 echo "  高容错分布式数据分发系统 RBC协议测试"
 echo "  节点数: $NODE_COUNT (n=${NODE_COUNT}, t=${T})"
 echo "  数据分片: $((T + 1))片, 校验分片: $((NODE_COUNT - T - 1))片"
 echo "  广播延迟: ${RBC_BROADCAST_DELAY}秒"
 echo "  测试内容: 大文件分片广播分发与恢复"
+echo "  附加统计: 传输开销 + 计算开销"
 echo "=========================================="
 echo ""
+
+# ==========================================
+# 开销统计工具函数
+# ==========================================
+
+# 采集单个容器的网络流量统计（通过docker exec读取/sys网络统计）
+# 参数1: 容器名
+# 返回: "发送字节数 接收字节数"
+capture_container_net_stats() {
+    local CONTAINER="$1"
+    local TX_BYTES RX_BYTES
+    TX_BYTES=$(docker exec "$CONTAINER" cat /sys/class/net/eth0/statistics/tx_bytes 2>/dev/null || echo "0")
+    RX_BYTES=$(docker exec "$CONTAINER" cat /sys/class/net/eth0/statistics/rx_bytes 2>/dev/null || echo "0")
+    echo "$TX_BYTES $RX_BYTES"
+}
+
+# 采集所有节点的网络流量快照
+# 参数1: 快照文件路径
+capture_all_net_stats() {
+    local SNAPSHOT_FILE="$1"
+    > "$SNAPSHOT_FILE"
+    for node in $ALL_NODES; do
+        local CONTAINER="p2p-${node}"
+        local STATS
+        STATS=$(capture_container_net_stats "$CONTAINER")
+        echo "${node} ${STATS}" >> "$SNAPSHOT_FILE"
+    done
+}
+
+# 计算两次快照之间的网络流量差值
+# 参数1: 前快照文件  参数2: 后快照文件  参数3: 输出文件
+calc_net_diff() {
+    local BEFORE="$1"
+    local AFTER="$2"
+    local OUTPUT="$3"
+    > "$OUTPUT"
+
+    local TOTAL_TX=0
+    local TOTAL_RX=0
+
+    while IFS=' ' read -r NODE TX_BEFORE RX_BEFORE; do
+        local TX_AFTER RX_AFTER
+        TX_AFTER=$(grep "^${NODE} " "$AFTER" | awk '{print $2}')
+        RX_AFTER=$(grep "^${NODE} " "$AFTER" | awk '{print $3}')
+        TX_AFTER=${TX_AFTER:-0}
+        RX_AFTER=${RX_AFTER:-0}
+
+        local TX_DIFF=$((TX_AFTER - TX_BEFORE))
+        local RX_DIFF=$((RX_AFTER - RX_BEFORE))
+
+        echo "${NODE} ${TX_DIFF} ${RX_DIFF}" >> "$OUTPUT"
+        TOTAL_TX=$((TOTAL_TX + TX_DIFF))
+        TOTAL_RX=$((TOTAL_RX + RX_DIFF))
+    done < "$BEFORE"
+
+    echo "TOTAL ${TOTAL_TX} ${TOTAL_RX}" >> "$OUTPUT"
+}
+
+# 格式化字节数为人类可读格式
+format_bytes() {
+    local BYTES=$1
+    if [ "$BYTES" -ge 1073741824 ]; then
+        echo "$(echo "scale=2; $BYTES / 1073741824" | bc)GB"
+    elif [ "$BYTES" -ge 1048576 ]; then
+        echo "$(echo "scale=2; $BYTES / 1048576" | bc)MB"
+    elif [ "$BYTES" -ge 1024 ]; then
+        echo "$(echo "scale=2; $BYTES / 1024" | bc)KB"
+    else
+        echo "${BYTES}B"
+    fi
+}
+
+# 从容器日志中提取RBC计算开销（编码/解码耗时）
+# 参数1: 测试名称标识
+extract_computation_stats() {
+    local TEST_ID="$1"
+    local COMP_FILE="${STATS_DIR}/${TEST_ID}_computation.txt"
+    > "$COMP_FILE"
+
+    for node in $ALL_NODES; do
+        local NODE_LOG
+        NODE_LOG=$(dc_with_override logs "$node" 2>&1)
+
+        # 提取RS编码耗时（格式: "RS编码耗时=X.XXXms"）
+        local ENCODE_TIME
+        ENCODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS编码耗时=\K[0-9.]+ms' | tail -1 || echo "")
+
+        # 提取RS解码耗时（格式: "RS解码耗时=X.XXXms"）
+        local DECODE_TIME
+        DECODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS解码耗时=\K[0-9.]+ms' | tail -1 || echo "")
+
+        # 提取SHA-256哈希计算耗时（格式: "SHA-256哈希耗时=X.XXXms"）
+        local HASH_TIME
+        HASH_TIME=$(echo "$NODE_LOG" | grep -oP 'SHA-256哈希耗时=\K[0-9.]+ms' | tail -1 || echo "")
+
+        # 提取哈希验证耗时（格式: "哈希验证耗时=X.XXXms"）
+        local HASH_VERIFY_TIME
+        HASH_VERIFY_TIME=$(echo "$NODE_LOG" | grep -oP '哈希验证耗时=\K[0-9.]+ms' | tail -1 || echo "")
+
+        # 提取纠错解码成功的总信息
+        local DECODE_INFO
+        DECODE_INFO=$(echo "$NODE_LOG" | grep '纠错解码成功' | tail -1 || echo "")
+
+        echo "${node} encode=${ENCODE_TIME:-N/A} decode=${DECODE_TIME:-N/A} hash=${HASH_TIME:-N/A} hash_verify=${HASH_VERIFY_TIME:-N/A}" >> "$COMP_FILE"
+    done
+}
+
+# 输出开销统计报告
+# 参数1: 测试名称  参数2: 原始文件大小  参数3: 网络差值文件  参数4: 端到端耗时(秒)  参数5: 测试ID
+print_overhead_report() {
+    local TEST_NAME="$1"
+    local FILE_SIZE="$2"
+    local NET_DIFF_FILE="$3"
+    local E2E_TIME="$4"
+    local TEST_ID="$5"
+    local COMP_FILE="${STATS_DIR}/${TEST_ID}_computation.txt"
+
+    echo ""
+    echo -e "${CYAN}┌──────────────────────────────────────────────────────┐${NC}"
+    echo -e "${CYAN}│          开销统计报告: ${TEST_NAME}${NC}"
+    echo -e "${CYAN}├──────────────────────────────────────────────────────┤${NC}"
+
+    # 1. 端到端延迟
+    echo -e "${CYAN}│${NC} ${BLUE}[端到端延迟]${NC} ${E2E_TIME}秒"
+    echo -e "${CYAN}│${NC}"
+
+    # 2. 传输开销
+    echo -e "${CYAN}│${NC} ${BLUE}[传输开销 - 各节点网络流量]${NC}"
+    echo -e "${CYAN}│${NC}   节点        发送(TX)         接收(RX)         合计"
+    echo -e "${CYAN}│${NC}   ─────────  ──────────────  ──────────────  ──────────────"
+
+    local TOTAL_TX=0
+    local TOTAL_RX=0
+
+    if [ -f "$NET_DIFF_FILE" ]; then
+        while IFS=' ' read -r NODE TX RX; do
+            if [ "$NODE" = "TOTAL" ]; then
+                TOTAL_TX=$TX
+                TOTAL_RX=$RX
+                continue
+            fi
+            local SUM=$((TX + RX))
+            printf "${CYAN}│${NC}   %-10s  %-14s  %-14s  %-14s\n" \
+                "$NODE" "$(format_bytes $TX)" "$(format_bytes $RX)" "$(format_bytes $SUM)"
+        done < "$NET_DIFF_FILE"
+    fi
+
+    local TOTAL_TRAFFIC=$((TOTAL_TX + TOTAL_RX))
+    echo -e "${CYAN}│${NC}   ─────────  ──────────────  ──────────────  ──────────────"
+    printf "${CYAN}│${NC}   ${GREEN}%-10s  %-14s  %-14s  %-14s${NC}\n" \
+        "合计" "$(format_bytes $TOTAL_TX)" "$(format_bytes $TOTAL_RX)" "$(format_bytes $TOTAL_TRAFFIC)"
+
+    # 3. 传输放大比
+    if [ "$FILE_SIZE" -gt 0 ] && [ "$TOTAL_TRAFFIC" -gt 0 ]; then
+        local AMPLIFICATION
+        AMPLIFICATION=$(echo "scale=2; $TOTAL_TRAFFIC / $FILE_SIZE" | bc)
+        echo -e "${CYAN}│${NC}"
+        echo -e "${CYAN}│${NC} ${BLUE}[传输放大比]${NC} ${AMPLIFICATION}x (总流量/原始文件大小)"
+        echo -e "${CYAN}│${NC}   原始文件: $(format_bytes $FILE_SIZE), 总网络流量: $(format_bytes $TOTAL_TRAFFIC)"
+    fi
+
+    # 4. 计算开销（从日志提取）
+    echo -e "${CYAN}│${NC}"
+    echo -e "${CYAN}│${NC} ${BLUE}[计算开销 - RS编解码与哈希计算耗时]${NC}"
+    if [ -f "$COMP_FILE" ]; then
+        echo -e "${CYAN}│${NC}   节点        RS编码       RS解码       SHA-256哈希  哈希验证"
+        echo -e "${CYAN}│${NC}   ─────────  ──────────  ──────────  ──────────  ──────────"
+        while IFS=' ' read -r NODE ENCODE DECODE HASH HASH_V; do
+            # 解析 key=value 格式
+            ENCODE=${ENCODE#encode=}
+            DECODE=${DECODE#decode=}
+            HASH=${HASH#hash=}
+            HASH_V=${HASH_V#hash_verify=}
+            printf "${CYAN}│${NC}   %-10s  %-10s  %-10s  %-10s  %-10s\n" \
+                "$NODE" "$ENCODE" "$DECODE" "$HASH" "$HASH_V"
+        done < "$COMP_FILE"
+    else
+        echo -e "${CYAN}│${NC}   (日志中未找到计时信息，需要在Rust代码中添加耗时日志)"
+    fi
+
+    # 5. 理论开销分析
+    echo -e "${CYAN}│${NC}"
+    echo -e "${CYAN}│${NC} ${BLUE}[理论分析]${NC}"
+    local DATA_SHARDS=$((T + 1))
+    local SHARD_SIZE
+    if [ "$FILE_SIZE" -gt 0 ]; then
+        SHARD_SIZE=$(( (FILE_SIZE + DATA_SHARDS - 1) / DATA_SHARDS ))
+    else
+        SHARD_SIZE=0
+    fi
+    # PROPOSE: 广播者发送完整数据给n个节点 = n * |M|
+    local PROPOSE_COST=$((NODE_COUNT * FILE_SIZE))
+    # ECHO: 每个节点向n个节点各发一个分片 = n * n * shard_size
+    local ECHO_COST=$((NODE_COUNT * NODE_COUNT * SHARD_SIZE))
+    # READY: 每个节点向n个节点广播自己的分片 = n * n * shard_size
+    local READY_COST=$((NODE_COUNT * NODE_COUNT * SHARD_SIZE))
+    local THEORY_TOTAL=$((PROPOSE_COST + ECHO_COST + READY_COST))
+
+    echo -e "${CYAN}│${NC}   分片大小: $(format_bytes $SHARD_SIZE) (文件$(format_bytes $FILE_SIZE) / ${DATA_SHARDS}个数据分片)"
+    echo -e "${CYAN}│${NC}   PROPOSE阶段理论开销: $(format_bytes $PROPOSE_COST) (n×|M| = ${NODE_COUNT}×$(format_bytes $FILE_SIZE))"
+    echo -e "${CYAN}│${NC}   ECHO阶段理论开销:    $(format_bytes $ECHO_COST) (n²×shard = ${NODE_COUNT}²×$(format_bytes $SHARD_SIZE))"
+    echo -e "${CYAN}│${NC}   READY阶段理论开销:   $(format_bytes $READY_COST) (n²×shard = ${NODE_COUNT}²×$(format_bytes $SHARD_SIZE))"
+    echo -e "${CYAN}│${NC}   理论总传输量:        $(format_bytes $THEORY_TOTAL)"
+    if [ "$THEORY_TOTAL" -gt 0 ] && [ "$FILE_SIZE" -gt 0 ]; then
+        local THEORY_AMP
+        THEORY_AMP=$(echo "scale=2; $THEORY_TOTAL / $FILE_SIZE" | bc)
+        echo -e "${CYAN}│${NC}   理论传输放大比:      ${THEORY_AMP}x"
+    fi
+
+    echo -e "${CYAN}└──────────────────────────────────────────────────────┘${NC}"
+    echo ""
+
+    # 将统计数据写入CSV文件（便于后续分析）
+    local CSV_FILE="${STATS_DIR}/overhead_summary.csv"
+    if [ ! -f "$CSV_FILE" ]; then
+        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送(B),总接收(B),总流量(B),传输放大比,理论总传输(B),理论放大比" > "$CSV_FILE"
+    fi
+    local AMP_VAL="0"
+    local THEORY_AMP_VAL="0"
+    if [ "$FILE_SIZE" -gt 0 ] && [ "$TOTAL_TRAFFIC" -gt 0 ]; then
+        AMP_VAL=$(echo "scale=4; $TOTAL_TRAFFIC / $FILE_SIZE" | bc)
+    fi
+    if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
+        THEORY_AMP_VAL=$(echo "scale=4; $THEORY_TOTAL / $FILE_SIZE" | bc)
+    fi
+    echo "${TEST_NAME},${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL}" >> "$CSV_FILE"
+}
 
 # ==========================================
 # 动态生成 docker-compose 基础文件
@@ -300,6 +532,10 @@ run_rbc_test() {
     local EXPECTED_HASH
     EXPECTED_HASH=$(sha256sum "$TEST_FILE" | awk '{print $1}')
 
+    # 生成测试ID（用于统计文件命名）
+    local TEST_ID
+    TEST_ID=$(echo "$TEST_NAME" | sed 's/[^a-zA-Z0-9]/_/g' | head -c 60)
+
     echo ""
     echo "========================================"
     step "$TEST_NAME"
@@ -310,6 +546,7 @@ run_rbc_test() {
         FAULT_COUNT=$(echo "$EXPECT_FAULT" | wc -w)
         info "  容错测试: 将停止 ${FAULT_COUNT} 个节点: $EXPECT_FAULT"
     fi
+    info "  📊 开销统计已启用"
     echo "========================================"
 
     # 1. 清理之前的环境
@@ -347,6 +584,17 @@ run_rbc_test() {
         done
         sleep 3
     fi
+
+    # 4.5 采集网络流量基线快照（在RBC广播开始前）
+    step "采集网络流量基线..."
+    local NET_BEFORE="${STATS_DIR}/${TEST_ID}_net_before.txt"
+    local NET_AFTER="${STATS_DIR}/${TEST_ID}_net_after.txt"
+    local NET_DIFF="${STATS_DIR}/${TEST_ID}_net_diff.txt"
+    capture_all_net_stats "$NET_BEFORE"
+
+    # 记录RBC开始时间
+    local RBC_START_TIME
+    RBC_START_TIME=$(date +%s)
 
     # 5. 等待RBC广播完成
     local TOTAL_WAIT=$((RBC_BROADCAST_DELAY + RBC_COMPLETION_WAIT))
@@ -396,6 +644,19 @@ run_rbc_test() {
         echo ""
         warn "超时：只有 $SUCCESS_NODES/$EXPECTED_SUCCESS 个节点完成"
     fi
+
+    # 5.5 采集网络流量结束快照 & 计算差值
+    local RBC_END_TIME
+    RBC_END_TIME=$(date +%s)
+    local E2E_TIME=$((RBC_END_TIME - RBC_START_TIME))
+
+    step "采集网络流量结束快照..."
+    capture_all_net_stats "$NET_AFTER"
+    calc_net_diff "$NET_BEFORE" "$NET_AFTER" "$NET_DIFF"
+
+    # 提取计算开销
+    step "提取计算开销数据..."
+    extract_computation_stats "$TEST_ID"
 
     # 6. 验证数据完整性
     step "验证数据完整性..."
@@ -447,12 +708,18 @@ run_rbc_test() {
     echo ""
     if [ "$INTEGRITY_PASS" -ge "$EXPECTED_SUCCESS" ] && [ "$INTEGRITY_FAIL" -eq 0 ]; then
         ok "[$TEST_NAME] 测试通过! $INTEGRITY_PASS/$EXPECTED_SUCCESS 个节点数据完整性验证通过"
+        # 输出开销统计报告
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
         return 0
     elif [ "$INTEGRITY_PASS" -gt 0 ]; then
         warn "[$TEST_NAME] 部分通过: $INTEGRITY_PASS 通过, $INTEGRITY_FAIL 失败"
+        # 输出开销统计报告
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
         return 0
     else
         fail "[$TEST_NAME] 测试失败: 没有节点通过数据完整性验证"
+        # 即使失败也输出开销统计（用于分析）
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
 
         # 输出调试日志
         info "调试信息 - 各节点RBC相关日志:"
@@ -574,6 +841,10 @@ run_byzantine_test() {
         fi
     done
 
+    # 生成测试ID（用于统计文件命名）
+    local TEST_ID
+    TEST_ID=$(echo "$TEST_NAME" | sed 's/[^a-zA-Z0-9]/_/g' | head -c 60)
+
     echo ""
     echo "========================================"
     step "$TEST_NAME"
@@ -581,6 +852,7 @@ run_byzantine_test() {
     info "  期望SHA-256: ${EXPECTED_HASH:0:32}..."
     info "  \033[0;31m恶意节点(${BYZ_COUNT}个): ${BYZ_NODE_NAMES}\033[0m"
     info "  诚实节点应正常完成RBC协议并输出正确数据"
+    info "  📊 开销统计已启用"
     echo "========================================"
 
     # 1. 清理之前的环境
@@ -608,7 +880,18 @@ run_byzantine_test() {
         warn "部分节点启动失败（运行中: $RUNNING_COUNT/$NODE_COUNT）"
     fi
 
-    # 4. 等待RBC广播完成
+    # 4. 采集网络流量基线快照（在RBC广播开始前）
+    step "采集网络流量基线..."
+    local NET_BEFORE="${STATS_DIR}/${TEST_ID}_net_before.txt"
+    local NET_AFTER="${STATS_DIR}/${TEST_ID}_net_after.txt"
+    local NET_DIFF="${STATS_DIR}/${TEST_ID}_net_diff.txt"
+    capture_all_net_stats "$NET_BEFORE"
+
+    # 记录RBC开始时间
+    local RBC_START_TIME
+    RBC_START_TIME=$(date +%s)
+
+    # 4.5 等待RBC广播完成
     local TOTAL_WAIT=$((RBC_BROADCAST_DELAY + RBC_COMPLETION_WAIT))
     step "等待RBC协议完成（最多 ${TOTAL_WAIT}秒）..."
 
@@ -657,6 +940,19 @@ run_byzantine_test() {
         echo ""
         warn "超时：只有 $SUCCESS_NODES/$EXPECTED_SUCCESS 个诚实节点完成"
     fi
+
+    # 4.8 采集网络流量结束快照 & 计算差值
+    local RBC_END_TIME
+    RBC_END_TIME=$(date +%s)
+    local E2E_TIME=$((RBC_END_TIME - RBC_START_TIME))
+
+    step "采集网络流量结束快照..."
+    capture_all_net_stats "$NET_AFTER"
+    calc_net_diff "$NET_BEFORE" "$NET_AFTER" "$NET_DIFF"
+
+    # 提取计算开销
+    step "提取计算开销数据..."
+    extract_computation_stats "$TEST_ID"
 
     # 5. 验证诚实节点的数据完整性
     step "验证诚实节点数据完整性..."
@@ -727,12 +1023,19 @@ run_byzantine_test() {
     echo ""
     if [ "$INTEGRITY_PASS" -ge "$EXPECTED_SUCCESS" ] && [ "$INTEGRITY_FAIL" -eq 0 ]; then
         ok "[$TEST_NAME] 测试通过! ${INTEGRITY_PASS}个诚实节点数据完整，${BYZ_COUNT}个恶意节点被容忍"
+        # 输出开销统计报告
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
         return 0
     elif [ "$INTEGRITY_PASS" -gt 0 ]; then
         warn "[$TEST_NAME] 部分通过: $INTEGRITY_PASS 通过, $INTEGRITY_FAIL 失败"
+        # 输出开销统计报告
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
         return 0
     else
         fail "[$TEST_NAME] 测试失败: 没有诚实节点通过数据完整性验证"
+        # 即使失败也输出开销统计（用于分析）
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+
         info "调试信息 - 各节点RBC相关日志:"
         for node in $ALL_NODES; do
             echo -e "${YELLOW}--- $node ---${NC}"
@@ -826,12 +1129,32 @@ echo ""
 echo "通过: $TOTAL_PASS / $((TOTAL_PASS + TOTAL_FAIL))"
 echo ""
 
+# 输出开销统计CSV文件位置
+if [ -f "${STATS_DIR}/overhead_summary.csv" ]; then
+    echo ""
+    echo -e "${CYAN}===========================================${NC}"
+    echo -e "${CYAN}  📊 开销统计数据已保存${NC}"
+    echo -e "${CYAN}===========================================${NC}"
+    echo -e "  CSV汇总文件: ${STATS_DIR}/overhead_summary.csv"
+    echo -e "  详细数据目录: ${STATS_DIR}/"
+    echo ""
+    echo -e "  ${BLUE}CSV文件内容预览:${NC}"
+    head -5 "${STATS_DIR}/overhead_summary.csv" | column -t -s ','
+    echo "  ..."
+    echo ""
+    echo -e "  ${BLUE}提示: 可用以下命令查看完整CSV:${NC}"
+    echo -e "    column -t -s ',' ${STATS_DIR}/overhead_summary.csv"
+    echo ""
+fi
+
 # 清理
 echo ""
 read -p "是否清理所有容器和测试文件？(y/N): " CLEANUP
 if [ "$CLEANUP" = "y" ] || [ "$CLEANUP" = "Y" ]; then
     cleanup
     rm -rf "$TEST_DIR" "${OUTPUT_BASE}" "${SCRIPT_DIR}/docker-compose.test.yml" "$COMPOSE_FILE" 2>/dev/null || true
+    # 注意：保留统计数据目录，不清理
+    info "开销统计数据保留在: ${STATS_DIR}/"
     ok "清理完成"
 else
     info "容器保留运行中，手动清理请执行: docker compose -f $COMPOSE_FILE down -v"
