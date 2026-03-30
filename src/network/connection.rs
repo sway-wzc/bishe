@@ -4,8 +4,17 @@ use tokio::sync::mpsc;
 
 use crate::network::message::{Message, MessageCodec, MessageError};
 
-/// 连接处理器
-/// 负责管理单个TCP连接的消息收发
+/// TCP 连接处理器
+///
+/// 将一条 TCP 连接拆分为独立的读/写异步协程，
+/// 通过 `mpsc` 通道向上层提供消息级别的收发接口。
+///
+/// ## 架构
+///
+/// ```text
+/// 上层调用者 ──send──▶ outbound_tx ──▶ [写协程] ──TCP──▶ 远端
+/// 上层调用者 ◀──recv── inbound_rx  ◀── [读协程] ◀──TCP── 远端
+/// ```
 pub struct Connection;
 
 impl Connection {

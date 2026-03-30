@@ -16,8 +16,13 @@ use crate::rbc::{RbcConfig, RbcManager, RbcMessage, ChunkedBroadcastManager};
 
 /// 拜占庭（恶意）节点行为模式
 ///
-/// 用于Docker测试中模拟不同类型的恶意节点攻击，
-/// 验证RBC协议的BFT容错能力。
+/// 用于 Docker 测试中模拟不同类型的恶意节点攻击，
+/// 验证 RBC 协议在 n ≥ 3t+1 条件下的 BFT 容错能力。
+///
+/// 通过环境变量 `BYZANTINE_MODE` 配置，可选值：
+/// - `corrupt_shard` — 篡改分片数据
+/// - `wrong_hash` — 伪造哈希值
+/// - `silent` — 丢弃 ECHO/READY 消息
 #[derive(Debug, Clone, PartialEq)]
 pub enum ByzantineMode {
     /// 正常模式（诚实节点）
@@ -61,7 +66,20 @@ enum NodeEvent {
     },
 }
 
-/// P2P节点
+/// P2P 节点
+///
+/// 系统的核心组件，负责：
+/// - TCP 连接的建立与维护（入站/出站、握手、心跳）
+/// - 节点发现与自动连接
+/// - RBC 协议的自动初始化与消息路由
+/// - 拜占庭模式下的消息篡改（仅测试用）
+///
+/// ## 事件循环
+///
+/// 节点启动后进入主事件循环，处理三类事件：
+/// 1. `NewInboundConnection` — 新的入站 TCP 连接
+/// 2. `IncomingMessage` — 来自已连接节点的消息
+/// 3. `PeerDisconnected` — 节点断开通知
 pub struct P2PNode {
     /// 本节点唯一ID
     node_id: String,
@@ -692,11 +710,16 @@ impl P2PNode {
         &self.node_id
     }
 
-    /// 初始化RBC协议管理器
+    /// 初始化 RBC 协议管理器
     ///
-    /// 在所有节点连接建立后调用，传入所有参与节点的ID列表
+    /// 在所有节点连接建立后调用，传入所有参与节点的 ID 列表。
+    /// 同时初始化分块广播管理器，以支持超大文件广播。
+    ///
     /// # 参数
-    /// - `node_ids`: 所有参与RBC协议的节点ID列表
+    /// - `node_ids`: 所有参与 RBC 协议的节点 ID 列表（需 ≥ 4 个）
+    ///
+    /// # 错误
+    /// - 节点数不足 4 个时返回错误
     pub async fn init_rbc(&self, node_ids: Vec<String>) -> Result<()> {
         let n = node_ids.len();
         if n < 4 {
@@ -728,11 +751,11 @@ impl P2PNode {
         Ok(())
     }
 
-    /// 通过RBC协议广播数据到所有节点
+    /// 通过 RBC 协议广播数据到所有节点
     ///
-    /// 自动判断数据大小：
-    /// - 小于等于4MB：直接使用单次RBC广播
-    /// - 大于4MB：使用分块广播（自动拆分为多个RBC实例）
+    /// 自动根据数据大小选择广播策略：
+    /// - **≤ 4MB**：直接使用单次 RBC 广播
+    /// - **> 4MB**：自动拆分为多个分块，每块独立 RBC 广播，接收端自动重组
     ///
     /// # 参数
     /// - `data`: 要广播的数据
@@ -801,12 +824,14 @@ impl P2PNode {
         Ok(())
     }
 
-    /// 对RBC消息应用拜占庭篡改（仅在恶意模式下生效）
+    /// 对 RBC 消息应用拜占庭篡改（仅在恶意模式下生效）
     ///
-    /// 根据 `byzantine_mode` 对即将发送的消息进行篡改：
-    /// - CorruptShard: 将分片数据替换为随机垃圾数据
-    /// - WrongHash: 将data_hash替换为伪造的哈希值
-    /// - Silent: 返回None表示丢弃该消息
+    /// 根据 [`ByzantineMode`] 对即将发送的消息进行篡改：
+    /// - `CorruptShard`：将分片数据替换为随机垃圾数据
+    /// - `WrongHash`：将 `data_hash` 替换为伪造的哈希值
+    /// - `Silent`：返回 `None` 表示丢弃该消息
+    ///
+    /// 注意：PROPOSE 消息始终正常转发，否则协议无法启动。
     fn apply_byzantine_tampering(&self, msg: RbcMessage) -> Option<RbcMessage> {
         match &self.byzantine_mode {
             ByzantineMode::None => Some(msg),
@@ -967,9 +992,11 @@ impl P2PNode {
         }
     }
 
-    /// 发送RBC消息（处理发给自己的消息递归）
+    /// 发送 RBC 消息（处理发给自己的消息递归）
     ///
-    /// 如果节点处于拜占庭模式，会在发送前对消息进行篡改
+    /// 对于目标为本节点的消息，直接在本地处理（不经过网络）；
+    /// 对于发往其他节点的消息，先应用拜占庭篡改再发送。
+    /// 内部使用队列循环处理，避免递归调用导致栈溢出。
     async fn send_rbc_messages(&self, messages: Vec<(String, RbcMessage)>) {
         let mut pending = messages;
         while !pending.is_empty() {

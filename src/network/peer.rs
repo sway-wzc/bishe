@@ -62,7 +62,9 @@ impl Peer {
 }
 
 /// 对等节点管理表
-/// 使用DashMap实现无锁并发安全的节点表
+///
+/// 使用 [`DashMap`] 实现无锁并发安全的节点表，
+/// 支持多个异步任务同时读写而无需外部加锁。
 #[derive(Debug, Clone)]
 pub struct PeerTable {
     /// 节点ID -> 对等节点数据

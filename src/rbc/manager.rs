@@ -5,9 +5,13 @@ use std::collections::HashMap;
 use super::protocol::RbcInstance;
 use super::types::{RbcConfig, RbcMessage, RbcOutput};
 
-/// RBC协议管理器
+/// RBC 协议管理器
 ///
-/// 管理多个并发的RBC广播实例，提供统一的消息处理接口
+/// 管理多个并发的 RBC 广播实例，提供统一的消息路由接口。
+///
+/// 每个广播任务由一个独立的 [`RbcInstance`] 状态机处理，
+/// 管理器负责根据 `instance_id` 将消息路由到对应实例，
+/// 并收集已完成实例的输出结果。
 pub struct RbcManager {
     /// 本节点ID
     local_node_id: String,
@@ -78,7 +82,13 @@ impl RbcManager {
         instance.broadcast(data)
     }
 
-    /// 处理收到的RBC消息
+    /// 处理收到的 RBC 消息
+    ///
+    /// 根据消息中的 `instance_id` 自动路由到对应的 [`RbcInstance`]，
+    /// 若实例不存在则自动创建。处理完成后检查实例是否已输出结果。
+    ///
+    /// # 返回
+    /// 需要转发的 (目标节点ID, RBC消息) 列表
     pub fn handle_message(
         &mut self,
         message: RbcMessage,

@@ -28,7 +28,12 @@ pub enum ChunkedSessionState {
 }
 
 /// 分块广播接收会话
-/// 管理单个超大文件的分块接收和重组
+///
+/// 管理单个超大文件的分块接收和重组。
+/// 工作流程：
+/// 1. 接收元信息（文件大小、分块数、各块哈希）
+/// 2. 逐块接收并校验哈希
+/// 3. 所有分块到齐后按序重组，校验整体哈希
 #[derive(Debug)]
 struct ChunkedReceiveSession {
     /// 会话ID
@@ -191,9 +196,25 @@ impl ChunkedReceiveSession {
 
 /// 分块广播管理器
 ///
-/// 在RbcManager之上提供超大文件分块广播能力。
-/// 将大文件拆分为多个块，每个块通过独立的RBC实例广播，
+/// 在 [`RbcManager`] 之上提供超大文件分块广播能力。
+/// 将大文件拆分为多个块，每个块通过独立的 RBC 实例广播，
 /// 接收端自动重组还原完整文件。
+///
+/// ## 广播流程
+///
+/// 1. 广播者先通过 RBC 广播元信息（[`ChunkedBroadcastMeta`]）
+/// 2. 然后逐块通过独立的 RBC 实例广播每个分块
+/// 3. 接收端根据元信息自动收集分块并重组
+///
+/// ## 实例 ID 命名规则
+///
+/// - 元信息：`{session_id}_meta`
+/// - 分块 i：`{session_id}_chunk_{i}`
+///
+/// ## 设计说明
+///
+/// `ChunkedBroadcastManager` 不持有 `RbcManager`，
+/// 而是在每次操作时由调用者传入，避免双重借用问题。
 pub struct ChunkedBroadcastManager {
     /// 底层RBC管理器引用（通过外部传入进行操作）
     /// 注意：ChunkedBroadcastManager不持有RbcManager，
@@ -340,14 +361,18 @@ impl ChunkedBroadcastManager {
         Ok(all_messages)
     }
 
-    /// 处理RBC输出，检查是否属于某个分块广播会话
+    /// 处理 RBC 输出，检查是否属于某个分块广播会话
     ///
-    /// 当RBC管理器产生输出时，调用此方法检查该输出是否属于分块广播。
+    /// 当 [`RbcManager`] 产生输出时，调用此方法检查该输出是否属于分块广播。
     /// 如果是，则自动收集分块并在所有分块到齐后重组文件。
     ///
+    /// 识别方式：
+    /// 1. 先查找已注册的实例 ID 映射
+    /// 2. 若未注册，则通过实例 ID 后缀模式匹配（`_meta` / `_chunk_N`）
+    ///
     /// # 返回
-    /// - `true`: 该输出已被分块广播管理器处理
-    /// - `false`: 该输出不属于任何分块广播会话（应作为普通RBC输出处理）
+    /// - `true`：该输出已被分块广播管理器处理
+    /// - `false`：该输出不属于任何分块广播会话，应作为普通 RBC 输出处理
     pub fn handle_rbc_output(&mut self, output: &RbcOutput) -> bool {
         let instance_id = &output.instance_id;
 

@@ -4,7 +4,9 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::tcp::{OwnedReadHalf, OwnedWriteHalf};
 use thiserror::Error;
 
-/// 消息协议错误
+/// 消息协议错误类型
+///
+/// 涵盖网络 I/O、序列化、帧校验等各类通信异常。
 #[derive(Error, Debug)]
 pub enum MessageError {
     #[error("IO错误: {0}")]
@@ -19,9 +21,9 @@ pub enum MessageError {
     InvalidMagic,
 }
 
-/// 协议魔数，用于标识合法消息帧
-const PROTOCOL_MAGIC: u32 = 0x50325044; // "P2PD"
-/// 消息体最大长度（16MB）
+/// 协议魔数（ASCII "P2PD"），用于标识合法消息帧并快速过滤非法连接
+const PROTOCOL_MAGIC: u32 = 0x50325044;
+/// 单条消息体最大长度：16MB（超过此大小应使用分块广播）
 const MAX_MESSAGE_SIZE: usize = 16 * 1024 * 1024;
 
 /// 节点信息
@@ -94,8 +96,13 @@ pub enum Message {
     },
 }
 
-/// 消息帧编码器/解码器
-/// 帧格式: [魔数 4字节][长度 4字节][消息体 N字节]
+/// 消息帧编解码器
+///
+/// 帧格式：`[魔数 4B][长度 4B][消息体 NB]`
+///
+/// - 魔数：固定值 `0x50325044`（"P2PD"），用于帧同步与合法性校验
+/// - 长度：消息体字节数（大端序 u32），上限 16MB
+/// - 消息体：bincode 序列化的 [`Message`] 枚举
 pub struct MessageCodec;
 
 impl MessageCodec {

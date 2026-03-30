@@ -6,7 +6,12 @@ use tokio::sync::Mutex;
 use crate::network::message::PeerInfo;
 
 /// 节点发现服务
-/// 维护已知节点列表，支持基于种子节点的发现机制
+///
+/// 维护已知节点列表，支持基于种子节点的发现机制。
+/// 工作流程：
+/// 1. 启动时添加种子节点（仅有地址，无 ID）
+/// 2. 握手成功后通过 [`update_peer_id`](Self::update_peer_id) 关联 ID
+/// 3. 定期通过 `DiscoverRequest/Response` 交换节点列表
 #[derive(Debug, Clone)]
 pub struct DiscoveryService {
     /// 已知节点集合（包括已连接和未连接的）

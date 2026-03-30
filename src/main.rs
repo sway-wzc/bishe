@@ -1,3 +1,21 @@
+//! 拜占庭容错可靠广播系统 — 主入口
+//!
+//! 启动一个 P2P 节点，自动完成节点发现、连接建立、RBC 协议初始化，
+//! 并可通过环境变量配置拜占庭模式、RBC 测试文件等参数。
+//!
+//! ## 环境变量
+//!
+//! | 变量名 | 说明 | 默认值 |
+//! |---|---|---|
+//! | `LISTEN_PORT` | 节点监听端口 | 8000 |
+//! | `SEED_ADDR` | 种子节点地址（逗号分隔） | 无 |
+//! | `EXPECTED_NODES` | 预期节点总数（达到后自动初始化 RBC） | 0（使用稳定期策略） |
+//! | `RBC_STABLE_WAIT` | 节点数稳定后等待秒数 | 8 |
+//! | `RBC_TEST_FILE` | 测试用广播文件路径 | 无 |
+//! | `RBC_BROADCAST_DELAY` | 广播前等待秒数 | 30 |
+//! | `RBC_OUTPUT_DIR` | RBC 输出目录 | `/app/rbc_output` |
+//! | `BYZANTINE_MODE` | 拜占庭模式（`corrupt_shard`/`wrong_hash`/`silent`） | 无 |
+
 mod network;
 pub mod erasure;
 pub mod rbc;
