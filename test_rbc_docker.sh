@@ -323,7 +323,7 @@ print_overhead_report() {
     if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
         CORRECTED_AMP_VAL=$(echo "scale=4; $THEORY_AMP_VAL * ($NODE_COUNT - 1) / $NODE_COUNT" | bc)
     fi
-    echo "${TEST_NAME},${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
+    echo "\"${TEST_NAME}\",${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
 }
 
 # ==========================================
