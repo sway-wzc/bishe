@@ -227,7 +227,7 @@ cargo build --release
 
 | 层次 | 测试内容 | 运行方式 | 耗时 |
 |------|---------|---------|------|
-| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播（42个用例） | `cargo test` | ~5秒 |
+| **单元测试** | 纠删码编解码 + RBC协议逻辑 + 拜占庭容错 + 分块广播（44个用例） | `cargo test` | ~5秒 |
 | **P2P网络集成测试** | Docker多节点组网、握手、心跳、容错 | `bash test_p2p.sh [-n N]` | ~3分钟 |
 | **RBC端到端测试** | Docker多节点文件广播分发与数据完整性验证 | `bash test_rbc_docker.sh [-n N]` | ~20分钟 |
 
@@ -244,10 +244,10 @@ cargo test --lib -- --nocapture
 #### 按模块运行测试
 
 ```bash
-# 纠删码模块测试（21个用例）
+# 纠删码模块测试（22个用例）
 cargo test --lib erasure::test_erasure -- --nocapture
 
-# RBC协议模块测试（14个用例）
+# RBC协议模块测试（16个用例）
 cargo test --lib rbc::test_rbc -- --nocapture
 ```
 
@@ -257,7 +257,7 @@ cargo test --lib rbc::test_rbc -- --nocapture
 # 仅运行RBC基础功能测试
 cargo test --lib rbc::test_rbc::test_rbc -- --nocapture
 
-# 仅运行拜占庭恶意节点测试（6个用例）
+# 仅运行拜占庭恶意节点测试（8个用例）
 cargo test --lib rbc::test_rbc::test_byzantine -- --nocapture
 
 # 仅运行分块广播测试（6个用例）
@@ -299,6 +299,7 @@ cargo test --lib rbc::test_rbc::test_byzantine_mixed_attack_7_nodes -- --nocaptu
 | `test_error_correction_two_corruptions` | 🔧 Berlekamp-Welch 双分片纠错 |
 | `test_error_correction_mixed_loss_and_corruption` | 🔧 丢失+篡改混合纠错 |
 | `test_error_correction_with_larger_parity` | 🔧 高冗余配置纠错 |
+| `test_error_correction_exceeds_capacity` | 🔧 超过纠错能力的损坏测试 |
 | `test_error_correction_capacity_values` | 🔧 纠错容量边界值测试 |
 | `test_error_correction_large_data` | 🔧 大数据纠错测试 |
 
@@ -320,6 +321,8 @@ cargo test --lib rbc::test_rbc::test_byzantine_mixed_attack_7_nodes -- --nocaptu
 | `test_byzantine_contradictory_echo` | 🔴 恶意场景：矛盾ECHO攻击 |
 | `test_byzantine_mixed_attack_7_nodes` | 🔴 恶意场景：混合攻击 |
 | `test_byzantine_max_tolerance_10_nodes` | 🔴 恶意场景：10节点极限容错 |
+| `test_byzantine_forged_shard_index` | 🔴 恶意场景：伪造分片索引（7节点） |
+| `test_byzantine_forged_shard_index_10_nodes` | 🔴 恶意场景：10节点极限伪造索引攻击 |
 
 **分块广播模块** (`src/rbc/chunked.rs`)：
 
@@ -458,6 +461,8 @@ docker compose down -v --remove-orphans
 | `RBC_TEST_FILE` | RBC测试文件路径 | - |
 | `RBC_BROADCAST_DELAY` | 广播前等待时间（秒） | 35 |
 | `RBC_OUTPUT_DIR` | RBC输出目录 | /app/rbc_output |
+| `BYZANTINE_MODE` | 拜占庭模式（测试用：corrupt_shard/wrong_hash/silent） | - |
+| `EXPECTED_NODES` | 期望的节点总数 | - |
 
 ---
 
@@ -497,13 +502,13 @@ bishe/
     │   ├── mod.rs
     │   ├── codec.rs            # Reed-Solomon编解码器
     │   ├── shard.rs            # 分片数据结构
-    │   └── test_erasure.rs     # 纠删码单元测试（21个用例，含6个Berlekamp-Welch纠错测试）
+    │   └── test_erasure.rs     # 纠删码单元测试（22个用例，含7个Berlekamp-Welch纠错测试）
     ├── rbc/                    # RBC协议模块
     │   ├── mod.rs
     │   ├── protocol.rs         # Bracha RBC协议实现
     │   ├── chunked.rs          # 超大文件分块广播管理器（6个单元测试）
     │   ├── types.rs            # 类型定义
-    │   └── test_rbc.rs         # RBC单元测试（14个用例，含6个拜占庭测试）
+    │   └── test_rbc.rs         # RBC单元测试（16个用例，含8个拜占庭测试）
     └── network/                # P2P网络模块
         ├── mod.rs
         ├── node.rs             # P2P节点核心

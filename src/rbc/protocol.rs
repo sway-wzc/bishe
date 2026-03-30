@@ -403,7 +403,7 @@ impl RbcInstance {
 
         // 算法第11行：upon receiving 2t+1 ⟨ECHO, m_i, h⟩ matching messages
         //             and not having sent a READY message do
-        // 严格按论文语义："matching" 要求 (m_i, h) 完全相同
+        // 严格按论文语义：\"matching\" 要求 (m_i, h) 完全相同
         if current_match_count >= self.config.echo_threshold() && !self.ready_sent {
             info!(
                 "[RBC-{}] ECHO阈值达到 ({}/{}), 确立分片m_i并发送READY",
@@ -421,6 +421,26 @@ impl RbcInstance {
 
             // 算法第12行：send ⟨READY, m_i, h⟩ to all
             return self.send_ready(data_hash, shard_data);
+        } else if current_match_count >= self.config.ready_amplify_threshold() && !self.ready_sent {
+            // 补充实现算法第14行的异步唤醒逻辑：
+            // 如果已经收到了 t+1 个 READY，并且现在 ECHO 也达到了 t+1 个，则触发 READY 放大
+            let ready_count = self.ready_hash_count.get(data_hash).copied().unwrap_or(0);
+            if ready_count >= self.config.ready_amplify_threshold() {
+                info!(
+                    "[RBC-{}] ECHO达到放大阈值 ({}/{}) 且已收到足够的READY ({}/{}), 触发READY放大",
+                    &self.instance_id[..8.min(self.instance_id.len())],
+                    current_match_count,
+                    self.config.ready_amplify_threshold(),
+                    ready_count,
+                    self.config.ready_amplify_threshold()
+                );
+                
+                self.my_shard = Some(shard_data.to_vec());
+                self.confirmed_hash = Some(data_hash.to_string());
+                self.state = RbcInstanceState::ReadyPhase;
+                
+                return self.send_ready(data_hash, shard_data);
+            }
         }
 
         Ok(Vec::new())
