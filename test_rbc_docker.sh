@@ -235,7 +235,7 @@ print_overhead_report() {
         done < "$NET_DIFF_FILE"
     fi
 
-    local TOTAL_TRAFFIC=$((TOTAL_TX + TOTAL_RX))
+    local TOTAL_TRAFFIC=$TOTAL_TX  # 只统计发送(TX)，避免TX+RX双重计算
     echo -e "${CYAN}│${NC}   ─────────  ──────────────  ──────────────  ──────────────"
     printf "${CYAN}│${NC}   ${GREEN}%-10s  %-14s  %-14s  %-14s${NC}\n" \
         "合计" "$(format_bytes $TOTAL_TX)" "$(format_bytes $TOTAL_RX)" "$(format_bytes $TOTAL_TRAFFIC)"
@@ -245,8 +245,8 @@ print_overhead_report() {
         local AMPLIFICATION
         AMPLIFICATION=$(echo "scale=2; $TOTAL_TRAFFIC / $FILE_SIZE" | bc)
         echo -e "${CYAN}│${NC}"
-        echo -e "${CYAN}│${NC} ${BLUE}[传输放大比]${NC} ${AMPLIFICATION}x (总流量/原始文件大小)"
-        echo -e "${CYAN}│${NC}   原始文件: $(format_bytes $FILE_SIZE), 总网络流量: $(format_bytes $TOTAL_TRAFFIC)"
+        echo -e "${CYAN}│${NC} ${BLUE}[传输放大比]${NC} ${AMPLIFICATION}x (总发送量/原始文件大小)"
+        echo -e "${CYAN}│${NC}   原始文件: $(format_bytes $FILE_SIZE), 总发送量(TX): $(format_bytes $TOTAL_TRAFFIC)"
     fi
 
     # 4. 计算开销（从日志提取）
@@ -303,7 +303,7 @@ print_overhead_report() {
     # 将统计数据写入CSV文件（便于后续分析）
     local CSV_FILE="${STATS_DIR}/overhead_summary.csv"
     if [ ! -f "$CSV_FILE" ]; then
-        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送(B),总接收(B),总流量(B),传输放大比,理论总传输(B),理论放大比" > "$CSV_FILE"
+        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比" > "$CSV_FILE"
     fi
     local AMP_VAL="0"
     local THEORY_AMP_VAL="0"
