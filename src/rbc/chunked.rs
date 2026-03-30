@@ -3,7 +3,7 @@ use log::{debug, error, info, warn};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 
-use super::protocol::RbcManager;
+use super::manager::RbcManager;
 use super::types::{
     ChunkedBroadcastMeta, ChunkedBroadcastOutput, RbcMessage, RbcOutput,
     DEFAULT_CHUNK_SIZE,
@@ -483,7 +483,7 @@ impl ChunkedBroadcastManager {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::rbc::protocol::RbcManager;
+    use crate::rbc::manager::RbcManager;
     use crate::rbc::types::RbcConfig;
 
     /// 辅助函数：创建n个RBC管理器

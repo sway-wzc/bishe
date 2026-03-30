@@ -1,4 +1,4 @@
-use crate::rbc::protocol::RbcManager;
+use crate::rbc::manager::RbcManager;
 use crate::rbc::types::{RbcConfig, RbcMessage};
 
 /// 辅助函数：创建n个RBC管理器，模拟n个节点
