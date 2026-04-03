@@ -197,15 +197,100 @@ extract_computation_stats() {
     done
 }
 
+# 从Rust程序写入的时间戳文件中计算真实的端到端延迟（毫秒）
+# 参数1: OUTPUT_BASE目录  参数2: 故障/恶意节点列表（空则无）  参数3: 模式（"fault"或"byzantine"）
+# 返回: 端到端延迟（毫秒），如果无法获取则返回-1
+calc_real_e2e_latency_ms() {
+    local OUT_BASE="$1"
+    local SKIP_NODES="$2"
+    local SKIP_MODE="$3"  # "fault" 或 "byzantine"
+
+    # 1. 从seed节点读取广播开始时间戳
+    local START_MS=""
+    if [ -f "${OUT_BASE}/seed/broadcast_start_ms.txt" ]; then
+        START_MS=$(cat "${OUT_BASE}/seed/broadcast_start_ms.txt" 2>/dev/null)
+    fi
+    if [ -z "$START_MS" ] || [ "$START_MS" = "0" ]; then
+        warn "无法读取广播开始时间戳，回退到脚本测量值"
+        echo "-1"
+        return
+    fi
+
+    # 2. 从所有节点读取完成时间戳，取最大值（最后一个完成的节点）
+    local MAX_END_MS=0
+    local FOUND_ANY=false
+    for node in $ALL_NODES; do
+        # 跳过故障/恶意节点
+        if [ -n "$SKIP_NODES" ]; then
+            local should_skip=false
+            if [ "$SKIP_MODE" = "fault" ]; then
+                if echo "$SKIP_NODES" | grep -qw "$node"; then
+                    should_skip=true
+                fi
+            elif [ "$SKIP_MODE" = "byzantine" ]; then
+                for byz_entry in $SKIP_NODES; do
+                    local byz_node="${byz_entry%%:*}"
+                    if [ "$byz_node" = "$node" ]; then
+                        should_skip=true
+                        break
+                    fi
+                done
+            fi
+            if [ "$should_skip" = true ]; then
+                continue
+            fi
+        fi
+
+        # 读取该节点的完成时间戳（可能有多个输出文件，取最大值）
+        for ts_file in "${OUT_BASE}/${node}"/output_*_end_ms.txt; do
+            if [ -f "$ts_file" ]; then
+                local END_MS
+                END_MS=$(cat "$ts_file" 2>/dev/null)
+                if [ -n "$END_MS" ] && [ "$END_MS" != "0" ]; then
+                    FOUND_ANY=true
+                    if [ "$END_MS" -gt "$MAX_END_MS" ] 2>/dev/null; then
+                        MAX_END_MS=$END_MS
+                    fi
+                fi
+            fi
+        done
+    done
+
+    if [ "$FOUND_ANY" = false ]; then
+        warn "无法读取任何节点的完成时间戳，回退到脚本测量值"
+        echo "-1"
+        return
+    fi
+
+    # 3. 计算差值（毫秒）
+    # 注意：bash不支持大整数运算，使用bc或awk
+    local LATENCY_MS
+    LATENCY_MS=$(echo "$MAX_END_MS - $START_MS" | bc 2>/dev/null || echo "-1")
+    echo "$LATENCY_MS"
+}
+
 # 输出开销统计报告
-# 参数1: 测试名称  参数2: 原始文件大小  参数3: 网络差值文件  参数4: 端到端耗时(秒)  参数5: 测试ID
+# 参数1: 测试名称  参数2: 原始文件大小  参数3: 网络差值文件  参数4: 端到端耗时(毫秒，精确值)  参数5: 测试ID  参数6: 脚本测量的粗略耗时(秒，备用)
 print_overhead_report() {
     local TEST_NAME="$1"
     local FILE_SIZE="$2"
     local NET_DIFF_FILE="$3"
-    local E2E_TIME="$4"
+    local E2E_TIME_MS="$4"
     local TEST_ID="$5"
+    local E2E_TIME_FALLBACK="$6"
     local COMP_FILE="${STATS_DIR}/${TEST_ID}_computation.txt"
+
+    # 格式化端到端延迟显示
+    local E2E_DISPLAY
+    if [ "$E2E_TIME_MS" -gt 0 ] 2>/dev/null; then
+        local E2E_SEC
+        E2E_SEC=$(echo "scale=3; $E2E_TIME_MS / 1000" | bc)
+        E2E_DISPLAY="${E2E_TIME_MS}ms (${E2E_SEC}秒) [精确值]"
+    else
+        E2E_DISPLAY="${E2E_TIME_FALLBACK}秒 [脚本粗略测量]"
+        # 将回退值转换为毫秒用于CSV
+        E2E_TIME_MS=$((E2E_TIME_FALLBACK * 1000))
+    fi
 
     echo ""
     echo -e "${CYAN}┌──────────────────────────────────────────────────────┐${NC}"
@@ -213,7 +298,7 @@ print_overhead_report() {
     echo -e "${CYAN}├──────────────────────────────────────────────────────┤${NC}"
 
     # 1. 端到端延迟
-    echo -e "${CYAN}│${NC} ${BLUE}[端到端延迟]${NC} ${E2E_TIME}秒"
+    echo -e "${CYAN}│${NC} ${BLUE}[端到端延迟]${NC} ${E2E_DISPLAY}"
     echo -e "${CYAN}│${NC}"
 
     # 2. 传输开销
@@ -309,7 +394,7 @@ print_overhead_report() {
     # 将统计数据写入CSV文件（便于后续分析）
     local CSV_FILE="${STATS_DIR}/overhead_summary.csv"
     if [ ! -f "$CSV_FILE" ]; then
-        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(s),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比,修正理论放大比" > "$CSV_FILE"
+        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(ms),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比,修正理论放大比" > "$CSV_FILE"
     fi
     local AMP_VAL="0"
     local THEORY_AMP_VAL="0"
@@ -323,7 +408,7 @@ print_overhead_report() {
     if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
         CORRECTED_AMP_VAL=$(echo "scale=4; $THEORY_AMP_VAL * ($NODE_COUNT - 1) / $NODE_COUNT" | bc)
     fi
-    echo "\"${TEST_NAME}\",${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
+    echo "\"${TEST_NAME}\",${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME_MS},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
 }
 
 # ==========================================
@@ -662,7 +747,7 @@ run_rbc_test() {
     # 5.5 采集网络流量结束快照 & 计算差值
     local RBC_END_TIME
     RBC_END_TIME=$(date +%s)
-    local E2E_TIME=$((RBC_END_TIME - RBC_START_TIME))
+    local E2E_TIME_FALLBACK=$((RBC_END_TIME - RBC_START_TIME))
 
     step "采集网络流量结束快照..."
     capture_all_net_stats "$NET_AFTER"
@@ -671,6 +756,18 @@ run_rbc_test() {
     # 提取计算开销
     step "提取计算开销数据..."
     extract_computation_stats "$TEST_ID"
+
+    # 5.6 从Rust程序时间戳文件计算真实端到端延迟
+    step "计算真实端到端延迟..."
+    local E2E_TIME_MS
+    E2E_TIME_MS=$(calc_real_e2e_latency_ms "$OUTPUT_BASE" "$EXPECT_FAULT" "fault")
+    if [ "$E2E_TIME_MS" -gt 0 ] 2>/dev/null; then
+        local E2E_SEC
+        E2E_SEC=$(echo "scale=3; $E2E_TIME_MS / 1000" | bc)
+        ok "真实端到端延迟: ${E2E_TIME_MS}ms (${E2E_SEC}秒)"
+    else
+        warn "无法获取精确时间戳，使用脚本粗略测量值: ${E2E_TIME_FALLBACK}秒"
+    fi
 
     # 6. 验证数据完整性
     step "验证数据完整性..."
@@ -723,17 +820,17 @@ run_rbc_test() {
     if [ "$INTEGRITY_PASS" -ge "$EXPECTED_SUCCESS" ] && [ "$INTEGRITY_FAIL" -eq 0 ]; then
         ok "[$TEST_NAME] 测试通过! $INTEGRITY_PASS/$EXPECTED_SUCCESS 个节点数据完整性验证通过"
         # 输出开销统计报告
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
         return 0
     elif [ "$INTEGRITY_PASS" -gt 0 ]; then
         warn "[$TEST_NAME] 部分通过: $INTEGRITY_PASS 通过, $INTEGRITY_FAIL 失败"
         # 输出开销统计报告
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
         return 0
     else
         fail "[$TEST_NAME] 测试失败: 没有节点通过数据完整性验证"
         # 即使失败也输出开销统计（用于分析）
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
 
         # 输出调试日志
         info "调试信息 - 各节点RBC相关日志:"
@@ -958,7 +1055,7 @@ run_byzantine_test() {
     # 4.8 采集网络流量结束快照 & 计算差值
     local RBC_END_TIME
     RBC_END_TIME=$(date +%s)
-    local E2E_TIME=$((RBC_END_TIME - RBC_START_TIME))
+    local E2E_TIME_FALLBACK=$((RBC_END_TIME - RBC_START_TIME))
 
     step "采集网络流量结束快照..."
     capture_all_net_stats "$NET_AFTER"
@@ -967,6 +1064,18 @@ run_byzantine_test() {
     # 提取计算开销
     step "提取计算开销数据..."
     extract_computation_stats "$TEST_ID"
+
+    # 4.9 从Rust程序时间戳文件计算真实端到端延迟
+    step "计算真实端到端延迟..."
+    local E2E_TIME_MS
+    E2E_TIME_MS=$(calc_real_e2e_latency_ms "$OUTPUT_BASE" "$BYZANTINE_CONFIG" "byzantine")
+    if [ "$E2E_TIME_MS" -gt 0 ] 2>/dev/null; then
+        local E2E_SEC
+        E2E_SEC=$(echo "scale=3; $E2E_TIME_MS / 1000" | bc)
+        ok "真实端到端延迟: ${E2E_TIME_MS}ms (${E2E_SEC}秒)"
+    else
+        warn "无法获取精确时间戳，使用脚本粗略测量值: ${E2E_TIME_FALLBACK}秒"
+    fi
 
     # 5. 验证诚实节点的数据完整性
     step "验证诚实节点数据完整性..."
@@ -1038,17 +1147,17 @@ run_byzantine_test() {
     if [ "$INTEGRITY_PASS" -ge "$EXPECTED_SUCCESS" ] && [ "$INTEGRITY_FAIL" -eq 0 ]; then
         ok "[$TEST_NAME] 测试通过! ${INTEGRITY_PASS}个诚实节点数据完整，${BYZ_COUNT}个恶意节点被容忍"
         # 输出开销统计报告
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
         return 0
     elif [ "$INTEGRITY_PASS" -gt 0 ]; then
         warn "[$TEST_NAME] 部分通过: $INTEGRITY_PASS 通过, $INTEGRITY_FAIL 失败"
         # 输出开销统计报告
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
         return 0
     else
         fail "[$TEST_NAME] 测试失败: 没有诚实节点通过数据完整性验证"
         # 即使失败也输出开销统计（用于分析）
-        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME" "$TEST_ID"
+        print_overhead_report "$TEST_NAME" "$FILE_SIZE" "$NET_DIFF" "$E2E_TIME_MS" "$TEST_ID" "$E2E_TIME_FALLBACK"
 
         info "调试信息 - 各节点RBC相关日志:"
         for node in $ALL_NODES; do

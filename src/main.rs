@@ -139,6 +139,17 @@ async fn main() -> Result<()> {
                         log::error!("[RBC测试] 写入原始哈希失败: {}", e);
                     }
 
+                    // 记录广播发起的精确时间戳（毫秒级），供端到端延迟计算
+                    let broadcast_start_ms = std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_millis();
+                    let ts_file = format!("{}/broadcast_start_ms.txt", output_dir);
+                    if let Err(e) = std::fs::write(&ts_file, broadcast_start_ms.to_string()) {
+                        log::error!("[RBC测试] 写入广播开始时间戳失败: {}", e);
+                    }
+                    info!("[RBC测试] 广播开始时间戳: {}ms", broadcast_start_ms);
+
                     // 发起RBC广播
                     match node_clone.rbc_broadcast(data).await {
                         Ok(()) => {
@@ -181,11 +192,17 @@ async fn main() -> Result<()> {
                                 let handled = chunked_manager.handle_rbc_output(output);
                                 if !handled {
                                     // 不属于分块广播的普通RBC输出，直接写入文件
+                                    // 记录RBC完成的精确时间戳（毫秒级）
+                                    let output_end_ms = std::time::SystemTime::now()
+                                        .duration_since(std::time::UNIX_EPOCH)
+                                        .unwrap()
+                                        .as_millis();
                                     info!(
-                                        "[RBC输出] 实例={}, 数据大小={}字节, hash={}",
+                                        "[RBC输出] 实例={}, 数据大小={}字节, hash={}, 完成时间戳={}ms",
                                         &output.instance_id[..8.min(output.instance_id.len())],
                                         output.data.len(),
-                                        &output.data_hash[..16.min(output.data_hash.len())]
+                                        &output.data_hash[..16.min(output.data_hash.len())],
+                                        output_end_ms
                                     );
 
                                     let output_file = format!(
@@ -196,6 +213,16 @@ async fn main() -> Result<()> {
                                     match std::fs::write(&output_file, &output.data) {
                                         Ok(()) => info!("[RBC输出] 数据已保存到 {}", output_file),
                                         Err(e) => log::error!("[RBC输出] 保存数据失败: {}", e),
+                                    }
+
+                                    // 写入RBC完成时间戳文件
+                                    let ts_file = format!(
+                                        "{}/output_{}_end_ms.txt",
+                                        output_dir,
+                                        &output.instance_id[..8.min(output.instance_id.len())]
+                                    );
+                                    if let Err(e) = std::fs::write(&ts_file, output_end_ms.to_string()) {
+                                        log::error!("[RBC输出] 写入完成时间戳失败: {}", e);
                                     }
 
                                     let hash_file = format!(
@@ -224,13 +251,19 @@ async fn main() -> Result<()> {
                         // 检查分块广播是否有完成的输出
                         let chunked_outputs = chunked_manager.drain_outputs();
                         for co in chunked_outputs {
+                            // 记录分块广播完成的精确时间戳（毫秒级）
+                            let chunked_end_ms = std::time::SystemTime::now()
+                                .duration_since(std::time::UNIX_EPOCH)
+                                .unwrap()
+                                .as_millis();
                             info!(
-                                "[分块广播输出] 会话={}, 文件大小={}字节 ({:.2}MB), 分块数={}, hash={}...",
+                                "[分块广播输出] 会话={}, 文件大小={}字节 ({:.2}MB), 分块数={}, hash={}..., 完成时间戳={}ms",
                                 &co.session_id[..8.min(co.session_id.len())],
                                 co.total_size,
                                 co.total_size as f64 / 1024.0 / 1024.0,
                                 co.total_chunks,
-                                &co.file_hash[..16.min(co.file_hash.len())]
+                                &co.file_hash[..16.min(co.file_hash.len())],
+                                chunked_end_ms
                             );
 
                             // 将完整文件写入输出目录
@@ -253,6 +286,16 @@ async fn main() -> Result<()> {
                                 log::error!("[分块广播输出] 保存哈希失败: {}", e);
                             }
 
+                            // 写入分块广播完成时间戳文件
+                            let ts_file = format!(
+                                "{}/output_{}_end_ms.txt",
+                                output_dir,
+                                &co.session_id[..8.min(co.session_id.len())]
+                            );
+                            if let Err(e) = std::fs::write(&ts_file, chunked_end_ms.to_string()) {
+                                log::error!("[分块广播输出] 写入完成时间戳失败: {}", e);
+                            }
+
                             // 写入完成标记
                             let done_file = format!("{}/DONE", output_dir);
                             let _ = std::fs::write(&done_file, format!(
@@ -271,11 +314,17 @@ async fn main() -> Result<()> {
                         if let Some(ref mut manager) = *rbc_guard {
                             let outputs = manager.drain_outputs();
                             for output in outputs {
+                                // 记录RBC完成的精确时间戳（毫秒级）
+                                let output_end_ms = std::time::SystemTime::now()
+                                    .duration_since(std::time::UNIX_EPOCH)
+                                    .unwrap()
+                                    .as_millis();
                                 info!(
-                                    "[RBC输出] 实例={}, 数据大小={}字节, hash={}",
+                                    "[RBC输出] 实例={}, 数据大小={}字节, hash={}, 完成时间戳={}ms",
                                     &output.instance_id[..8.min(output.instance_id.len())],
                                     output.data.len(),
-                                    &output.data_hash[..16.min(output.data_hash.len())]
+                                    &output.data_hash[..16.min(output.data_hash.len())],
+                                    output_end_ms
                                 );
 
                                 let output_file = format!(
@@ -286,6 +335,16 @@ async fn main() -> Result<()> {
                                 match std::fs::write(&output_file, &output.data) {
                                     Ok(()) => info!("[RBC输出] 数据已保存到 {}", output_file),
                                     Err(e) => log::error!("[RBC输出] 保存数据失败: {}", e),
+                                }
+
+                                // 写入RBC完成时间戳文件
+                                let ts_file = format!(
+                                    "{}/output_{}_end_ms.txt",
+                                    output_dir,
+                                    &output.instance_id[..8.min(output.instance_id.len())]
+                                );
+                                if let Err(e) = std::fs::write(&ts_file, output_end_ms.to_string()) {
+                                    log::error!("[RBC输出] 写入完成时间戳失败: {}", e);
                                 }
 
                                 let hash_file = format!(
