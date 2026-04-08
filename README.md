@@ -927,3 +927,45 @@ for i in 0..synd.r {
 1. **修复逐字节冗余计算**：利用 Berlekamp-Welch 算法的数学性质——错误定位多项式 E(x) 与具体字节位置无关，只需运行一次 BW 定位错误分片，然后丢弃错误分片用剩余正确分片做普通 rebuild
 2. **SIMD 加速 GF(2⁸) 运算**：使用 SSSE3/AVX2 的 `pshufb` 指令实现向量化有限域乘法，加速 `addmul()` 核心热循环
 3. **优化代数运算实现**：`pow()` 改为 O(1) 查表、消除不必要的堆分配、优化多项式除法的内存操作
+
+### 本地 RS 纠错性能基准测试（优化前基线）
+
+为了快速迭代优化，新增了本地 Rust 性能测试（无需 Docker），直接测量 RS 纠错解码耗时：
+
+```bash
+# 运行所有性能测试
+cargo test --release perf -- --nocapture
+
+# 单独运行某个测试
+cargo test --release test_rs_correction_perf_n13_k5 -- --nocapture
+cargo test --release test_rs_correction_perf_n10_k4 -- --nocapture
+cargo test --release test_rs_correction_perf_scaling -- --nocapture
+```
+
+#### 优化前基线数据（n=13, k=5, t=4, release 模式）
+
+**对照组（无损坏）vs 实验组（4个恶意分片，BFT 极限）**
+
+| 数据大小 | 无损坏解码 | 纠错解码（4损坏） | 性能退化倍数 |
+|:---:|:---:|:---:|:---:|
+| 100KB | 0.5ms (180 MB/s) | 231ms (0.42 MB/s) | **×462** |
+| 1MB | 4.8ms (207 MB/s) | 2,518ms (0.40 MB/s) | **×524** |
+| 5MB | 26ms (191 MB/s) | ~12,600ms (0.40 MB/s) | **×485** |
+
+**纠错耗时随数据大小的线性增长**
+
+| 数据大小 | 分片大小 | 纠错解码耗时 | 吞吐量 |
+|:---:|:---:|:---:|:---:|
+| 1KB | ~200B | 2.5ms | 0.39 MB/s |
+| 10KB | 2KB | 22.9ms | 0.43 MB/s |
+| 50KB | 10KB | 115.8ms | 0.42 MB/s |
+| 100KB | 20KB | 228.8ms | 0.43 MB/s |
+| 200KB | 40KB | 453.2ms | 0.43 MB/s |
+| 500KB | 100KB | 1,139ms | 0.43 MB/s |
+| 1MB | 204KB | 2,518ms | 0.40 MB/s |
+
+#### 关键发现
+
+1. **纠错吞吐量恒定在 ~0.42 MB/s**，与数据大小无关——完美的线性增长，证实了"逐字节调用 BW"的瓶颈
+2. **无损坏时吞吐量 ~200 MB/s**，纠错时退化到 0.42 MB/s，**性能差距约 500 倍**
+3. 按此推算，50MB 文件的纠错解码耗时 ≈ 50/0.42 ≈ **119 秒**，与 Docker 中测到的 48.6 秒量级一致（Docker 中是分 chunk 处理的，每个 chunk 约 4MB）

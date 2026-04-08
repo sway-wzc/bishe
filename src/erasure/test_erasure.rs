@@ -329,3 +329,181 @@ fn test_error_correction_large_data() {
     assert_eq!(recovered, data);
 }
 
+// ============================================================================
+// RS 纠错解码性能测试（本地直接运行，无需 Docker）
+//
+// 用法：cargo test --release test_rs_correction_perf -- --nocapture
+//       cargo test --release perf -- --nocapture  （模糊匹配所有性能测试）
+// ============================================================================
+
+/// 辅助函数：测量 RS 纠错解码性能
+fn bench_rs_correction(
+    data_shards: usize,
+    parity_shards: usize,
+    data_size: usize,
+    corrupt_count: usize,
+    label: &str,
+) {
+    use std::time::Instant;
+
+    let n = data_shards + parity_shards;
+    let codec = ErasureCodec::new(data_shards, parity_shards).unwrap();
+
+    // 生成测试数据
+    let data: Vec<u8> = (0..data_size).map(|i| ((i * 7 + 13) % 256) as u8).collect();
+
+    // 编码
+    let encode_start = Instant::now();
+    let group = codec.encode(&data).unwrap();
+    let encode_elapsed = encode_start.elapsed();
+
+    let shard_size = group.shards[0].data.len();
+
+    // 构造损坏的分片索引（从索引0开始损坏）
+    let corrupt_indices: Vec<usize> = (0..corrupt_count).collect();
+
+    // 损坏分片并解码（纠错）
+    let mut corrupted_shards = group.shards.clone();
+    for shard in corrupted_shards.iter_mut() {
+        if corrupt_indices.contains(&shard.id.index) {
+            for byte in shard.data.iter_mut() {
+                *byte = 0xFF; // 完全篡改
+            }
+        }
+    }
+
+    let decode_start = Instant::now();
+    let recovered = codec.decode(&corrupted_shards).unwrap();
+    let decode_elapsed = decode_start.elapsed();
+
+    // 验证正确性
+    assert_eq!(recovered, data, "纠错解码结果不正确！");
+
+    let throughput = data_size as f64 / decode_elapsed.as_secs_f64() / 1024.0 / 1024.0;
+
+    println!(
+        "[{}] n={}, k={}, 数据={}KB, 分片={}KB, 损坏={}/{}, \
+         编码={:.1}ms, 纠错解码={:.1}ms, 吞吐量={:.2} MB/s",
+        label,
+        n,
+        data_shards,
+        data_size / 1024,
+        shard_size / 1024,
+        corrupt_count,
+        n,
+        encode_elapsed.as_secs_f64() * 1000.0,
+        decode_elapsed.as_secs_f64() * 1000.0,
+        throughput,
+    );
+}
+
+/// 辅助函数：测量无损坏场景下的 RS rebuild 性能（作为对照组）
+fn bench_rs_rebuild_no_error(
+    data_shards: usize,
+    parity_shards: usize,
+    data_size: usize,
+    label: &str,
+) {
+    use std::time::Instant;
+
+    let n = data_shards + parity_shards;
+    let codec = ErasureCodec::new(data_shards, parity_shards).unwrap();
+
+    let data: Vec<u8> = (0..data_size).map(|i| ((i * 7 + 13) % 256) as u8).collect();
+    let group = codec.encode(&data).unwrap();
+    let shard_size = group.shards[0].data.len();
+
+    // 无损坏，直接解码
+    let decode_start = Instant::now();
+    let recovered = codec.decode(&group.shards).unwrap();
+    let decode_elapsed = decode_start.elapsed();
+
+    assert_eq!(recovered, data);
+
+    let throughput = data_size as f64 / decode_elapsed.as_secs_f64() / 1024.0 / 1024.0;
+
+    println!(
+        "[{}] n={}, k={}, 数据={}KB, 分片={}KB, 无损坏, \
+         解码={:.1}ms, 吞吐量={:.2} MB/s",
+        label,
+        n,
+        data_shards,
+        data_size / 1024,
+        shard_size / 1024,
+        decode_elapsed.as_secs_f64() * 1000.0,
+        throughput,
+    );
+}
+
+#[test]
+fn test_rs_correction_perf_n13_k5() {
+    // 模拟实际 BFT 配置：n=13, k=5 (t=4)
+    // 纠错能力 = ⌊8/2⌋ = 4
+    println!("\n========== RS 纠错性能测试: n=13, k=5 (t=4) ==========");
+
+    let data_shards = 5;
+    let parity_shards = 8;
+    let corrupt_count = 4; // BFT 极限：t=4 个恶意节点
+
+    // 对照组：无损坏
+    for &size in &[100 * 1024, 1024 * 1024, 5 * 1024 * 1024] {
+        bench_rs_rebuild_no_error(data_shards, parity_shards, size, "对照组-无损坏");
+    }
+
+    println!("---");
+
+    // 实验组：4个恶意分片（BFT极限）
+    // 注意：大文件可能非常慢（这正是我们要优化的！），先从小文件开始
+    for &size in &[
+        10 * 1024,        // 10KB - 快速验证
+        100 * 1024,       // 100KB - 小文件
+        500 * 1024,       // 500KB - 中等文件
+        1024 * 1024,      // 1MB - 大文件（可能需要几秒）
+        // 5 * 1024 * 1024,  // 5MB - 超大文件（可能需要几十秒，按需取消注释）
+    ] {
+        bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "BFT极限-4损坏");
+    }
+}
+
+#[test]
+fn test_rs_correction_perf_n10_k4() {
+    // 模拟实际 BFT 配置：n=10, k=4 (t=3)
+    // 纠错能力 = ⌊6/2⌋ = 3
+    println!("\n========== RS 纠错性能测试: n=10, k=4 (t=3) ==========");
+
+    let data_shards = 4;
+    let parity_shards = 6;
+    let corrupt_count = 3; // BFT 极限：t=3 个恶意节点
+
+    for &size in &[100 * 1024, 500 * 1024, 1024 * 1024] {
+        bench_rs_rebuild_no_error(data_shards, parity_shards, size, "对照组-无损坏");
+    }
+
+    println!("---");
+
+    for &size in &[10 * 1024, 100 * 1024, 500 * 1024, 1024 * 1024] {
+        bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "BFT极限-3损坏");
+    }
+}
+
+#[test]
+fn test_rs_correction_perf_scaling() {
+    // 测试纠错耗时随数据大小的增长趋势
+    println!("\n========== RS 纠错耗时增长趋势 (n=13, k=5, 4损坏) ==========");
+
+    let data_shards = 5;
+    let parity_shards = 8;
+    let corrupt_count = 4;
+
+    for &size in &[
+        1024,             // 1KB
+        10 * 1024,        // 10KB
+        50 * 1024,        // 50KB
+        100 * 1024,       // 100KB
+        200 * 1024,       // 200KB
+        500 * 1024,       // 500KB
+    ] {
+        bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "增长趋势");
+    }
+}
+
