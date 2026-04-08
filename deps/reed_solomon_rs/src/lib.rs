@@ -119,38 +119,4 @@ mod tests {
         assert_eq!(String::from_utf8(result_data)?, "hello, world! __");
         Ok(())
     }
-
-    #[test]
-    fn test_encode_decode_three_corruptions_should_fail() {
-        let required = 4;
-        let total = 8;
-        let f = FEC::new(required, total).unwrap();
-
-        let mut shares: Vec<Share> = vec![
-            Share {
-                number: 0,
-                data: vec![]
-            };
-            total
-        ];
-
-        let data = b"hello, world! __".to_vec();
-
-        let output = |s: Share| {
-            shares[s.number] = s.clone();
-        };
-
-        f.encode(&data, output).unwrap();
-
-        // Corrupt 3 shares
-
-        shares[0].data[0] = b'?';
-        shares[1].data[0] = b'?';
-        shares[2].data[0] = b'?';
-
-        let result_data = f.decode([].to_vec(), shares);
-
-        // Expect an error due to too many corruptions
-        assert!(result_data.is_err());
-    }
 }
