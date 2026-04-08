@@ -381,14 +381,17 @@ fn bench_rs_correction(
 
     let throughput = data_size as f64 / decode_elapsed.as_secs_f64() / 1024.0 / 1024.0;
 
+    let data_mb = data_size as f64 / 1024.0 / 1024.0;
+    let shard_mb = shard_size as f64 / 1024.0 / 1024.0;
+
     println!(
-        "[{}] n={}, k={}, 数据={}KB, 分片={}KB, 损坏={}/{}, \
+        "[{}] n={}, k={}, 数据={:.1}MB, 分片={:.1}MB, 损坏={}/{}, \
          编码={:.1}ms, 纠错解码={:.1}ms, 吞吐量={:.2} MB/s",
         label,
         n,
         data_shards,
-        data_size / 1024,
-        shard_size / 1024,
+        data_mb,
+        shard_mb,
         corrupt_count,
         n,
         encode_elapsed.as_secs_f64() * 1000.0,
@@ -397,11 +400,15 @@ fn bench_rs_correction(
     );
 }
 
-/// 辅助函数：测量无损坏场景下的 RS rebuild 性能（作为对照组）
+/// 辅助函数：测量无损坏场景下的 RS 解码性能（作为对照组）
+///
+/// 传入全部 n 个正确分片，走与实验组相同的 fec.decode() 路径
+/// （correct() 检测无错误快速返回 → rebuild()），确保公平对比。
 fn bench_rs_rebuild_no_error(
     data_shards: usize,
     parity_shards: usize,
     data_size: usize,
+    corrupt_count: usize,
     label: &str,
 ) {
     use std::time::Instant;
@@ -413,23 +420,33 @@ fn bench_rs_rebuild_no_error(
     let group = codec.encode(&data).unwrap();
     let shard_size = group.shards[0].data.len();
 
-    // 无损坏，直接解码
+    // 模拟与实验组相同的条件：传入 n - corrupt_count 个正确分片
+    // 实验组 correct() 会丢弃 corrupt_count 个错误分片后剩余相同数量
+    let shards_to_use: Vec<_> = group.shards.iter()
+        .take(n - corrupt_count)
+        .cloned()
+        .collect();
+
     let decode_start = Instant::now();
-    let recovered = codec.decode(&group.shards).unwrap();
+    let recovered = codec.decode(&shards_to_use).unwrap();
     let decode_elapsed = decode_start.elapsed();
 
     assert_eq!(recovered, data);
 
     let throughput = data_size as f64 / decode_elapsed.as_secs_f64() / 1024.0 / 1024.0;
 
+    let data_mb = data_size as f64 / 1024.0 / 1024.0;
+    let shard_mb = shard_size as f64 / 1024.0 / 1024.0;
+
     println!(
-        "[{}] n={}, k={}, 数据={}KB, 分片={}KB, 无损坏, \
+        "[{}] n={}, k={}, 数据={:.1}MB, 分片={:.1}MB, 无损坏({}个分片), \
          解码={:.1}ms, 吞吐量={:.2} MB/s",
         label,
         n,
         data_shards,
-        data_size / 1024,
-        shard_size / 1024,
+        data_mb,
+        shard_mb,
+        n - corrupt_count,
         decode_elapsed.as_secs_f64() * 1000.0,
         throughput,
     );
@@ -445,22 +462,22 @@ fn test_rs_correction_perf_n13_k5() {
     let parity_shards = 8;
     let corrupt_count = 4; // BFT 极限：t=4 个恶意节点
 
-    // 对照组：无损坏
-    for &size in &[100 * 1024, 1024 * 1024, 5 * 1024 * 1024] {
-        bench_rs_rebuild_no_error(data_shards, parity_shards, size, "对照组-无损坏");
+    // 统一测试数据大小，聚焦大文件（20MB以上），确保对照组和实验组可公平对比
+    let test_sizes = [
+        20 * 1024 * 1024,   // 20MB
+        50 * 1024 * 1024,   // 50MB
+        100 * 1024 * 1024,  // 100MB
+    ];
+
+    // 对照组：无损坏（传入 n - corrupt_count 个正确分片，与实验组 rebuild 阶段条件一致）
+    for &size in &test_sizes {
+        bench_rs_rebuild_no_error(data_shards, parity_shards, size, corrupt_count, "对照组-无损坏");
     }
 
     println!("---");
 
     // 实验组：4个恶意分片（BFT极限）
-    // 注意：大文件可能非常慢（这正是我们要优化的！），先从小文件开始
-    for &size in &[
-        10 * 1024,        // 10KB - 快速验证
-        100 * 1024,       // 100KB - 小文件
-        500 * 1024,       // 500KB - 中等文件
-        1024 * 1024,      // 1MB - 大文件（可能需要几秒）
-        // 5 * 1024 * 1024,  // 5MB - 超大文件（可能需要几十秒，按需取消注释）
-    ] {
+    for &size in &test_sizes {
         bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "BFT极限-4损坏");
     }
 }
@@ -475,13 +492,21 @@ fn test_rs_correction_perf_n10_k4() {
     let parity_shards = 6;
     let corrupt_count = 3; // BFT 极限：t=3 个恶意节点
 
-    for &size in &[100 * 1024, 500 * 1024, 1024 * 1024] {
-        bench_rs_rebuild_no_error(data_shards, parity_shards, size, "对照组-无损坏");
+    // 统一测试数据大小，聚焦大文件（20MB以上），确保对照组和实验组可公平对比
+    let test_sizes = [
+        20 * 1024 * 1024,   // 20MB
+        50 * 1024 * 1024,   // 50MB
+        100 * 1024 * 1024,  // 100MB
+    ];
+
+    // 对照组：无损坏（传入 n - corrupt_count 个正确分片，与实验组 rebuild 阶段条件一致）
+    for &size in &test_sizes {
+        bench_rs_rebuild_no_error(data_shards, parity_shards, size, corrupt_count, "对照组-无损坏");
     }
 
     println!("---");
 
-    for &size in &[10 * 1024, 100 * 1024, 500 * 1024, 1024 * 1024] {
+    for &size in &test_sizes {
         bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "BFT极限-3损坏");
     }
 }
@@ -496,12 +521,12 @@ fn test_rs_correction_perf_scaling() {
     let corrupt_count = 4;
 
     for &size in &[
-        1024,             // 1KB
-        10 * 1024,        // 10KB
-        50 * 1024,        // 50KB
-        100 * 1024,       // 100KB
-        200 * 1024,       // 200KB
-        500 * 1024,       // 500KB
+        1024 * 1024,        // 1MB
+        5 * 1024 * 1024,    // 5MB
+        10 * 1024 * 1024,   // 10MB
+        20 * 1024 * 1024,   // 20MB
+        50 * 1024 * 1024,   // 50MB
+        100 * 1024 * 1024,  // 100MB
     ] {
         bench_rs_correction(data_shards, parity_shards, size, corrupt_count, "增长趋势");
     }
