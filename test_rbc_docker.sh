@@ -167,34 +167,87 @@ format_bytes() {
 extract_computation_stats() {
     local TEST_ID="$1"
     local COMP_FILE="${STATS_DIR}/${TEST_ID}_computation.txt"
+    local COMP_SUMMARY="${STATS_DIR}/${TEST_ID}_computation_summary.txt"
     > "$COMP_FILE"
+
+    # 用于汇总的变量
+    local SEED_ENCODE_TOTAL=0
+    local SEED_HASH_TOTAL=0
+    local DECODE_SUM=0
+    local HASH_VERIFY_SUM=0
+    local DECODE_COUNT=0
 
     for node in $ALL_NODES; do
         local NODE_LOG
         NODE_LOG=$(dc_with_override logs "$node" 2>&1)
 
         # 提取RS编码耗时（格式: "RS编码耗时=X.XXXms"）
+        # 分块广播时会有多条日志，需要累加所有chunk的耗时
         local ENCODE_TIME
-        ENCODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS编码耗时=\K[0-9.]+ms' | tail -1 || echo "")
+        ENCODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS编码耗时=\K[0-9.]+' || echo "")
+        local ENCODE_DISPLAY="N/A"
+        if [ -n "$ENCODE_TIME" ]; then
+            local ENCODE_TOTAL
+            ENCODE_TOTAL=$(echo "$ENCODE_TIME" | awk '{s+=$1} END {printf "%.3f", s}')
+            ENCODE_DISPLAY="${ENCODE_TOTAL}ms"
+            # seed节点（广播者）的编码耗时
+            if [ "$node" = "seed" ]; then
+                SEED_ENCODE_TOTAL=$ENCODE_TOTAL
+            fi
+        fi
 
         # 提取RS解码耗时（格式: "RS解码耗时=X.XXXms"）
         local DECODE_TIME
-        DECODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS解码耗时=\K[0-9.]+ms' | tail -1 || echo "")
+        DECODE_TIME=$(echo "$NODE_LOG" | grep -oP 'RS解码耗时=\K[0-9.]+' || echo "")
+        local DECODE_DISPLAY="N/A"
+        if [ -n "$DECODE_TIME" ]; then
+            local DECODE_TOTAL
+            DECODE_TOTAL=$(echo "$DECODE_TIME" | awk '{s+=$1} END {printf "%.3f", s}')
+            DECODE_DISPLAY="${DECODE_TOTAL}ms"
+            # 累加所有接收节点的解码耗时（用于求平均）
+            DECODE_SUM=$(echo "$DECODE_SUM + $DECODE_TOTAL" | bc)
+            DECODE_COUNT=$((DECODE_COUNT + 1))
+        fi
 
         # 提取SHA-256哈希计算耗时（格式: "SHA-256哈希耗时=X.XXXms"）
         local HASH_TIME
-        HASH_TIME=$(echo "$NODE_LOG" | grep -oP 'SHA-256哈希耗时=\K[0-9.]+ms' | tail -1 || echo "")
+        HASH_TIME=$(echo "$NODE_LOG" | grep -oP 'SHA-256哈希耗时=\K[0-9.]+' || echo "")
+        local HASH_DISPLAY="N/A"
+        if [ -n "$HASH_TIME" ]; then
+            local HASH_TOTAL
+            HASH_TOTAL=$(echo "$HASH_TIME" | awk '{s+=$1} END {printf "%.3f", s}')
+            HASH_DISPLAY="${HASH_TOTAL}ms"
+            if [ "$node" = "seed" ]; then
+                SEED_HASH_TOTAL=$HASH_TOTAL
+            fi
+        fi
 
         # 提取哈希验证耗时（格式: "哈希验证耗时=X.XXXms"）
         local HASH_VERIFY_TIME
-        HASH_VERIFY_TIME=$(echo "$NODE_LOG" | grep -oP '哈希验证耗时=\K[0-9.]+ms' | tail -1 || echo "")
+        HASH_VERIFY_TIME=$(echo "$NODE_LOG" | grep -oP '哈希验证耗时=\K[0-9.]+' || echo "")
+        local HASH_VERIFY_DISPLAY="N/A"
+        if [ -n "$HASH_VERIFY_TIME" ]; then
+            local HASH_VERIFY_TOTAL
+            HASH_VERIFY_TOTAL=$(echo "$HASH_VERIFY_TIME" | awk '{s+=$1} END {printf "%.3f", s}')
+            HASH_VERIFY_DISPLAY="${HASH_VERIFY_TOTAL}ms"
+            HASH_VERIFY_SUM=$(echo "$HASH_VERIFY_SUM + $HASH_VERIFY_TOTAL" | bc)
+        fi
 
-        # 提取纠错解码成功的总信息
-        local DECODE_INFO
-        DECODE_INFO=$(echo "$NODE_LOG" | grep '纠错解码成功' | tail -1 || echo "")
-
-        echo "${node} encode=${ENCODE_TIME:-N/A} decode=${DECODE_TIME:-N/A} hash=${HASH_TIME:-N/A} hash_verify=${HASH_VERIFY_TIME:-N/A}" >> "$COMP_FILE"
+        echo "${node} encode=${ENCODE_DISPLAY} decode=${DECODE_DISPLAY} hash=${HASH_DISPLAY} hash_verify=${HASH_VERIFY_DISPLAY}" >> "$COMP_FILE"
     done
+
+    # 计算汇总值：广播者编码耗时 + 接收节点平均解码耗时
+    local AVG_DECODE=0
+    local AVG_HASH_VERIFY=0
+    if [ "$DECODE_COUNT" -gt 0 ]; then
+        AVG_DECODE=$(echo "scale=3; $DECODE_SUM / $DECODE_COUNT" | bc)
+        AVG_HASH_VERIFY=$(echo "scale=3; $HASH_VERIFY_SUM / $DECODE_COUNT" | bc)
+    fi
+    local TOTAL_CODEC
+    TOTAL_CODEC=$(echo "scale=3; $SEED_ENCODE_TOTAL + $AVG_DECODE" | bc)
+
+    # 写入汇总文件（供CSV使用）
+    echo "encode=${SEED_ENCODE_TOTAL} decode_avg=${AVG_DECODE} hash=${SEED_HASH_TOTAL} hash_verify_avg=${AVG_HASH_VERIFY} total_codec=${TOTAL_CODEC}" > "$COMP_SUMMARY"
 }
 
 # 从Rust程序写入的时间戳文件中计算真实的端到端延迟（毫秒）
@@ -394,7 +447,7 @@ print_overhead_report() {
     # 将统计数据写入CSV文件（便于后续分析）
     local CSV_FILE="${STATS_DIR}/overhead_summary.csv"
     if [ ! -f "$CSV_FILE" ]; then
-        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(ms),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比,修正理论放大比" > "$CSV_FILE"
+        echo "测试名称,文件大小(B),节点数,容错数t,数据分片数,端到端延迟(ms),总发送TX(B),总接收RX(B),实际总发送(B),传输放大比(TX),理论总传输(B),理论放大比,修正理论放大比,RS编码耗时(ms),RS解码耗时(ms),SHA256哈希耗时(ms),哈希验证耗时(ms),编解码总耗时(ms),吞吐量(MB/s)" > "$CSV_FILE"
     fi
     local AMP_VAL="0"
     local THEORY_AMP_VAL="0"
@@ -408,7 +461,31 @@ print_overhead_report() {
     if [ "$FILE_SIZE" -gt 0 ] && [ "$THEORY_TOTAL" -gt 0 ]; then
         CORRECTED_AMP_VAL=$(echo "scale=4; $THEORY_AMP_VAL * ($NODE_COUNT - 1) / $NODE_COUNT" | bc)
     fi
-    echo "\"${TEST_NAME}\",${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME_MS},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL}" >> "$CSV_FILE"
+
+    # 从计算开销汇总文件中读取数据
+    local COMP_SUMMARY="${STATS_DIR}/${TEST_ID}_computation_summary.txt"
+    local CSV_ENCODE="N/A"
+    local CSV_DECODE="N/A"
+    local CSV_HASH="N/A"
+    local CSV_HASH_VERIFY="N/A"
+    local CSV_TOTAL_CODEC="N/A"
+    if [ -f "$COMP_SUMMARY" ]; then
+        local SUMMARY_LINE
+        SUMMARY_LINE=$(cat "$COMP_SUMMARY")
+        CSV_ENCODE=$(echo "$SUMMARY_LINE" | grep -oP 'encode=\K[0-9.]+' || echo "N/A")
+        CSV_DECODE=$(echo "$SUMMARY_LINE" | grep -oP 'decode_avg=\K[0-9.]+' || echo "N/A")
+        CSV_HASH=$(echo "$SUMMARY_LINE" | grep -oP 'hash=\K[0-9.]+' || echo "N/A")
+        CSV_HASH_VERIFY=$(echo "$SUMMARY_LINE" | grep -oP 'hash_verify_avg=\K[0-9.]+' || echo "N/A")
+        CSV_TOTAL_CODEC=$(echo "$SUMMARY_LINE" | grep -oP 'total_codec=\K[0-9.]+' || echo "N/A")
+    fi
+
+    # 计算吞吐量(MB/s) = (文件大小B / 1048576) / (端到端延迟ms / 1000)
+    local THROUGHPUT_MBPS="0.0000"
+    if [ "$E2E_TIME_MS" -gt 0 ] 2>/dev/null && [ "$FILE_SIZE" -gt 0 ]; then
+        THROUGHPUT_MBPS=$(echo "scale=4; ($FILE_SIZE / 1048576) / ($E2E_TIME_MS / 1000)" | bc)
+    fi
+
+    echo "\"${TEST_NAME}\",${FILE_SIZE},${NODE_COUNT},${T},${DATA_SHARDS},${E2E_TIME_MS},${TOTAL_TX},${TOTAL_RX},${TOTAL_TRAFFIC},${AMP_VAL},${THEORY_TOTAL},${THEORY_AMP_VAL},${CORRECTED_AMP_VAL},${CSV_ENCODE},${CSV_DECODE},${CSV_HASH},${CSV_HASH_VERIFY},${CSV_TOTAL_CODEC},${THROUGHPUT_MBPS}" >> "$CSV_FILE"
 }
 
 # ==========================================
@@ -1210,6 +1287,24 @@ run_byzantine_test "测试12: ${T}个混合恶意节点(100KB) [n=${NODE_COUNT},
 TEST12_RESULT=$?
 
 # ==========================================
+# 测试13: 大文件BFT极限测试 (50MB, t个混合恶意节点)
+# ==========================================
+# 使用与测试12相同的恶意节点配置，但文件改为50MB大文件
+# 目的：探究恶意节点对大文件传输编解码耗时和吞吐量的影响
+BYZ_MIX_LARGE=""
+for i in $(seq $((NODE_COUNT - 1)) -1 $((NODE_COUNT - T))); do
+    local_idx=$(( (NODE_COUNT - 1 - i) % 3 ))
+    MODE=${BYZ_MODES[$local_idx]}
+    if [ -z "$BYZ_MIX_LARGE" ]; then
+        BYZ_MIX_LARGE="node${i}:${MODE}"
+    else
+        BYZ_MIX_LARGE="$BYZ_MIX_LARGE node${i}:${MODE}"
+    fi
+done
+run_byzantine_test "测试13: ${T}个混合恶意节点(50MB) [n=${NODE_COUNT},t=${T},BFT极限]" "$TEST_DIR/huge_50mb.bin" "$BYZ_MIX_LARGE"
+TEST13_RESULT=$?
+
+# ==========================================
 # 测试结果汇总
 # ==========================================
 echo ""
@@ -1247,6 +1342,7 @@ print_result "测试9: 恶意节点-篡改分片(100KB)" "$TEST9_RESULT"
 print_result "测试10: 恶意节点-伪造哈希(100KB)" "$TEST10_RESULT"
 print_result "测试11: 恶意节点-选择性沉默(100KB)" "$TEST11_RESULT"
 print_result "测试12: ${T}个混合恶意节点(100KB)" "$TEST12_RESULT"
+print_result "测试13: ${T}个混合恶意节点(50MB)" "$TEST13_RESULT"
 
 echo ""
 echo "通过: $TOTAL_PASS / $((TOTAL_PASS + TOTAL_FAIL))"
