@@ -933,8 +933,17 @@ generate_compose_file
 echo ""
 
 # 构建镜像
-info "测试0: 构建Docker镜像..."
-dc build 2>&1 | tail -10
+# 注意：使用 --no-cache 强制全量重新编译，避免切换分支时 Docker 复用旧代码的构建缓存层
+# （否则 deps/ 或 src/ 的代码变更可能因缓存命中而未被实际编译进镜像，导致优化无效）
+info "测试0: 构建Docker镜像（--no-cache 全量编译）..."
+BUILD_LOG_FILE="${STATS_DIR}/docker_build.log"
+if ! dc build --no-cache --pull > "$BUILD_LOG_FILE" 2>&1; then
+    fail "Docker镜像构建失败！以下是构建日志的最后30行："
+    tail -30 "$BUILD_LOG_FILE"
+    fail "请检查 Dockerfile 及依赖配置后重试。完整日志: $BUILD_LOG_FILE"
+    exit 1
+fi
+tail -10 "$BUILD_LOG_FILE"
 ok "Docker镜像构建成功"
 echo ""
 
