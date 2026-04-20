@@ -10,6 +10,10 @@ COPY Cargo.toml Cargo.lock ./
 RUN mkdir -p src && \
     echo 'fn main() {}' > src/main.rs && \
     echo '' > src/lib.rs
+
+# 复制本地依赖目录（必须在 cargo build 之前，否则 path 依赖找不到源码）
+COPY deps/ deps/
+
 RUN cargo build --release 2>/dev/null || true
 
 # 复制实际源码
