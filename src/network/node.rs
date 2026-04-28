@@ -859,8 +859,25 @@ impl P2PNode {
                 }
             }
             ByzantineMode::CorruptShard => {
-                use rand::Rng;
-                let mut rng = rand::thread_rng();
+                // 单字节精确篡改：对每个恶意节点，根据其 node_id 哈希出一个固定位置，
+                // 仅翻转该位置上的一个字节。这样做的目的是：
+                //   1) 粒度最小——最能模拟真实世界中隐蔽的比特翻转攻击；
+                //   2) 不同节点哈希到不同位置——几乎零碰撞，保证多个恶意节点的错误字节
+                //      分布在不同列上，从而对 RS/BW 纠错算法施加最大压力（能暴露
+                //      "只检查单列一次" 这类纠错算法 Bug）；
+                //   3) 确定性——同一节点每次篡改位置固定，便于调试与复现。
+                use std::collections::hash_map::DefaultHasher;
+                use std::hash::{Hash, Hasher};
+
+                fn tamper_position(sender: &str, shard_len: usize) -> usize {
+                    if shard_len == 0 {
+                        return 0;
+                    }
+                    let mut hasher = DefaultHasher::new();
+                    sender.hash(&mut hasher);
+                    (hasher.finish() as usize) % shard_len
+                }
+
                 match msg {
                     RbcMessage::Echo {
                         instance_id,
@@ -872,14 +889,19 @@ impl P2PNode {
                         data_shard_count,
                         parity_shard_count,
                     } => {
-                        // 篡改分片数据：用随机数据替换
-                        let mut corrupted = vec![0u8; shard_data.len()];
-                        rng.fill(&mut corrupted[..]);
-                        warn!(
-                            "[拜占庭-篡改分片] 篡改ECHO分片: instance={}, shard_index={}",
-                            &instance_id[..8.min(instance_id.len())],
-                            shard_index
-                        );
+                        // 单字节篡改：翻转哈希定位到的那个字节的所有位
+                        let mut corrupted = shard_data;
+                        if !corrupted.is_empty() {
+                            let pos = tamper_position(&sender, corrupted.len());
+                            corrupted[pos] ^= 0xFF;
+                            warn!(
+                                "[拜占庭-篡改分片] 篡改ECHO分片: instance={}, shard_index={}, pos={}/{}",
+                                &instance_id[..8.min(instance_id.len())],
+                                shard_index,
+                                pos,
+                                corrupted.len()
+                            );
+                        }
                         Some(RbcMessage::Echo {
                             instance_id,
                             sender,
@@ -901,14 +923,19 @@ impl P2PNode {
                         data_shard_count,
                         parity_shard_count,
                     } => {
-                        // 篡改分片数据：用随机数据替换
-                        let mut corrupted = vec![0u8; shard_data.len()];
-                        rng.fill(&mut corrupted[..]);
-                        warn!(
-                            "[拜占庭-篡改分片] 篡改READY分片: instance={}, shard_index={}",
-                            &instance_id[..8.min(instance_id.len())],
-                            shard_index
-                        );
+                        // 单字节篡改：翻转哈希定位到的那个字节的所有位
+                        let mut corrupted = shard_data;
+                        if !corrupted.is_empty() {
+                            let pos = tamper_position(&sender, corrupted.len());
+                            corrupted[pos] ^= 0xFF;
+                            warn!(
+                                "[拜占庭-篡改分片] 篡改READY分片: instance={}, shard_index={}, pos={}/{}",
+                                &instance_id[..8.min(instance_id.len())],
+                                shard_index,
+                                pos,
+                                corrupted.len()
+                            );
+                        }
                         Some(RbcMessage::Ready {
                             instance_id,
                             sender,
